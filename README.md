@@ -1,3 +1,162 @@
 # UTD Course Requisite Parser 
 
-> ANTLR 4 based approah for parsing course requirments
+ANTLR 4 based approach for parsing course requirements
+
+
+---
+
+# Visitor Completion (14 / 138 = 9%)
+
+
+- [x] VisitAllGradeCourseList
+- [x] VisitCrossListedCourse
+- [x] VisitDegree
+- [x] VisitEitherGradeCourseList
+- [x] VisitFullCourseList
+- [x] VisitGpaGradeCondition
+- [x] VisitGradeAtLeastCondition
+- [x] VisitGradeListCondition
+- [x] VisitParenCourse
+- [x] VisitParenGradeCourseList
+- [x] VisitShorthandCourseList
+- [x] VisitSimpleCourse
+- [x] VisitSimpleGradeCondition
+- [x] VisitTitle
+- [ ] VisitAcademic
+- [ ] VisitAcademicPlanReq
+- [ ] VisitAleksScoreCondition
+- [ ] VisitAleksScoreExpr
+- [ ] VisitAlternativeExpr
+- [ ] VisitAlternativeRepeateExpr
+- [ ] VisitAmpersandExpr
+- [ ] VisitAndExpr
+- [ ] VisitAndRepeateExpr
+- [ ] VisitAnyCoreExpr
+- [ ] VisitAnyCoreSCHCondition
+- [ ] VisitAnyMajorCourseExpr
+- [ ] VisitAnyPreviousMajorCourseCondition
+- [ ] VisitAppendAcademicPlanReq
+- [ ] VisitApScoreCondition
+- [ ] VisitApScoreExpr
+- [ ] VisitAtLeastGradeLevelStandingCondition
+- [ ] VisitBachelorsOrMastersCondition
+- [ ] VisitBareRepeatRule
+- [ ] VisitBothHonorsCondition
+- [ ] VisitCombinedRepeatMaxHoursRule
+- [ ] VisitCompleteHoursFromFollowingCondition
+- [ ] VisitCompleteNExpr
+- [ ] VisitCompleteNFromFollowingCondition
+- [ ] VisitCompleteNOfFollowingCondition
+- [ ] VisitCompletionOfCoreCondition
+- [ ] VisitComputerScholarsExpr
+- [ ] VisitComputerScholarsReq
+- [ ] VisitConcurrentEnrollmentCondition
+- [ ] VisitConcurrentEnrollmentExpr
+- [ ] VisitCoreCondition
+- [ ] VisitCoreExpr
+- [ ] VisitCoreqReq
+- [ ] VisitCourseAlternativeCondition
+- [ ] VisitCourseExpr
+- [ ] VisitCourseRepeateExpr
+- [ ] VisitCourseRepeatLimitRule
+- [ ] VisitCourseRepeatMaxHoursRule
+- [ ] VisitCourseRepeatRule
+- [ ] VisitCredit
+- [ ] VisitCreditForReq
+- [ ] VisitDegreeExpr
+- [ ] VisitDegreeSatisfactionReq
+- [ ] VisitDegreeTypePrefixMajorCondition
+- [ ] VisitDepartmentConsentExpr
+- [ ] VisitElectivesDegreeSatisfactionRule
+- [ ] VisitEquivalentExpr
+- [ ] VisitExactCoreqNoticeReq
+- [ ] VisitExactSectionCondition
+- [ ] VisitExactSectionExpr
+- [ ] VisitExcludeNoticeReq
+- [ ] VisitExprReq
+- [ ] VisitFourThousandLevelCondition
+- [ ] VisitGoodAcademicStandingExpr
+- [ ] VisitGpa
+- [ ] VisitGpaExpr
+- [ ] VisitGpaInCourseCondition
+- [ ] VisitGpaRepeatReq
+- [ ] VisitGradeAlternativeCondition
+- [ ] VisitGradeExpr
+- [ ] VisitGradeLevelMajorStandingCondition
+- [ ] VisitGradeLevelPrefixMajorCondition
+- [ ] VisitGradeLevelStandingCondition
+- [ ] VisitGradeLevelStandingExpr
+- [ ] VisitGraduateLevelStandingCondition
+- [ ] VisitGraduateStandingExpr
+- [ ] VisitGraduateStandingInCondition
+- [ ] VisitGroup
+- [ ] VisitGroupCondition
+- [ ] VisitGroupExpr
+- [ ] VisitHonorsExpr
+- [ ] VisitInstructorConsentExpr
+- [ ] VisitInternshipRepeatRule
+- [ ] VisitLivingLearningExpr
+- [ ] VisitLivingLearningReq
+- [ ] VisitMajorExpr
+- [ ] VisitMajorReq
+- [ ] VisitMathDegreeSatisfactionRule
+- [ ] VisitMinimumGpaCondition
+- [ ] VisitMinimumGradeLevelStandingCondition
+- [ ] VisitMinimumHoursCondition
+- [ ] VisitMinimumHoursExpr
+- [ ] VisitMultiPrefixDegreeSatisfactionRule
+- [ ] VisitMultiPrefixForDegreeSatisfactionRule
+- [ ] VisitNamedDegreeSatisfactionRule
+- [ ] VisitNamedDegreeTypeMajorCondition
+- [ ] VisitNamedLivingLearningRule
+- [ ] VisitNamedMajorCondition
+- [ ] VisitOfMultiPrefixDegreeSatisfactionRule
+- [ ] VisitOrExpr
+- [ ] VisitParenAlternativeCondition
+- [ ] VisitParenExpr
+- [ ] VisitPlacement
+- [ ] VisitPlacementScoreComparisonCondition
+- [ ] VisitPlacementScoreMinimumCondition
+- [ ] VisitPlacementScoreRangeCondition
+- [ ] VisitPlacementTestExpr
+- [ ] VisitPrefixDegreeSatisfactionRule
+- [ ] VisitPrefixGradeLevelStandingCondition
+- [ ] VisitPrefixLivingLearningRule
+- [ ] VisitPrefixMajorCondition
+- [ ] VisitPreOrCoReq
+- [ ] VisitPrereqAndCoreqReq
+- [ ] VisitPrereqReq
+- [ ] VisitProg
+- [ ] VisitRepeatHoursMaxSuffixRule
+- [ ] VisitRepeatLimitHoursExpr
+- [ ] VisitRepeatLimitHoursReq
+- [ ] VisitRepeatLimitTimesReq
+- [ ] VisitRepeatMaxHoursRule
+- [ ] VisitRepeatMaxTimesRule
+- [ ] VisitRepeatReq
+- [ ] VisitRepeatRuleExpr
+- [ ] VisitRepeatUpToTimesRule
+- [ ] VisitResearchCondition
+- [ ] VisitResearchExpr
+- [ ] VisitSameAsParenReq
+- [ ] VisitSameAsReq
+- [ ] VisitSchool
+- [ ] VisitSchoolDegreeSatisfactionRule
+- [ ] VisitSchoolReq
+- [ ] VisitSchoolsDegreeSatisfactionRule
+- [ ] VisitSemesterCreditHoursCondition
+- [ ] VisitSemesterCreditHoursExpr
+- [ ] VisitSentence
+- [ ] VisitSingleHonorsCondition
+- [ ] VisitStudentDegreeSatisfactionRule
+- [ ] VisitTopicsVaryRepeatRule
+- [ ] VisitUndergraduateDegreeCondition
+- [ ] VisitUniversityGpaCondition
+- [ ] VisitUpperDivisionClassesCondition
+- [ ] VisitUpperDivisionClassesExpr
+- [ ] VisitUpperDivisionCreditsCondition
+- [ ] VisitUpperDivisionHoursExpr
+- [ ] VisitUpperDivisionSCHCondition
+- [ ] VisitUpperDivisionStandingExpr
+- [ ] VisitUteachConsentExpr
+- [ ] VisitWorkshopSectionCondition

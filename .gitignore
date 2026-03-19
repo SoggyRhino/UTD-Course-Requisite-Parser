@@ -1,3 +1,7 @@
 scripts/
 
 .idea
+/scripts/out/
+
+# do not included generated sources in repo
+/parser/*

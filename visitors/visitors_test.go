@@ -1,6 +1,7 @@
 package visitors
 
 import (
+	"fmt"
 	"parser/parser"
 	"testing"
 
@@ -26,11 +27,9 @@ func testTree[T any](t *testing.T, input string, creator treeCreator, result T) 
 	tree := creator(p)
 
 	visitor := NewRequisiteVisitor(tokens)
-
+	fmt.Printf("tree type: %T\n", tree) // what concrete type is the tree?
 	output := visitor.Visit(tree).(T)
 	if diff := cmp.Diff(result, output); diff != "" {
 		t.Errorf("Unexpected output (-want +got):\n%s", diff)
 	}
 }
-
-

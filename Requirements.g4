@@ -82,30 +82,31 @@ course_list
     | PREFIX COURSE_NUMBER (OR COURSE_NUMBER)+      # shorthandCourseList
     ;
 
+title : (CAPITALIZED | CORE)+ (AND (CAPITALIZED | CORE)+)* ;
+
 degree_atom : CAPITALIZED | CORE | WORD ;
 
 degree : degree_atom+ (AND degree_atom+)* ;
 
-title : (CAPITALIZED | CORE)+ (AND (CAPITALIZED | CORE)+)* ;
-
-degree_list : degree ((COMMA | OR | COMMA AND) degree)* ;
+degree_list : degree ((COMMA AND | COMMA | OR) degree)* ;
 
 // Grade conditions
 grade_condition
-    : course WITH_GRADE GRADE OR_BETTER?                                    # simpleGradeCondition
+    : course WITH_GRADE GRADE OR_BETTER?                                   # simpleGradeCondition
     | course WITH_GRADE 'greater than or equal to' GRADE ('(' GPA ')')?    # gpaGradeCondition
-    | '(' course (OR course)* ')' WITH_GRADE GRADE OR_BETTER?              # parenGradeCondition
+    | grade_course_list WITH_GRADE GRADE OR_BETTER?                        # gradeListCondition
     | A_GRADE_OF_AT_LEAST GRADE OR_BETTER? 'in' grade_course_list          # gradeAtLeastCondition
     ;
 
 grade_course_list
-    : 'either'? course ((AND | OR) 'in'? course)*
-    | '(' course (OR course)* ')'
+    : 'either'? course (OR 'in'? course)*             #eitherGradeCourseList
+    |  course (AND course)*                              #allGradeCourseList
+    | '(' course (OR course)* ')'                     #parenGradeCourseList
     ;
 
 alternative_condition
     : course OR EQUIVALENT                          # courseAlternativeCondition
-    | '(' course (OR course)* ')' OR EQUIVALENT    # parenAlternativeCondition
+    | grade_course_list OR EQUIVALENT               # parenAlternativeCondition
     | grade_condition OR EQUIVALENT                 # gradeAlternativeCondition
     ;
 
@@ -146,9 +147,6 @@ degree_condition
     : 'an undergraduate degree in' title 'and adequate foundation/academic performance in a corresponding area'  # undergraduateDegreeCondition
     | 'Bachelor\'s or Master\'s degree in' degree_list                                                           # bachelorsOrMastersCondition
     ;
-
-
-
 
 
 // Core conditions
