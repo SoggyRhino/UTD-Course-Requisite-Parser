@@ -2,19 +2,20 @@
 
 ANTLR 4 based approach for parsing course requirements
 
-
 ---
 
-# Visitor Completion (14 / 138 = 9%)
+# Visitor Completion (16 / 151 = 10%)
 
 
 - [x] VisitAllGradeCourseList
+- [x] VisitCourseAlternativeCondition
 - [x] VisitCrossListedCourse
 - [x] VisitDegree
 - [x] VisitEitherGradeCourseList
 - [x] VisitFullCourseList
 - [x] VisitGpaGradeCondition
 - [x] VisitGradeAtLeastCondition
+- [x] VisitGradeCourseListAlternativeCondition
 - [x] VisitGradeListCondition
 - [x] VisitParenCourse
 - [x] VisitParenGradeCourseList
@@ -55,7 +56,6 @@ ANTLR 4 based approach for parsing course requirements
 - [ ] VisitCoreCondition
 - [ ] VisitCoreExpr
 - [ ] VisitCoreqReq
-- [ ] VisitCourseAlternativeCondition
 - [ ] VisitCourseExpr
 - [ ] VisitCourseRepeateExpr
 - [ ] VisitCourseRepeatLimitRule
@@ -80,7 +80,6 @@ ANTLR 4 based approach for parsing course requirements
 - [ ] VisitGpaExpr
 - [ ] VisitGpaInCourseCondition
 - [ ] VisitGpaRepeatReq
-- [ ] VisitGradeAlternativeCondition
 - [ ] VisitGradeExpr
 - [ ] VisitGradeLevelMajorStandingCondition
 - [ ] VisitGradeLevelPrefixMajorCondition
@@ -112,7 +111,6 @@ ANTLR 4 based approach for parsing course requirements
 - [ ] VisitNamedMajorCondition
 - [ ] VisitOfMultiPrefixDegreeSatisfactionRule
 - [ ] VisitOrExpr
-- [ ] VisitParenAlternativeCondition
 - [ ] VisitParenExpr
 - [ ] VisitPlacement
 - [ ] VisitPlacementScoreComparisonCondition

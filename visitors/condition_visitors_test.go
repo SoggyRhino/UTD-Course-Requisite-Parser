@@ -55,3 +55,34 @@ func TestVisitSimpleGradeCondition(t *testing.T) {
 	}
 
 }
+
+func TestVisitAlternateCondition(t *testing.T) {
+
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Single Course": {
+			Input: "BIOL 2311 or equivalent",
+			Result: conditions.NewAlternativeCondition(
+				conditions.NewCourseCondition("BIOL", "2311", ""),
+			),
+		},
+
+		"Multiple Courses": {
+			Input: "PHIL 1301 or PHIL 1305 or PHIL 1306 or equivalent",
+			Result: conditions.NewAlternativeCondition(
+				conditions.NewOrCondition(
+					conditions.NewCourseCondition("PHIL", "1301", ""),
+					conditions.NewCourseCondition("PHIL", "1305", ""),
+					conditions.NewCourseCondition("PHIL", "1306", ""),
+				),
+			),
+		},
+	}
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Alternative_condition), tc.Result)
+		})
+	}
+}

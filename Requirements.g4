@@ -100,14 +100,13 @@ grade_condition
 
 grade_course_list
     : 'either'? course (OR 'in'? course)*             #eitherGradeCourseList
-    |  course (AND course)*                              #allGradeCourseList
+    |  course (AND course)*                           #allGradeCourseList
     | '(' course (OR course)* ')'                     #parenGradeCourseList
     ;
 
 alternative_condition
-    : course OR EQUIVALENT                          # courseAlternativeCondition
-    | grade_course_list OR EQUIVALENT               # parenAlternativeCondition
-    | grade_condition OR EQUIVALENT                 # gradeAlternativeCondition
+    : course OR EQUIVALENT                    # courseAlternativeCondition
+    | course_list OR EQUIVALENT               # gradeCourseListAlternativeCondition
     ;
 
 

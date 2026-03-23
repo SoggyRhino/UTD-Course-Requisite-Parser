@@ -85,7 +85,7 @@ func (v *RequisiteVisitor) visitShorthandCourseList(ctx *parser.ShorthandCourseL
 
 // VisitEitherGradeCourseList
 //
-// Rule : 'either'? course (OR 'in'? course)*
+// Rule: 'either'? course (OR 'in'? course)*
 func (v *RequisiteVisitor) VisitEitherGradeCourseList(ctx *parser.EitherGradeCourseListContext) any {
 	return v.visitEitherGradeCourseList(ctx)
 }
@@ -100,7 +100,7 @@ func (v *RequisiteVisitor) visitEitherGradeCourseList(ctx *parser.EitherGradeCou
 
 // VisitAllGradeCourseList
 //
-// Rule : course (AND course)*
+// Rule: course (AND course)*
 func (v *RequisiteVisitor) VisitAllGradeCourseList(ctx *parser.AllGradeCourseListContext) any {
 	return v.visitAllGradeCourseList(ctx)
 }
@@ -115,7 +115,7 @@ func (v *RequisiteVisitor) visitAllGradeCourseList(ctx *parser.AllGradeCourseLis
 
 // VisitParenGradeCourseList
 //
-// Rule : '(' course (OR course)* ')'
+// Rule: '(' course (OR course)* ')'
 func (v *RequisiteVisitor) VisitParenGradeCourseList(ctx *parser.ParenGradeCourseListContext) any {
 	return v.visitParenGradeCourseList(ctx)
 }
