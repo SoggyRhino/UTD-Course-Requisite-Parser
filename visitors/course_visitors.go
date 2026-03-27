@@ -90,7 +90,7 @@ func (v *RequisiteVisitor) VisitEitherGradeCourseList(ctx *parser.EitherGradeCou
 	return v.visitEitherGradeCourseList(ctx)
 }
 
-func (v *RequisiteVisitor) visitEitherGradeCourseList(ctx *parser.EitherGradeCourseListContext) *conditions.OrCondition {
+func (v *RequisiteVisitor) visitEitherGradeCourseList(ctx *parser.EitherGradeCourseListContext) conditions.Condition {
 	list := make([]conditions.Condition, len(ctx.AllCourse()))
 	for i := range list {
 		list[i] = v.Visit(ctx.Course(i)).(conditions.Condition)
@@ -105,7 +105,7 @@ func (v *RequisiteVisitor) VisitAllGradeCourseList(ctx *parser.AllGradeCourseLis
 	return v.visitAllGradeCourseList(ctx)
 }
 
-func (v *RequisiteVisitor) visitAllGradeCourseList(ctx *parser.AllGradeCourseListContext) *conditions.AndCondition {
+func (v *RequisiteVisitor) visitAllGradeCourseList(ctx *parser.AllGradeCourseListContext) conditions.Condition {
 	list := make([]conditions.Condition, len(ctx.AllCourse()))
 	for i := range list {
 		list[i] = v.Visit(ctx.Course(i)).(conditions.Condition)
@@ -120,7 +120,7 @@ func (v *RequisiteVisitor) VisitParenGradeCourseList(ctx *parser.ParenGradeCours
 	return v.visitParenGradeCourseList(ctx)
 }
 
-func (v *RequisiteVisitor) visitParenGradeCourseList(ctx *parser.ParenGradeCourseListContext) *conditions.OrCondition {
+func (v *RequisiteVisitor) visitParenGradeCourseList(ctx *parser.ParenGradeCourseListContext) conditions.Condition {
 	list := make([]conditions.Condition, len(ctx.AllCourse()))
 	for i := range list {
 		list[i] = v.Visit(ctx.Course(i)).(conditions.Condition)

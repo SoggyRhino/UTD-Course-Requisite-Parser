@@ -1,12 +1,12 @@
 package conditions
 
-type GradeLevel int
+type GradeLevel string
 
 const (
-	Senior GradeLevel = iota
-	Junior
-	Sophomore
-	Freshman
+	Senior    GradeLevel = "Senior"
+	Junior    GradeLevel = "Junior"
+	Sophomore GradeLevel = "Sophomore"
+	Freshman  GradeLevel = "Freshman"
 )
 
 type GradeLevelCondition struct {

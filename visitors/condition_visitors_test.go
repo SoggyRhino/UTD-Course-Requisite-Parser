@@ -179,3 +179,54 @@ func TestVisitGpaCondition(t *testing.T) {
 		})
 	}
 }
+
+func TestVisitMajorCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		// prefixMajorCondition
+		"Single prefix majors only": {
+			Input:  "ENCS majors only",
+			Result: conditions.NewMajorCondition("ENCS"),
+		},
+		"Multiple prefixes": {
+			Input: "EE or CE or TE major",
+			Result: conditions.NewOrCondition(
+				conditions.NewMajorCondition("EE"),
+				conditions.NewMajorCondition("CE"),
+				conditions.NewMajorCondition("TE"),
+			),
+		},
+		"Prefix with degree type": {
+			Input:  "BBSC GRAD majors only",
+			Result: conditions.NewMajorConditionWithDegreeLevel("BBSC", conditions.Graduate),
+		},
+		"Grade level prefix major": {
+			Input:  "Freshman ENCS Majors only",
+			Result: conditions.NewMajorConditionWithGradeLevel("ENCS", conditions.Freshman),
+		},
+		"Degree type prefix major": {
+			Input:  "MS ITM Major only",
+			Result: conditions.NewMajorConditionWithDegreeLevel("ITM", conditions.Graduate),
+		},
+		"Named major": {
+			Input:  "Data Science major",
+			Result: conditions.NewMajorCondition("Data Science"),
+		},
+		"Named major only": {
+			Input:  "Visual and Performing Arts Major Only",
+			Result: conditions.NewMajorCondition("Visual and Performing Arts"),
+		},
+		"Named degree type major": {
+			Input:  "International Management Studies PhD majors only",
+			Result: conditions.NewMajorConditionWithDegreeLevel("International Management Studies", conditions.PhD),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Major_condition), tc.Result)
+		})
+	}
+}

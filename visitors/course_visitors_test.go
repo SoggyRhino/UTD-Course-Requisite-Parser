@@ -47,7 +47,7 @@ func TestVisitCourseList(t *testing.T) {
 
 	testCases := map[string]struct {
 		Input  string
-		Result *conditions.OrCondition
+		Result conditions.Condition
 	}{
 		"Full Course List": {
 			Input: "ACN 6340 or HCS 6340",
@@ -76,7 +76,7 @@ func TestVisitGradeCourseList(t *testing.T) {
 
 	testCases := map[string]struct {
 		Input  string
-		Result *conditions.OrCondition
+		Result conditions.Condition
 	}{
 		"Either": {
 			Input: "either MATH 2414 or in MATH 2418 or MATH 2419",

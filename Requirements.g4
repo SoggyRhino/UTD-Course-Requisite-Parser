@@ -135,11 +135,11 @@ gpa_condition
 
 // Major / degree conditions
 major_condition
-    : PREFIX (OR PREFIX)* (DIVISION_TYPE | DEGREE_TYPE)? GRADE_LEVEL? MAJOR_KW? ONLY_KW?    # prefixMajorCondition
+    : PREFIX (OR PREFIX)* (DIVISION_TYPE | DEGREE_LEVEL)? GRADE_LEVEL? MAJOR_KW? ONLY_KW?     # prefixMajorCondition
     | GRADE_LEVEL PREFIX MAJOR_KW? ONLY_KW?                                                  # gradeLevelPrefixMajorCondition
-    | DEGREE_TYPE PREFIX MAJOR_KW? ONLY_KW?                                                  # degreeTypePrefixMajorCondition
+    | DEGREE_LEVEL PREFIX MAJOR_KW? ONLY_KW?                                                  # degreeTypePrefixMajorCondition
     | degree MAJOR_KW ONLY_KW?                                                               # namedMajorCondition
-    | degree DEGREE_TYPE MAJOR_KW? ONLY_KW?                                                  # namedDegreeTypeMajorCondition
+    | degree DEGREE_LEVEL MAJOR_KW? ONLY_KW?                                                  # namedDegreeTypeMajorCondition
     ;
 
 degree_condition
@@ -287,13 +287,13 @@ gpa_repeate_rule
     ;
 
 degree_satisfaction_rule
-    : MAY_NOT_BE_USED_TO_SATISFY DEGREE_TYPE? PREFIX 'degree requirements'                                           # prefixDegreeSatisfactionRule
-    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements in' DEGREE_TYPE? title                                         # namedDegreeSatisfactionRule
-    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements' (OR? THE? DEGREE_TYPE? PREFIX)+ 'degree plans'               # multiPrefixDegreeSatisfactionRule
-    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' (OR? THE? DEGREE_TYPE? PREFIX)+ 'degree plans'           # multiPrefixForDegreeSatisfactionRule
-    | MAY_NOT_BE_USED_TO_SATISFY 'the degree requirements of' (OR? THE? DEGREE_TYPE? PREFIX)+ 'degree plans'        # ofMultiPrefixDegreeSatisfactionRule
-    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' DEGREE_TYPE? 'majors in'? 'the School of'? degree+       # schoolDegreeSatisfactionRule
-    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' DEGREE_TYPE? 'majors in'? 'Schools of'? degree_list+     # schoolsDegreeSatisfactionRule
+    : MAY_NOT_BE_USED_TO_SATISFY DEGREE_LEVEL? PREFIX 'degree requirements'                                           # prefixDegreeSatisfactionRule
+    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements in' DEGREE_LEVEL? title                                         # namedDegreeSatisfactionRule
+    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements' (OR? THE? DEGREE_LEVEL? PREFIX)+ 'degree plans'               # multiPrefixDegreeSatisfactionRule
+    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' (OR? THE? DEGREE_LEVEL? PREFIX)+ 'degree plans'           # multiPrefixForDegreeSatisfactionRule
+    | MAY_NOT_BE_USED_TO_SATISFY 'the degree requirements of' (OR? THE? DEGREE_LEVEL? PREFIX)+ 'degree plans'        # ofMultiPrefixDegreeSatisfactionRule
+    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' DEGREE_LEVEL? 'majors in'? 'the School of'? degree+       # schoolDegreeSatisfactionRule
+    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' DEGREE_LEVEL? 'majors in'? 'Schools of'? degree_list+     # schoolsDegreeSatisfactionRule
     | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements by students in' degree                                         # studentDegreeSatisfactionRule
     | MAY_NOT_BE_USED_TO_SATISFY 'mathematics requirements by students in Mathematics'                               # mathDegreeSatisfactionRule
     | degree_satisfaction_rule AND 'may not be used to satisfy electives'                                            # electivesDegreeSatisfactionRule
@@ -383,7 +383,7 @@ DIVISION_TYPE : [Uu]'ndergraduate' | 'Ugrd' | 'ugrd'
               | [Gg]'raduate'      | 'GRAD' | 'grad'
               | [Dd]'octoral'
               ;
-DEGREE_TYPE : 'MS' | 'BS' | 'PHD' | 'PhD';
+DEGREE_LEVEL : 'MS' | 'BS' | 'PHD' | 'PhD';
 MAJOR_KW    : [Mm]'ajor''s'?;
 ONLY_KW     : [Oo]'nly';
 STUDENTS    : [Ss]'tudents';

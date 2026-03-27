@@ -6,10 +6,11 @@ type OrCondition struct {
 	Conditions []Condition
 }
 
-func NewOrCondition(conditions ...Condition) *OrCondition {
-	return &OrCondition{
-		Conditions: conditions,
+func NewOrCondition(conditions ...Condition) Condition {
+	if len(conditions) == 1 {
+		return conditions[0]
 	}
+	return &OrCondition{Conditions: conditions}
 }
 
 func (o *OrCondition) Fulfils(userInfo UserInfo) (bool, error) {
@@ -37,10 +38,11 @@ type AndCondition struct {
 	Conditions []Condition
 }
 
-func NewAndCondition(conditions ...Condition) *AndCondition {
-	return &AndCondition{
-		Conditions: conditions,
+func NewAndCondition(conditions ...Condition) Condition {
+	if len(conditions) == 1 {
+		return conditions[0]
 	}
+	return &OrCondition{Conditions: conditions}
 }
 
 func (a *AndCondition) Fulfils(userInfo UserInfo) (bool, error) {

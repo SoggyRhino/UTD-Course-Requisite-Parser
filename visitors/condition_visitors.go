@@ -93,7 +93,7 @@ func (v *RequisiteVisitor) VisitGradeLevelStandingCondition(ctx *parser.GradeLev
 	return v.visitGradeLevelStandingCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGradeLevelStandingCondition(ctx *parser.GradeLevelStandingConditionContext) *conditions.OrCondition {
+func (v *RequisiteVisitor) visitGradeLevelStandingCondition(ctx *parser.GradeLevelStandingConditionContext) conditions.Condition {
 	conds := make([]conditions.Condition, len(ctx.AllGRADE_LEVEL()))
 	for i, gradeLevel := range ctx.AllGRADE_LEVEL() {
 		conds[i] = conditions.NewGradeLevelCondition(mapGradeLevel(gradeLevel.GetText()))
@@ -142,9 +142,7 @@ func (v *RequisiteVisitor) VisitPrefixGradeLevelStandingCondition(ctx *parser.Pr
 	return v.visitPrefixGradeLevelStandingCondition(ctx)
 }
 
-//todo post-process conditions and collapse and/ors with single conditions
-
-func (v *RequisiteVisitor) visitPrefixGradeLevelStandingCondition(ctx *parser.PrefixGradeLevelStandingConditionContext) *conditions.OrCondition {
+func (v *RequisiteVisitor) visitPrefixGradeLevelStandingCondition(ctx *parser.PrefixGradeLevelStandingConditionContext) conditions.Condition {
 	//todo map/standardize major/degree/school etc
 	degree := ctx.PREFIX().GetText()
 
@@ -214,4 +212,98 @@ func (v *RequisiteVisitor) VisitGpaInCourseCondition(ctx *parser.GpaInCourseCond
 func (v *RequisiteVisitor) visitGpaInCourseCondition(ctx *parser.GpaInCourseConditionContext) *conditions.GPACondition {
 	degree := v.Visit(ctx.Degree()).(string)
 	return conditions.NewGpaConditionWithDegree(mapGPA(ctx.GPA().GetText()), degree)
+}
+
+// ======================= Major condition =======================
+
+// VisitPrefixMajorCondition
+//
+// Rule: PREFIX (OR PREFIX)* (DIVISION_TYPE | DEGREE_LEVEL)? GRADE_LEVEL? MAJOR_KW? ONLY_KW?
+func (v *RequisiteVisitor) VisitPrefixMajorCondition(ctx *parser.PrefixMajorConditionContext) any {
+	return v.visitPrefixMajorCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitPrefixMajorCondition(ctx *parser.PrefixMajorConditionContext) conditions.Condition {
+
+	var degreeLevel conditions.DegreeLevel
+	if ctx.DIVISION_TYPE() != nil {
+		degreeLevel = mapDivisionType(ctx.DIVISION_TYPE().GetText())
+	} else if ctx.DEGREE_LEVEL() != nil {
+		degreeLevel = mapDegreeLevel(ctx.DEGREE_LEVEL().GetText())
+	}
+
+	var gradeLevel conditions.GradeLevel
+	if ctx.GRADE_LEVEL() != nil {
+		gradeLevel = mapGradeLevel(ctx.GRADE_LEVEL().GetText())
+	}
+
+	conds := make([]conditions.Condition, len(ctx.AllPREFIX()))
+	for i, prefix := range ctx.AllPREFIX() {
+		degree := prefix.GetText()
+
+		if degreeLevel != "" && gradeLevel != "" {
+			conds[i] = conditions.NewMajorConditionWithDegreeAndGradeLevel(degree, degreeLevel, gradeLevel)
+		} else if degreeLevel != "" {
+			conds[i] = conditions.NewMajorConditionWithDegreeLevel(degree, degreeLevel)
+		} else if gradeLevel != "" {
+			conds[i] = conditions.NewMajorConditionWithGradeLevel(degree, gradeLevel)
+		} else {
+			conds[i] = conditions.NewMajorCondition(degree)
+		}
+
+		conds[i] = conditions.NewMajorConditionWithDegreeLevel(degree, degreeLevel)
+	}
+	return conditions.NewOrCondition(conds...)
+}
+
+// VisitGradeLevelPrefixMajorCondition
+//
+// Rule: GRADE_LEVEL PREFIX MAJOR_KW? ONLY_KW?
+func (v *RequisiteVisitor) VisitGradeLevelPrefixMajorCondition(ctx *parser.GradeLevelPrefixMajorConditionContext) any {
+	return v.visitGradeLevelPrefixMajorCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitGradeLevelPrefixMajorCondition(ctx *parser.GradeLevelPrefixMajorConditionContext) *conditions.MajorCondition {
+	//todo map prefix to degree
+	degree := ctx.PREFIX().GetText()
+	gradeLevel := mapGradeLevel(ctx.GRADE_LEVEL().GetText())
+	return conditions.NewMajorConditionWithGradeLevel(degree, gradeLevel)
+}
+
+// VisitDegreeTypePrefixMajorCondition
+//
+// Rule: DEGREE_LEVEL PREFIX MAJOR_KW? ONLY_KW?
+func (v *RequisiteVisitor) VisitDegreeTypePrefixMajorCondition(ctx *parser.DegreeTypePrefixMajorConditionContext) any {
+	return v.visitDegreeTypePrefixMajorCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitDegreeTypePrefixMajorCondition(ctx *parser.DegreeTypePrefixMajorConditionContext) *conditions.MajorCondition {
+	degree := ctx.PREFIX().GetText()
+	gradeLevel := mapDegreeLevel(ctx.DEGREE_LEVEL().GetText())
+	return conditions.NewMajorConditionWithDegreeLevel(degree, gradeLevel)
+}
+
+// VisitNamedMajorCondition
+//
+// Rule: degree MAJOR_KW ONLY_KW?
+func (v *RequisiteVisitor) VisitNamedMajorCondition(ctx *parser.NamedMajorConditionContext) any {
+	return v.visitNamedMajorCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitNamedMajorCondition(ctx *parser.NamedMajorConditionContext) *conditions.MajorCondition {
+	degree := v.Visit(ctx.Degree()).(string)
+	return conditions.NewMajorCondition(degree)
+}
+
+// VisitNamedDegreeTypeMajorCondition
+//
+// Rule: degree DEGREE_LEVEL MAJOR_KW? ONLY_KW?
+func (v *RequisiteVisitor) VisitNamedDegreeTypeMajorCondition(ctx *parser.NamedDegreeTypeMajorConditionContext) any {
+	return v.visitNamedDegreeTypeMajorCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitNamedDegreeTypeMajorCondition(ctx *parser.NamedDegreeTypeMajorConditionContext) *conditions.MajorCondition {
+	degree := v.Visit(ctx.Degree()).(string)
+	degreeLevel := mapDegreeLevel(ctx.DEGREE_LEVEL().GetText())
+	return conditions.NewMajorConditionWithDegreeLevel(degree, degreeLevel)
 }

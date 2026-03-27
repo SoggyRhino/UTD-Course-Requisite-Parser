@@ -1,0 +1,47 @@
+package conditions
+
+type DegreeLevel string
+
+const (
+	Undergraduate DegreeLevel = "Undergraduate"
+	Graduate      DegreeLevel = "Graduate"
+	PhD           DegreeLevel = "PhD"
+)
+
+type MajorCondition struct {
+	Degree      string
+	DegreeLevel DegreeLevel
+	GradeLevel  GradeLevel
+}
+
+func NewMajorCondition(degree string) *MajorCondition {
+	return &MajorCondition{
+		Degree: degree,
+	}
+}
+
+func NewMajorConditionWithGradeLevel(degree string, level GradeLevel) *MajorCondition {
+	return &MajorCondition{
+		Degree:     degree,
+		GradeLevel: level,
+	}
+}
+
+func NewMajorConditionWithDegreeLevel(degree string, level DegreeLevel) *MajorCondition {
+	return &MajorCondition{
+		Degree:      degree,
+		DegreeLevel: level,
+	}
+}
+
+func NewMajorConditionWithDegreeAndGradeLevel(degree string, level DegreeLevel, gradeLevel GradeLevel) *MajorCondition {
+	return &MajorCondition{
+		Degree:      degree,
+		DegreeLevel: level,
+		GradeLevel:  gradeLevel,
+	}
+}
+
+func (m *MajorCondition) Fulfils(userInfo UserInfo) (bool, error) {
+	return false, nil
+}
