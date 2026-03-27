@@ -31,3 +31,20 @@ func NewGradeLevelConditionWithDegree(level GradeLevel, degree string) *GradeLev
 func (g *GradeLevelCondition) Fulfils(userInfo UserInfo) (bool, error) {
 	return false, nil
 }
+
+type GraduateStandingInCondition struct {
+	Degree string
+}
+
+func NewGraduateStandingInCondition() *GraduateStandingInCondition {
+	return &GraduateStandingInCondition{}
+}
+
+func NewGraduateStandingInConditionWithDegree(degree string) *GraduateStandingInCondition {
+	return &GraduateStandingInCondition{
+		Degree: degree}
+}
+
+func (g *GraduateStandingInCondition) Fulfils(userInfo UserInfo) (bool, error) {
+	return false, nil
+}

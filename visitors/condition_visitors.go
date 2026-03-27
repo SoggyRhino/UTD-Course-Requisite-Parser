@@ -155,3 +155,27 @@ func (v *RequisiteVisitor) visitPrefixGradeLevelStandingCondition(ctx *parser.Pr
 
 	return conditions.NewOrCondition(conds...)
 }
+
+// ======================= graduate standing condition =======================
+
+// VisitGraduateStandingInCondition
+//
+// Rule: 'Graduate standing in' degree
+func (v *RequisiteVisitor) VisitGraduateStandingInCondition(ctx *parser.GraduateStandingInConditionContext) any {
+	return v.visitGraduateStandingInCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitGraduateStandingInCondition(ctx *parser.GraduateStandingInConditionContext) *conditions.GraduateStandingInCondition {
+	return conditions.NewGraduateStandingInConditionWithDegree(ctx.Degree().GetText())
+}
+
+// VisitGraduateLevelStandingCondition
+//
+// Rule: 'Graduate Level Standing'
+func (v *RequisiteVisitor) VisitGraduateLevelStandingCondition(ctx *parser.GraduateLevelStandingConditionContext) any {
+	return v.visitGraduateLevelStandingCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitGraduateLevelStandingCondition(ctx *parser.GraduateLevelStandingConditionContext) *conditions.GraduateStandingInCondition {
+	return conditions.NewGraduateStandingInCondition()
+}

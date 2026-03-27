@@ -3,10 +3,17 @@
 ANTLR4 based approach for parsing course requirements. 
 
 Currently, the grammar successfully parses* 97% of the 25f course requirements. At this point adding the remaining 20 ish 
- inputs is not worth focusing on since they are all mostly unique edge cases or typos. 
+ inputs is not worth focusing on since they are all mostly unique edge cases or typos.
 
-> * Antlr parses them into an AST, not parsed yet into a useful json object. Currently, only 10% of the way of that but the hardest 
+> * Antlr parses them into an AST, not parsed yet into a useful JSON object. Currently, only 15% are done, but the hardest 
 > visitors are done.
+
+
+# Goals 
+
+ - [ ] 99% Coverage of all inputs 
+ - [x] Complete unit test coverage
+ - [ ] TypeScript binding/code for course validation (not parsing, from json)
 
 # Build 
 
@@ -41,8 +48,7 @@ test_grammar.bat
 
 ---
 
-# Visitor Completion (21 / 151 = 13%)
-
+# Visitor Completion (23 / 151 = 15%)
 - [x] VisitAllGradeCourseList
 - [x] VisitAtLeastGradeLevelStandingCondition
 - [x] VisitCourseAlternativeCondition
@@ -56,6 +62,8 @@ test_grammar.bat
 - [x] VisitGradeLevelMajorStandingCondition
 - [x] VisitGradeLevelStandingCondition
 - [x] VisitGradeListCondition
+- [x] VisitGraduateLevelStandingCondition
+- [x] VisitGraduateStandingInCondition
 - [x] VisitMinimumGradeLevelStandingCondition
 - [x] VisitParenCourse
 - [x] VisitParenGradeCourseList
@@ -123,9 +131,7 @@ test_grammar.bat
 - [ ] VisitGradeExpr
 - [ ] VisitGradeLevelPrefixMajorCondition
 - [ ] VisitGradeLevelStandingExpr
-- [ ] VisitGraduateLevelStandingCondition
 - [ ] VisitGraduateStandingExpr
-- [ ] VisitGraduateStandingInCondition
 - [ ] VisitGroup
 - [ ] VisitGroupCondition
 - [ ] VisitGroupExpr

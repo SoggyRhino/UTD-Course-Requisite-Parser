@@ -127,3 +127,29 @@ func TestVisitGradeLevelStandingCondition(t *testing.T) {
 	}
 
 }
+
+func TestVisitGraduateStandingCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Graduate standing in Biology": {
+			Input:  "Graduate standing in Biology",
+			Result: conditions.NewGraduateStandingInConditionWithDegree("Biology"),
+		},
+		"Graduate standing in Chemistry": {
+			Input:  "Graduate standing in chemistry",
+			Result: conditions.NewGraduateStandingInConditionWithDegree("chemistry"),
+		},
+		"Graduate Level Standing": {
+			Input:  "Graduate Level Standing",
+			Result: conditions.NewGraduateStandingInCondition(),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Graduate_standing_condition), tc.Result)
+		})
+	}
+}
