@@ -83,3 +83,75 @@ func (v *RequisiteVisitor) visitGradeCourseListAlternativeCondition(ctx *parser.
 	courseList := v.Visit(ctx.Course_list()).(conditions.Condition)
 	return conditions.NewAlternativeCondition(courseList)
 }
+
+// ======================= grade level standing condition condition =======================
+
+// VisitGradeLevelStandingCondition
+//
+// Rule: GRADE_LEVEL (OR GRADE_LEVEL)* LEVEL? STANDING
+func (v *RequisiteVisitor) VisitGradeLevelStandingCondition(ctx *parser.GradeLevelStandingConditionContext) any {
+	return v.visitGradeLevelStandingCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitGradeLevelStandingCondition(ctx *parser.GradeLevelStandingConditionContext) *conditions.OrCondition {
+	conds := make([]conditions.Condition, len(ctx.AllGRADE_LEVEL()))
+	for i, gradeLevel := range ctx.AllGRADE_LEVEL() {
+		conds[i] = conditions.NewGradeLevelCondition(mapGradeLevel(gradeLevel.GetText()))
+	}
+
+	return conditions.NewOrCondition(conds...)
+}
+
+// VisitGradeLevelMajorStandingCondition
+//
+// Rule: GRADE_LEVEL degree MAJOR_KW STANDING
+func (v *RequisiteVisitor) VisitGradeLevelMajorStandingCondition(ctx *parser.GradeLevelMajorStandingConditionContext) any {
+	return v.visitGradeLevelMajorStandingCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitGradeLevelMajorStandingCondition(ctx *parser.GradeLevelMajorStandingConditionContext) *conditions.GradeLevelCondition {
+	return conditions.NewGradeLevelConditionWithDegree(mapGradeLevel(ctx.GRADE_LEVEL().GetText()), ctx.Degree().GetText())
+}
+
+// VisitMinimumGradeLevelStandingCondition
+//
+// Rule: MINIMUM_OF GRADE_LEVEL STANDING
+func (v *RequisiteVisitor) VisitMinimumGradeLevelStandingCondition(ctx *parser.MinimumGradeLevelStandingConditionContext) any {
+	return v.visitMinimumGradeLevelStandingCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitMinimumGradeLevelStandingCondition(ctx *parser.MinimumGradeLevelStandingConditionContext) *conditions.GradeLevelCondition {
+	return conditions.NewGradeLevelCondition(mapGradeLevel(ctx.GRADE_LEVEL().GetText()))
+}
+
+// VisitAtLeastGradeLevelStandingCondition
+//
+// Rule: AT_LEAST GRADE_LEVEL (DASH LEVEL | LEVEL)? STANDING
+func (v *RequisiteVisitor) VisitAtLeastGradeLevelStandingCondition(ctx *parser.AtLeastGradeLevelStandingConditionContext) any {
+	return v.visitAtLeastGradeLevelStandingCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitAtLeastGradeLevelStandingCondition(ctx *parser.AtLeastGradeLevelStandingConditionContext) *conditions.GradeLevelCondition {
+	return conditions.NewGradeLevelCondition(mapGradeLevel(ctx.GRADE_LEVEL().GetText()))
+}
+
+// VisitPrefixGradeLevelStandingCondition
+//
+// Rule: PREFIX MAJOR_KW? ONLY_KW 'with' GRADE_LEVEL (OR GRADE_LEVEL)* LEVEL? STANDING
+func (v *RequisiteVisitor) VisitPrefixGradeLevelStandingCondition(ctx *parser.PrefixGradeLevelStandingConditionContext) any {
+	return v.visitPrefixGradeLevelStandingCondition(ctx)
+}
+
+//todo post-process conditions and collapse and/ors with single conditions
+
+func (v *RequisiteVisitor) visitPrefixGradeLevelStandingCondition(ctx *parser.PrefixGradeLevelStandingConditionContext) *conditions.OrCondition {
+	//todo map/standardize major/degree/school etc
+	degree := ctx.PREFIX().GetText()
+
+	conds := make([]conditions.Condition, len(ctx.AllGRADE_LEVEL()))
+	for i, gradeLevel := range ctx.AllGRADE_LEVEL() {
+		conds[i] = conditions.NewGradeLevelConditionWithDegree(mapGradeLevel(gradeLevel.GetText()), degree)
+	}
+
+	return conditions.NewOrCondition(conds...)
+}

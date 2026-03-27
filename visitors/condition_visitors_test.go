@@ -86,3 +86,44 @@ func TestVisitAlternateCondition(t *testing.T) {
 		})
 	}
 }
+
+func TestVisitGradeLevelStandingCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Basic": {
+			Input: "Junior or Senior standing",
+			Result: conditions.NewOrCondition(
+				conditions.NewGradeLevelCondition(conditions.Junior),
+				conditions.NewGradeLevelCondition(conditions.Senior),
+			),
+		},
+		"Senior History Major standing": {
+			Input:  "Senior History Major standing",
+			Result: conditions.NewGradeLevelConditionWithDegree(conditions.Senior, "History"),
+		},
+		"Minimum of Sophomore standing": {
+			Input:  "Minimum of Sophomore standing",
+			Result: conditions.NewGradeLevelCondition(conditions.Sophomore),
+		},
+		"At least Senior-level Standing": {
+			Input:  "At least Senior-level Standing",
+			Result: conditions.NewGradeLevelCondition(conditions.Senior),
+		},
+		"PSY Majors Only with Junior or Senior standing": {
+			Input: "PSY Majors Only with Junior or Senior standing",
+			Result: conditions.NewOrCondition(
+				conditions.NewGradeLevelConditionWithDegree(conditions.Junior, "PSY"),
+				conditions.NewGradeLevelConditionWithDegree(conditions.Senior, "PSY"),
+			),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Grade_level_standing_condition), tc.Result)
+		})
+	}
+
+}
