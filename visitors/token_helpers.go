@@ -2,6 +2,7 @@ package visitors
 
 import (
 	"parser/conditions"
+	"strconv"
 )
 
 // mapGradeLevel
@@ -23,6 +24,15 @@ func mapGradeLevel(text string) conditions.GradeLevel {
 	case "Senior", "senior", "Sr":
 		return conditions.Senior
 	default:
+		//todo look into better option than panic
 		panic("Invalid Grade Level: " + text)
 	}
+}
+
+func mapGPA(text string) float64 {
+	float, err := strconv.ParseFloat(text, 64)
+	if err != nil {
+		panic("Invalid GPA: " + text)
+	}
+	return float
 }

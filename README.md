@@ -46,9 +46,8 @@ extract_inputs.bat
 test_grammar.bat 
  - Runs the grammar and makes sure that changes don't make the grammar worse 
 
----
+# Visitor Completion (26 / 151 = 17%)
 
-# Visitor Completion (23 / 151 = 15%)
 - [x] VisitAllGradeCourseList
 - [x] VisitAtLeastGradeLevelStandingCondition
 - [x] VisitCourseAlternativeCondition
@@ -57,6 +56,7 @@ test_grammar.bat
 - [x] VisitEitherGradeCourseList
 - [x] VisitFullCourseList
 - [x] VisitGpaGradeCondition
+- [x] VisitGpaInCourseCondition
 - [x] VisitGradeAtLeastCondition
 - [x] VisitGradeCourseListAlternativeCondition
 - [x] VisitGradeLevelMajorStandingCondition
@@ -64,6 +64,7 @@ test_grammar.bat
 - [x] VisitGradeListCondition
 - [x] VisitGraduateLevelStandingCondition
 - [x] VisitGraduateStandingInCondition
+- [x] VisitMinimumGpaCondition
 - [x] VisitMinimumGradeLevelStandingCondition
 - [x] VisitParenCourse
 - [x] VisitParenGradeCourseList
@@ -72,6 +73,7 @@ test_grammar.bat
 - [x] VisitSimpleCourse
 - [x] VisitSimpleGradeCondition
 - [x] VisitTitle
+- [x] VisitUniversityGpaCondition
 - [ ] VisitAcademic
 - [ ] VisitAcademicPlanReq
 - [ ] VisitAleksScoreCondition
@@ -126,7 +128,6 @@ test_grammar.bat
 - [ ] VisitGoodAcademicStandingExpr
 - [ ] VisitGpa
 - [ ] VisitGpaExpr
-- [ ] VisitGpaInCourseCondition
 - [ ] VisitGpaRepeatReq
 - [ ] VisitGradeExpr
 - [ ] VisitGradeLevelPrefixMajorCondition
@@ -143,7 +144,6 @@ test_grammar.bat
 - [ ] VisitMajorExpr
 - [ ] VisitMajorReq
 - [ ] VisitMathDegreeSatisfactionRule
-- [ ] VisitMinimumGpaCondition
 - [ ] VisitMinimumHoursCondition
 - [ ] VisitMinimumHoursExpr
 - [ ] VisitMultiPrefixDegreeSatisfactionRule
@@ -191,7 +191,6 @@ test_grammar.bat
 - [ ] VisitStudentDegreeSatisfactionRule
 - [ ] VisitTopicsVaryRepeatRule
 - [ ] VisitUndergraduateDegreeCondition
-- [ ] VisitUniversityGpaCondition
 - [ ] VisitUpperDivisionClassesCondition
 - [ ] VisitUpperDivisionClassesExpr
 - [ ] VisitUpperDivisionCreditsCondition

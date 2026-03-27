@@ -153,3 +153,29 @@ func TestVisitGraduateStandingCondition(t *testing.T) {
 		})
 	}
 }
+
+func TestVisitGpaCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"University GPA": {
+			Input:  "A university grade point average of at least 2.750",
+			Result: conditions.NewGpaCondition(2.750),
+		},
+		"Minimum GPA requirement": {
+			Input:  "Minimum GPA requirement 3.200",
+			Result: conditions.NewGpaCondition(3.200),
+		},
+		"GPA in course": {
+			Input:  "a GPA of 3.000 or better in UTeach coursework",
+			Result: conditions.NewGpaConditionWithDegree(3.000, "UTeach"),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Gpa_condition), tc.Result)
+		})
+	}
+}

@@ -129,7 +129,7 @@ graduate_standing_condition
 gpa_condition
     : UNIVERSITY_GPA_KW GPA                                                 # universityGpaCondition
     | 'Minimum GPA requirement' GPA                                         # minimumGpaCondition
-    | 'a GPA of' GPA OR_BETTER 'in' (WORD | CAPITALIZED)+ COURSE_KW?       # gpaInCourseCondition
+    | 'a GPA of' GPA OR_BETTER 'in' degree COURSE_KW?                       # gpaInCourseCondition
     ;
 
 
@@ -403,7 +403,7 @@ CORE : 'Communication'
 
 
 CORE_KW   : [Cc]'ore';
-COURSE_KW : [Cc]'lass''es'? | [Cc]'ourse''s'?;
+COURSE_KW : [Cc]'lass''es'? | [Cc]'ourse''s'? | 'coursework';
 
 COMPLETION_OF       : [Cc]'ompletion of';
 SEMESTER_CREDIT_HOURS: 'semester credit hour''s'?;

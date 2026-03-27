@@ -6,14 +6,6 @@ import (
 	"testing"
 )
 
-/*
-course
-    : '(' course ')'						# parenCourse
-    | course '/' course						# crossListedCourse
-    | PREFIX ('/' PREFIX)* COURSE_NUMBER	# simpleCourse
-    ;
-*/
-
 func TestVisitCourse(t *testing.T) {
 
 	testCases := map[string]struct {
@@ -51,12 +43,6 @@ func TestVisitCourse(t *testing.T) {
 	}
 }
 
-/*
-	 course_list
-		: course (OR course)+                   # fullCourseList
-		| course (OR COURSE_NUMBER)+            # shorthandCourseList
-		;
-*/
 func TestVisitCourseList(t *testing.T) {
 
 	testCases := map[string]struct {
@@ -86,13 +72,6 @@ func TestVisitCourseList(t *testing.T) {
 	}
 }
 
-/*
-grade_course_list
-
-	: 'either'? course ((AND | OR) 'in'? course)*
-	| '(' course (OR course)* ')'
-	;
-*/
 func TestVisitGradeCourseList(t *testing.T) {
 
 	testCases := map[string]struct {

@@ -179,3 +179,39 @@ func (v *RequisiteVisitor) VisitGraduateLevelStandingCondition(ctx *parser.Gradu
 func (v *RequisiteVisitor) visitGraduateLevelStandingCondition(ctx *parser.GraduateLevelStandingConditionContext) *conditions.GraduateStandingInCondition {
 	return conditions.NewGraduateStandingInCondition()
 }
+
+// ======================= GPA condition =======================
+
+// VisitUniversityGpaCondition
+//
+// Rule: UNIVERSITY_GPA_KW GPA
+func (v *RequisiteVisitor) VisitUniversityGpaCondition(ctx *parser.UniversityGpaConditionContext) any {
+	return v.visitUniversityGpaCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitUniversityGpaCondition(ctx *parser.UniversityGpaConditionContext) *conditions.GPACondition {
+	return conditions.NewGpaCondition(mapGPA(ctx.GPA().GetText()))
+}
+
+// VisitMinimumGpaCondition
+//
+// Rule: 'Minimum GPA requirement' GPA
+func (v *RequisiteVisitor) VisitMinimumGpaCondition(ctx *parser.MinimumGpaConditionContext) any {
+	return v.visitMinimumGpaCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitMinimumGpaCondition(ctx *parser.MinimumGpaConditionContext) *conditions.GPACondition {
+	return conditions.NewGpaCondition(mapGPA(ctx.GPA().GetText()))
+}
+
+// VisitGpaInCourseCondition
+//
+// Rule: 'a GPA of' GPA OR_BETTER 'in' degree COURSE_KW?
+func (v *RequisiteVisitor) VisitGpaInCourseCondition(ctx *parser.GpaInCourseConditionContext) any {
+	return v.visitGpaInCourseCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitGpaInCourseCondition(ctx *parser.GpaInCourseConditionContext) *conditions.GPACondition {
+	degree := v.Visit(ctx.Degree()).(string)
+	return conditions.NewGpaConditionWithDegree(mapGPA(ctx.GPA().GetText()), degree)
+}
