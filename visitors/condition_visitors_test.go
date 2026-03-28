@@ -202,6 +202,17 @@ func TestVisitMajorCondition(t *testing.T) {
 			Input:  "BBSC GRAD majors only",
 			Result: conditions.NewMajorConditionWithDegreeLevel("BBSC", conditions.Graduate),
 		},
+		"Prefixes with grade level": {
+			Input: "CE or EE Freshman Majors only",
+			Result: conditions.NewOrCondition(
+				conditions.NewMajorConditionWithGradeLevel("CE", conditions.Freshman),
+				conditions.NewMajorConditionWithGradeLevel("EE", conditions.Freshman),
+			),
+		},
+		"Prefix with degree level": {
+			Input:  "ENCS PhD majors only",
+			Result: conditions.NewMajorConditionWithDegreeLevel("ENCS", conditions.PhD),
+		},
 		"Grade level prefix major": {
 			Input:  "Freshman ENCS Majors only",
 			Result: conditions.NewMajorConditionWithGradeLevel("ENCS", conditions.Freshman),
@@ -227,6 +238,32 @@ func TestVisitMajorCondition(t *testing.T) {
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Major_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitDegreeCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Undergraduate degree in Accounting": {
+			Input:  "an undergraduate degree in Accounting and adequate foundation/academic performance in a corresponding area",
+			Result: conditions.NewDegreeCondition("Accounting"),
+		},
+		"Bachelors or Masters degree in subject list": {
+			Input: "Bachelor's or Master's degree in psychology or computer science or neuroscience",
+			Result: conditions.NewOrCondition(
+				conditions.NewDegreeCondition("psychology"),
+				conditions.NewDegreeCondition("computer science"),
+				conditions.NewDegreeCondition("neuroscience"),
+			),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Degree_condition), tc.Result)
 		})
 	}
 }

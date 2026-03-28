@@ -45,3 +45,17 @@ func NewMajorConditionWithDegreeAndGradeLevel(degree string, level DegreeLevel, 
 func (m *MajorCondition) Fulfils(userInfo UserInfo) (bool, error) {
 	return false, nil
 }
+
+type DegreeCondition struct {
+	Degree string
+}
+
+func NewDegreeCondition(degree string) *DegreeCondition {
+	return &DegreeCondition{
+		Degree: degree,
+	}
+}
+
+func (d *DegreeCondition) Fulfils(userInfo UserInfo) (bool, error) {
+	return false, nil
+}

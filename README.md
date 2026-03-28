@@ -2,18 +2,11 @@
 
 ANTLR4 based approach for parsing course requirements. 
 
-Currently, the grammar successfully parses* 97% of the 25f course requirements. At this point adding the remaining 20 ish 
- inputs is not worth focusing on since they are all mostly unique edge cases or typos.
+Currently, the grammar successfully parses* ~97% of the unique, 25f course requirements. At this point adding the remaining 20 ish 
+ inputs is not worth focusing on since they are all mostly unique edge cases and/or typos.
 
-> * Antlr parses them into an AST, not parsed yet into a useful JSON object. Currently, only 15% are done, but the hardest 
+> \*Antlr parses them into an AST, not parsed yet into a useful JSON object. Currently, only 21% are done, but the hardest 
 > visitors are done.
-
-
-# Goals 
-
- - [ ] 99% Coverage of all inputs 
- - [x] Complete unit test coverage
- - [ ] TypeScript binding/code for course validation (not parsing, from json)
 
 # Build 
 
@@ -27,13 +20,13 @@ transform it into a useful object.
 
 Since antlr4 generates code, you must run the following command
 ```bash
-cd .. scripts
-./build.sh
+cd .. scripts 
+./build.bat
 ```
 
 # Scripts
 There are also some scripts in the scripts folder to help development. 
-> These are AI slop, but since it's not actually part of the project, I couldn't be bothered to make do better.
+> These are AI slop, but since it's not actually part of the project, I couldn't be bothered to make something better.
 
 completed.bat
  - Prints out how many visitors are created and how many are missing
@@ -46,13 +39,14 @@ extract_inputs.bat
 test_grammar.bat 
  - Runs the grammar and makes sure that changes don't make the grammar worse 
 
-# Visitor Completion (26 / 151 = 17%)
-
+# Visitor Completion (33 / 151 = 21%)
 - [x] VisitAllGradeCourseList
 - [x] VisitAtLeastGradeLevelStandingCondition
+- [x] VisitBachelorsOrMastersCondition
 - [x] VisitCourseAlternativeCondition
 - [x] VisitCrossListedCourse
 - [x] VisitDegree
+- [x] VisitDegreeTypePrefixMajorCondition
 - [x] VisitEitherGradeCourseList
 - [x] VisitFullCourseList
 - [x] VisitGpaGradeCondition
@@ -60,19 +54,24 @@ test_grammar.bat
 - [x] VisitGradeAtLeastCondition
 - [x] VisitGradeCourseListAlternativeCondition
 - [x] VisitGradeLevelMajorStandingCondition
+- [x] VisitGradeLevelPrefixMajorCondition
 - [x] VisitGradeLevelStandingCondition
 - [x] VisitGradeListCondition
 - [x] VisitGraduateLevelStandingCondition
 - [x] VisitGraduateStandingInCondition
 - [x] VisitMinimumGpaCondition
 - [x] VisitMinimumGradeLevelStandingCondition
+- [x] VisitNamedDegreeTypeMajorCondition
+- [x] VisitNamedMajorCondition
 - [x] VisitParenCourse
 - [x] VisitParenGradeCourseList
 - [x] VisitPrefixGradeLevelStandingCondition
+- [x] VisitPrefixMajorCondition
 - [x] VisitShorthandCourseList
 - [x] VisitSimpleCourse
 - [x] VisitSimpleGradeCondition
 - [x] VisitTitle
+- [x] VisitUndergraduateDegreeCondition
 - [x] VisitUniversityGpaCondition
 - [ ] VisitAcademic
 - [ ] VisitAcademicPlanReq
@@ -90,7 +89,6 @@ test_grammar.bat
 - [ ] VisitAppendAcademicPlanReq
 - [ ] VisitApScoreCondition
 - [ ] VisitApScoreExpr
-- [ ] VisitBachelorsOrMastersCondition
 - [ ] VisitBareRepeatRule
 - [ ] VisitBothHonorsCondition
 - [ ] VisitCombinedRepeatMaxHoursRule
@@ -115,7 +113,6 @@ test_grammar.bat
 - [ ] VisitCreditForReq
 - [ ] VisitDegreeExpr
 - [ ] VisitDegreeSatisfactionReq
-- [ ] VisitDegreeTypePrefixMajorCondition
 - [ ] VisitDepartmentConsentExpr
 - [ ] VisitElectivesDegreeSatisfactionRule
 - [ ] VisitEquivalentExpr
@@ -130,7 +127,6 @@ test_grammar.bat
 - [ ] VisitGpaExpr
 - [ ] VisitGpaRepeatReq
 - [ ] VisitGradeExpr
-- [ ] VisitGradeLevelPrefixMajorCondition
 - [ ] VisitGradeLevelStandingExpr
 - [ ] VisitGraduateStandingExpr
 - [ ] VisitGroup
@@ -149,9 +145,7 @@ test_grammar.bat
 - [ ] VisitMultiPrefixDegreeSatisfactionRule
 - [ ] VisitMultiPrefixForDegreeSatisfactionRule
 - [ ] VisitNamedDegreeSatisfactionRule
-- [ ] VisitNamedDegreeTypeMajorCondition
 - [ ] VisitNamedLivingLearningRule
-- [ ] VisitNamedMajorCondition
 - [ ] VisitOfMultiPrefixDegreeSatisfactionRule
 - [ ] VisitOrExpr
 - [ ] VisitParenExpr
@@ -162,7 +156,6 @@ test_grammar.bat
 - [ ] VisitPlacementTestExpr
 - [ ] VisitPrefixDegreeSatisfactionRule
 - [ ] VisitPrefixLivingLearningRule
-- [ ] VisitPrefixMajorCondition
 - [ ] VisitPreOrCoReq
 - [ ] VisitPrereqAndCoreqReq
 - [ ] VisitPrereqReq
@@ -190,7 +183,6 @@ test_grammar.bat
 - [ ] VisitSingleHonorsCondition
 - [ ] VisitStudentDegreeSatisfactionRule
 - [ ] VisitTopicsVaryRepeatRule
-- [ ] VisitUndergraduateDegreeCondition
 - [ ] VisitUpperDivisionClassesCondition
 - [ ] VisitUpperDivisionClassesExpr
 - [ ] VisitUpperDivisionCreditsCondition

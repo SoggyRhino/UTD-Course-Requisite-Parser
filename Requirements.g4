@@ -143,7 +143,7 @@ major_condition
     ;
 
 degree_condition
-    : 'an undergraduate degree in' title 'and adequate foundation/academic performance in a corresponding area'  # undergraduateDegreeCondition
+    : 'an undergraduate degree in' degree 'and adequate foundation/academic performance in a corresponding area'  # undergraduateDegreeCondition
     | 'Bachelor\'s or Master\'s degree in' degree_list                                                           # bachelorsOrMastersCondition
     ;
 

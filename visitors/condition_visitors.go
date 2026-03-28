@@ -84,7 +84,7 @@ func (v *RequisiteVisitor) visitGradeCourseListAlternativeCondition(ctx *parser.
 	return conditions.NewAlternativeCondition(courseList)
 }
 
-// ======================= grade level standing condition condition =======================
+// ======================= grade level standing condition =======================
 
 // VisitGradeLevelStandingCondition
 //
@@ -228,7 +228,9 @@ func (v *RequisiteVisitor) visitPrefixMajorCondition(ctx *parser.PrefixMajorCond
 	var degreeLevel conditions.DegreeLevel
 	if ctx.DIVISION_TYPE() != nil {
 		degreeLevel = mapDivisionType(ctx.DIVISION_TYPE().GetText())
-	} else if ctx.DEGREE_LEVEL() != nil {
+	}
+
+	if ctx.DEGREE_LEVEL() != nil {
 		degreeLevel = mapDegreeLevel(ctx.DEGREE_LEVEL().GetText())
 	}
 
@@ -250,8 +252,6 @@ func (v *RequisiteVisitor) visitPrefixMajorCondition(ctx *parser.PrefixMajorCond
 		} else {
 			conds[i] = conditions.NewMajorCondition(degree)
 		}
-
-		conds[i] = conditions.NewMajorConditionWithDegreeLevel(degree, degreeLevel)
 	}
 	return conditions.NewOrCondition(conds...)
 }
@@ -306,4 +306,34 @@ func (v *RequisiteVisitor) visitNamedDegreeTypeMajorCondition(ctx *parser.NamedD
 	degree := v.Visit(ctx.Degree()).(string)
 	degreeLevel := mapDegreeLevel(ctx.DEGREE_LEVEL().GetText())
 	return conditions.NewMajorConditionWithDegreeLevel(degree, degreeLevel)
+}
+
+// ======================= degree condition =======================
+
+// VisitUndergraduateDegreeCondition
+//
+// Rule: 'an undergraduate degree in' title 'and adequate foundation/academic performance in a corresponding area'
+func (v *RequisiteVisitor) VisitUndergraduateDegreeCondition(ctx *parser.UndergraduateDegreeConditionContext) any {
+	return v.visitUndergraduateDegreeCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitUndergraduateDegreeCondition(ctx *parser.UndergraduateDegreeConditionContext) *conditions.DegreeCondition {
+	return conditions.NewDegreeCondition(v.Visit(ctx.Degree()).(string))
+}
+
+// VisitBachelorsOrMastersCondition
+//
+// Rule: 'Bachelor\'s or Master\'s degree in' degree_list
+func (v *RequisiteVisitor) VisitBachelorsOrMastersCondition(ctx *parser.BachelorsOrMastersConditionContext) any {
+	return v.visitBachelorsOrMastersCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitBachelorsOrMastersCondition(ctx *parser.BachelorsOrMastersConditionContext) conditions.Condition {
+	degreeList := v.Visit(ctx.Degree_list()).([]string)
+	conds := make([]conditions.Condition, len(degreeList))
+	for i, degree := range degreeList {
+		conds[i] = conditions.NewDegreeCondition(degree)
+	}
+
+	return conditions.NewOrCondition(conds...)
 }
