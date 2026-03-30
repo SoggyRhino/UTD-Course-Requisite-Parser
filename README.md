@@ -42,7 +42,7 @@ test_grammar.bat
 
 # Visitor Progress
 
-- Implemented : 42
-- Missing     : 108
+- Implemented : 45
+- Missing     : 105
 - Total       : 150
-- Coverage    : 28%
+- Coverage    : 30%

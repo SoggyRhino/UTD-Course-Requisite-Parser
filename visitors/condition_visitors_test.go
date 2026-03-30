@@ -355,12 +355,21 @@ func TestVisitMinimumHoursCondition(t *testing.T) {
 				{Prefix: "DANC", Number: "2334"},
 			}),
 		},
-		"Minimum of 3 SCH in any combination": {
+		"Minimum of 3 SCH of": {
 			Input: "At least 3 semester credits of ECS 1192 or 2192 or 3292",
 			Result: conditions.NewCreditHoursFromCondition(3, []conditions.Course{
 				{Prefix: "ECS", Number: "1192"},
 				{Prefix: "ECS", Number: "2192"},
 				{Prefix: "ECS", Number: "3292"},
+			}),
+		},
+		"Minimum of 6 SCH from": {
+			Input: "6 semester credit hours from the following: LIT 2320 or LIT 2321 or LIT 2322 or LIT 2331",
+			Result: conditions.NewCreditHoursFromCondition(6, []conditions.Course{
+				{Prefix: "LIT", Number: "2320"},
+				{Prefix: "LIT", Number: "2321"},
+				{Prefix: "LIT", Number: "2322"},
+				{Prefix: "LIT", Number: "2331"},
 			}),
 		},
 	}

@@ -144,7 +144,7 @@ major_condition
 
 degree_condition
     : 'an undergraduate degree in' degree 'and adequate foundation/academic performance in a corresponding area'  # undergraduateDegreeCondition
-    | 'Bachelor\'s or Master\'s degree in' degree_list                                                           # bachelorsOrMastersCondition
+    | 'Bachelor\'s or Master\'s degree in' degree_list                                                            # bachelorsOrMastersCondition
     ;
 
 
@@ -157,12 +157,13 @@ any_core_condition : 'any' SMALL_INT SEMESTER_CREDIT_HOURS CORE_NUMBER CORE_KW C
 // Hours / credit conditions
 
 semester_credit_hours_condition
-    : INT SEMESTER_CREDIT_HOURS    # semesterCreditHoursCondition
+    : INT SEMESTER_CREDIT_HOURS                                              # semesterCreditHoursCondition
     ;
 
 minimum_hours_condition
     : MINIMUM_OF SMALL_INT SEMESTER_CREDIT_HOURS 'in any combination of' course_list   # minimumHoursCondition
     | AT_LEAST SMALL_INT 'semester credits of' course_list                             # minimumHoursOfCondition
+    | SMALL_INT SEMESTER_CREDIT_HOURS 'from the following' COLON course_list           # minimumHoursFromCondition
     ;
 
 upper_division_hours_condition
@@ -179,16 +180,15 @@ research_condition
     ;
 
 complete_n_condition
-    : COMPLETION_OF NUMBER_STRING 'of the following' COLON course_list      # completeNOfFollowingCondition
-    | NUMBER_STRING COURSE_KW 'from the following' DASH course_list         # completeNFromFollowingCondition
-    | SMALL_INT SEMESTER_CREDIT_HOURS 'from the following' COLON course_list # completeHoursFromFollowingCondition
+    : COMPLETION_OF NUMBER_STRING 'of the following' COLON course_list       # completeNOfFollowingCondition
+    | NUMBER_STRING COURSE_KW 'from the following' DASH course_list          # completeNFromFollowingCondition
     ;
 
 
 // Placement / score conditions
 
 placement_test_condition
-    : 'a'? placement_test_name SCORE_KW (LESS_THAN | GREATER_THAN) INT   # placementScoreComparisonCondition
+    : 'a'? placement_test_name SCORE_KW (LESS_THAN | GREATER_THAN) INT    # placementScoreComparisonCondition
     | 'a'? placement_test_name SCORE_KW 'of' INT DASH INT                 # placementScoreRangeCondition
     | 'a'? placement_test_name 'of'? INT OR_BETTER                        # placementScoreMinimumCondition
     ;
@@ -255,16 +255,16 @@ repeat_rule
     ;
 
 repeat_limit_hours_rule
-    : REPEAT_LIMIT DASH course ONLY_KW? 'may' ONLY_KW? 'be repeated' ONLY_KW? 'for'? 'a maximum of' SMALL_INT SEMESTER_CREDIT_HOURS          # repeatMaxHoursRule
-    | REPEAT_LIMIT DASH course ONLY_KW? 'may' ONLY_KW? 'be repeated' ONLY_KW? 'for'? SMALL_INT SEMESTER_CREDIT_HOURS 'maximum'                # repeatHoursMaxSuffixRule
+    : REPEAT_LIMIT DASH course ONLY_KW? 'may' ONLY_KW? 'be repeated' ONLY_KW? 'for'? 'a maximum of' SMALL_INT SEMESTER_CREDIT_HOURS                    # repeatMaxHoursRule
+    | REPEAT_LIMIT DASH course ONLY_KW? 'may' ONLY_KW? 'be repeated' ONLY_KW? 'for'? SMALL_INT SEMESTER_CREDIT_HOURS 'maximum'                         # repeatHoursMaxSuffixRule
     | course REPEAT_LIMIT DASH 'This' COURSE_KW ('may' | 'can') ONLY_KW? 'be repeated' ONLY_KW? 'for'? 'a maximum of' SMALL_INT SEMESTER_CREDIT_HOURS  # courseRepeatMaxHoursRule
-    | REPEAT_LIMIT DASH course AND course 'combined may only be repeated for a maximum of' SMALL_INT SEMESTER_CREDIT_HOURS                     # combinedRepeatMaxHoursRule
-    | course REPEAT_LIMIT DASH 'May be repeated for credit as topics vary' SMALL_INT SEMESTER_CREDIT_HOURS 'maximum'                          # topicsVaryRepeatRule
-    | course REPEAT_LIMIT                                                                                                                      # courseRepeatLimitRule
+    | REPEAT_LIMIT DASH course AND course 'combined may only be repeated for a maximum of' SMALL_INT SEMESTER_CREDIT_HOURS                             # combinedRepeatMaxHoursRule
+    | course REPEAT_LIMIT DASH 'May be repeated for credit as topics vary' SMALL_INT SEMESTER_CREDIT_HOURS 'maximum'                                   # topicsVaryRepeatRule
+    | course REPEAT_LIMIT                                                                                                                              # courseRepeatLimitRule
     ;
 
 repeat_limit_times_rule
-    : REPEAT_LIMIT DASH course 'may' ONLY_KW? 'be repeated up to' SMALL_INT 'times'         # repeatUpToTimesRule
+    : REPEAT_LIMIT DASH course 'may' ONLY_KW? 'be repeated up to' SMALL_INT 'times'          # repeatUpToTimesRule
     | REPEAT_LIMIT DASH course 'may' ONLY_KW? 'be repeated' 'a maximum of' SMALL_INT 'times' # repeatMaxTimesRule
     ;
 
@@ -282,8 +282,8 @@ gpa_repeate_rule
     ;
 
 degree_satisfaction_rule
-    : MAY_NOT_BE_USED_TO_SATISFY DEGREE_LEVEL? PREFIX 'degree requirements'                                           # prefixDegreeSatisfactionRule
-    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements in' DEGREE_LEVEL? title                                         # namedDegreeSatisfactionRule
+    : MAY_NOT_BE_USED_TO_SATISFY DEGREE_LEVEL? PREFIX 'degree requirements'                                          # prefixDegreeSatisfactionRule
+    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements in' DEGREE_LEVEL? title                                        # namedDegreeSatisfactionRule
     | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements' (OR? THE? DEGREE_LEVEL? PREFIX)+ 'degree plans'               # multiPrefixDegreeSatisfactionRule
     | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' (OR? THE? DEGREE_LEVEL? PREFIX)+ 'degree plans'           # multiPrefixForDegreeSatisfactionRule
     | MAY_NOT_BE_USED_TO_SATISFY 'the degree requirements of' (OR? THE? DEGREE_LEVEL? PREFIX)+ 'degree plans'        # ofMultiPrefixDegreeSatisfactionRule
@@ -299,7 +299,7 @@ credit_for_rule
     ;
 
 living_learning_rule
-    : PREFIX ('&' PREFIX)* LIVING_LEARNING_COMMUNITY   # prefixLivingLearningRule
+    : PREFIX ('&' PREFIX)* LIVING_LEARNING_COMMUNITY    # prefixLivingLearningRule
     | degree_list LIVING_LEARNING_COMMUNITY             # namedLivingLearningRule
     ;
 

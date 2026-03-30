@@ -116,3 +116,19 @@ func NewResearchCondition(hours int, degreeLevel DegreeLevel) *ResearchCondition
 func (c *ResearchCondition) Fulfils(userInfo UserInfo) (bool, error) {
 	return false, nil
 }
+
+type NCoursesCondition struct {
+	N       int
+	Courses []Course
+}
+
+func NewNCoursesCondition(n int, courses []Course) *NCoursesCondition {
+	return &NCoursesCondition{
+		N:       n,
+		Courses: courses,
+	}
+}
+
+func (c *NCoursesCondition) Fulfils(userInfo UserInfo) (bool, error) {
+	return false, nil
+}

@@ -415,6 +415,19 @@ func (v *RequisiteVisitor) visitMinimumHoursOfCondition(ctx *parser.MinimumHours
 	return conditions.NewCreditHoursFromCondition(hours, courses)
 }
 
+// VisitMinimumHoursFromCondition
+//
+// Rule: MINIMUM_OF SMALL_INT SEMESTER_CREDIT_HOURS 'in any combination of' course_list
+func (v *RequisiteVisitor) VisitMinimumHoursFromCondition(ctx *parser.MinimumHoursFromConditionContext) any {
+	return v.visitMinimumHoursFromCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitMinimumHoursFromCondition(ctx *parser.MinimumHoursFromConditionContext) *conditions.CreditHoursFromCondition {
+	hours := mapInt(ctx.SMALL_INT().GetText())
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions.Condition))
+	return conditions.NewCreditHoursFromCondition(hours, courses)
+}
+
 // ======================= Upper Division condition =======================
 
 // VisitUpperDivisionSCHCondition
@@ -468,4 +481,32 @@ func (v *RequisiteVisitor) visitResearchCondition(ctx *parser.ResearchConditionC
 	degreeLevel := mapDivisionType(ctx.DIVISION_TYPE().GetText())
 
 	return conditions.NewResearchCondition(count, degreeLevel)
+}
+
+// ======================= N courses condition =======================
+
+// VisitCompleteNOfFollowingCondition
+//
+// Rule: COMPLETION_OF NUMBER_STRING 'of the following' COLON course_list
+func (v *RequisiteVisitor) VisitCompleteNOfFollowingCondition(ctx *parser.CompleteNOfFollowingConditionContext) any {
+	return v.visitCompleteNOfFollowingCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitCompleteNOfFollowingCondition(ctx *parser.CompleteNOfFollowingConditionContext) *conditions.NCoursesCondition {
+	count := mapNumberString(ctx.NUMBER_STRING().GetText())
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions.Condition))
+	return conditions.NewNCoursesCondition(count, courses)
+}
+
+// VisitCompleteNFromFollowingCondition
+//
+// Rule: NUMBER_STRING COURSE_KW 'from the following' DASH course_list
+func (v *RequisiteVisitor) VisitCompleteNFromFollowingCondition(ctx *parser.CompleteNFromFollowingConditionContext) any {
+	return v.visitCompleteNFromFollowingCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitCompleteNFromFollowingCondition(ctx *parser.CompleteNFromFollowingConditionContext) *conditions.NCoursesCondition {
+	count := mapNumberString(ctx.NUMBER_STRING().GetText())
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions.Condition))
+	return conditions.NewNCoursesCondition(count, courses)
 }
