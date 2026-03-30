@@ -355,6 +355,14 @@ func TestVisitMinimumHoursCondition(t *testing.T) {
 				{Prefix: "DANC", Number: "2334"},
 			}),
 		},
+		"Minimum of 3 SCH in any combination": {
+			Input: "At least 3 semester credits of ECS 1192 or 2192 or 3292",
+			Result: conditions.NewCreditHoursFromCondition(3, []conditions.Course{
+				{Prefix: "ECS", Number: "1192"},
+				{Prefix: "ECS", Number: "2192"},
+				{Prefix: "ECS", Number: "3292"},
+			}),
+		},
 	}
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
@@ -399,6 +407,24 @@ func TestVisitUpperDivisionClassesCondition(t *testing.T) {
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Uppper_division_classes_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitResearchCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Undergraduate research": {
+			Input:  "at least 3 semester credit hours of undergraduate research",
+			Result: conditions.NewResearchCondition(3, conditions.Undergraduate),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Research_condition), tc.Result)
 		})
 	}
 }

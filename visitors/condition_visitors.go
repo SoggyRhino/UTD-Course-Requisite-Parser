@@ -455,3 +455,17 @@ func (v *RequisiteVisitor) visitUpperDivisionSingleCondition(ctx *parser.UpperDi
 	prefix := ctx.PREFIX().GetText()
 	return conditions.NewUpperDivisionCountCondition(1, prefix)
 }
+
+// VisitResearchCondition
+//
+// Rule: AT_LEAST SMALL_INT SEMESTER_CREDIT_HOURS 'of' DIVISION_TYPE 'research'
+func (v *RequisiteVisitor) VisitResearchCondition(ctx *parser.ResearchConditionContext) any {
+	return v.visitResearchCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitResearchCondition(ctx *parser.ResearchConditionContext) *conditions.ResearchCondition {
+	count := mapInt(ctx.SMALL_INT().GetText())
+	degreeLevel := mapDivisionType(ctx.DIVISION_TYPE().GetText())
+
+	return conditions.NewResearchCondition(count, degreeLevel)
+}
