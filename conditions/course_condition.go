@@ -22,3 +22,27 @@ func (c *CourseCondition) Fulfils(userInfo UserInfo) (bool, error) {
 func (c *CourseCondition) AppendGrade(grade Grade) {
 	c.MinGrade = grade
 }
+
+type CoreCondition struct {
+	CoreNumber    string
+	CoreTitle     string
+	SemesterHours int
+}
+
+func (c *CoreCondition) Fulfils(userInfo UserInfo) (bool, error) {
+	return false, nil
+}
+
+func NewCoreCondition(courseNumber, coreTitle string) *CoreCondition {
+	return &CoreCondition{
+		CoreNumber: courseNumber,
+		CoreTitle:  coreTitle,
+	}
+}
+
+func NewCoreConditionWithSemesterHours(courseNumber, coreTitle string, semesterHours int) *CoreCondition {
+	return &CoreCondition{
+		CoreNumber:    courseNumber,
+		SemesterHours: semesterHours,
+	}
+}

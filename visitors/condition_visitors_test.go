@@ -267,3 +267,56 @@ func TestVisitDegreeCondition(t *testing.T) {
 		})
 	}
 }
+
+func TestVisitCoreCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		// coreCondition
+		"Completion of core number": {
+			Input:  "Completion of 050 Creative Arts Core",
+			Result: conditions.NewCoreCondition("050", "Creative Arts"),
+		},
+		"Completion of bare core number": {
+			Input:  "Completion of 040 Core",
+			Result: conditions.NewCoreCondition("040", ""),
+		},
+		"Completion of core course": {
+			Input:  "Completion of an 010 core course",
+			Result: conditions.NewCoreCondition("010", ""),
+		},
+		"Completion of parenthesized core": {
+			Input:  "Completion of a 060 (American History) core course",
+			Result: conditions.NewCoreCondition("060", "American History"),
+		},
+		"Completion of multiword core": {
+			Input:  "Completion of 040 Language, Philosophy and Culture Core",
+			Result: conditions.NewCoreCondition("040", "Language, Philosophy and Culture"),
+		},
+		// anyCoreSCHCondition
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Core_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitAnyCoreSCHCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Any SCH core course": {
+			Input:  "any 3 semester credit hour 040 core course",
+			Result: conditions.NewCoreConditionWithSemesterHours("040", "", 3),
+		},
+	}
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Any_core_condition), tc.Result)
+		})
+	}
+}

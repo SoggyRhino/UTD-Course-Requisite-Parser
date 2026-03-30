@@ -3,6 +3,7 @@ package visitors
 import (
 	"parser/conditions"
 	"strconv"
+	"strings"
 )
 
 // mapGradeLevel maps variants of grade levels to a GradeLevel
@@ -72,4 +73,19 @@ func mapGPA(text string) float64 {
 		panic("Invalid GPA: " + text)
 	}
 	return float
+}
+
+func mapSmallInt(text string) int {
+	num, err := strconv.Atoi(text)
+	if err != nil || num < 0 {
+		panic("Invalid Small Int: " + text)
+	}
+	return num
+}
+
+func stripChars(text string, chars ...string) string {
+	for _, char := range chars {
+		text = strings.Replace(text, char, "", -1)
+	}
+	return text
 }

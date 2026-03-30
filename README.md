@@ -5,7 +5,7 @@ ANTLR4 based approach for parsing course requirements.
 Currently, the grammar successfully parses* ~97% of the unique, 25f course requirements. At this point adding the remaining 20 ish 
  inputs is not worth focusing on since they are all mostly unique edge cases and/or typos.
 
-> \*Antlr parses them into an AST, not parsed yet into a useful JSON object. Currently, only 21% are done, but the hardest 
+> \*Antlr parses them into an AST, not parsed yet into a useful JSON object. Currently, only 23% are done, but the hardest 
 > visitors are done.
 
 # Build 
@@ -39,10 +39,12 @@ extract_inputs.bat
 test_grammar.bat 
  - Runs the grammar and makes sure that changes don't make the grammar worse 
 
-# Visitor Completion (33 / 151 = 21%)
+# Visitor Completion (35 / 151 = 23%)
 - [x] VisitAllGradeCourseList
+- [x] VisitAnyCoreSCHCondition
 - [x] VisitAtLeastGradeLevelStandingCondition
 - [x] VisitBachelorsOrMastersCondition
+- [x] VisitCoreCondition
 - [x] VisitCourseAlternativeCondition
 - [x] VisitCrossListedCourse
 - [x] VisitDegree
@@ -83,7 +85,6 @@ test_grammar.bat
 - [ ] VisitAndExpr
 - [ ] VisitAndRepeateExpr
 - [ ] VisitAnyCoreExpr
-- [ ] VisitAnyCoreSCHCondition
 - [ ] VisitAnyMajorCourseExpr
 - [ ] VisitAnyPreviousMajorCourseCondition
 - [ ] VisitAppendAcademicPlanReq
@@ -96,12 +97,10 @@ test_grammar.bat
 - [ ] VisitCompleteNExpr
 - [ ] VisitCompleteNFromFollowingCondition
 - [ ] VisitCompleteNOfFollowingCondition
-- [ ] VisitCompletionOfCoreCondition
 - [ ] VisitComputerScholarsExpr
 - [ ] VisitComputerScholarsReq
 - [ ] VisitConcurrentEnrollmentCondition
 - [ ] VisitConcurrentEnrollmentExpr
-- [ ] VisitCoreCondition
 - [ ] VisitCoreExpr
 - [ ] VisitCoreqReq
 - [ ] VisitCourseExpr

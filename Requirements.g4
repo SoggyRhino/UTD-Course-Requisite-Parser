@@ -149,14 +149,9 @@ degree_condition
 
 
 // Core conditions
-core_condition
-    : COMPLETION_OF ('a' | 'an')? CORE_NUMBER (CORE | '(' CORE ')' )? CORE_KW COURSE_KW?   # coreCondition
-    ;
+core_condition : COMPLETION_OF ('a' | 'an')? CORE_NUMBER (CORE | '(' CORE ')' )? CORE_KW COURSE_KW?   # coreCondition;
 
-any_core_condition
-    : 'any' SMALL_INT SEMESTER_CREDIT_HOURS CORE_NUMBER CORE_KW COURSE_KW   # anyCoreSCHCondition
-    | COMPLETION_OF ('a' | 'an')? CORE_NUMBER CORE_KW COURSE_KW             # completionOfCoreCondition
-    ;
+any_core_condition : 'any' SMALL_INT SEMESTER_CREDIT_HOURS CORE_NUMBER CORE_KW COURSE_KW   # anyCoreSCHCondition;
 
 
 // Hours / credit conditions

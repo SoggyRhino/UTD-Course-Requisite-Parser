@@ -36,3 +36,10 @@ func (v *RequisiteVisitor) getText(ctx antlr.BaseParserRuleContext) string {
 
 	return ctx.GetStart().GetInputStream().GetTextFromInterval(antlr.Interval{Start: start, Stop: stop})
 }
+
+func (v *RequisiteVisitor) getTextOrDefault(node antlr.TerminalNode, str string) string {
+	if node != nil {
+		return node.GetText()
+	}
+	return str
+}

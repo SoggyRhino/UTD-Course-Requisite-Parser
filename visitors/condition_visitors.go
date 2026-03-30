@@ -3,6 +3,7 @@ package visitors
 import (
 	"parser/conditions"
 	"parser/parser"
+	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
 )
@@ -336,4 +337,38 @@ func (v *RequisiteVisitor) visitBachelorsOrMastersCondition(ctx *parser.Bachelor
 	}
 
 	return conditions.NewOrCondition(conds...)
+}
+
+// ======================= core condition =======================
+
+// VisitCoreCondition
+//
+// Rule: COMPLETION_OF ('a' | 'an')? CORE_NUMBER (CORE | '(' CORE ')' )? CORE_KW COURSE_KW?
+func (v *RequisiteVisitor) VisitCoreCondition(ctx *parser.CoreConditionContext) any {
+	return v.visitCoreCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitCoreCondition(ctx *parser.CoreConditionContext) *conditions.CoreCondition {
+	coreNumber := ctx.CORE_NUMBER().GetText()
+	coreTitle := stripChars(v.getTextOrDefault(ctx.CORE(), ""), "(", ")")
+	if strings.ToLower(coreTitle) == "core" {
+		coreTitle = ""
+	}
+
+	return conditions.NewCoreCondition(coreNumber, coreTitle)
+}
+
+// VisitAnyCoreSCHCondition
+//
+// Rule: 'any' SMALL_INT SEMESTER_CREDIT_HOURS CORE_NUMBER CORE_KW COURSE_KW
+func (v *RequisiteVisitor) VisitAnyCoreSCHCondition(ctx *parser.AnyCoreSCHConditionContext) any {
+	return v.visitAnyCoreSCHCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitAnyCoreSCHCondition(ctx *parser.AnyCoreSCHConditionContext) *conditions.CoreCondition {
+	hours := mapSmallInt(ctx.SMALL_INT().GetText())
+	coreNumber := ctx.CORE_NUMBER().GetText()
+
+	//todo map core number to title / vice versa
+	return conditions.NewCoreConditionWithSemesterHours(coreNumber, "", hours)
 }
