@@ -39,7 +39,7 @@ extract_inputs.bat
 test_grammar.bat 
  - Runs the grammar and makes sure that changes don't make the grammar worse 
 
-# Visitor Completion (37 / 151 = 24%)
+# Visitor Completion (39 / 151 = 26%)
 - [x] VisitAllGradeCourseList
 - [x] VisitAnyCoreSCHCondition
 - [x] VisitAtLeastGradeLevelStandingCondition
@@ -64,6 +64,7 @@ test_grammar.bat
 - [x] VisitMinimumGpaCondition
 - [x] VisitMinimumGradeLevelStandingCondition
 - [x] VisitMinimumHoursCondition
+- [x] VisitMinimumHoursOfCondition
 - [x] VisitNamedDegreeTypeMajorCondition
 - [x] VisitNamedMajorCondition
 - [x] VisitParenCourse
@@ -77,6 +78,7 @@ test_grammar.bat
 - [x] VisitTitle
 - [x] VisitUndergraduateDegreeCondition
 - [x] VisitUniversityGpaCondition
+- [x] VisitUpperDivisionSCHCondition
 - [ ] VisitAcademic
 - [ ] VisitAcademicPlanReq
 - [ ] VisitAleksScoreCondition
@@ -184,9 +186,7 @@ test_grammar.bat
 - [ ] VisitTopicsVaryRepeatRule
 - [ ] VisitUpperDivisionClassesCondition
 - [ ] VisitUpperDivisionClassesExpr
-- [ ] VisitUpperDivisionCreditsCondition
 - [ ] VisitUpperDivisionHoursExpr
-- [ ] VisitUpperDivisionSCHCondition
 - [ ] VisitUpperDivisionStandingExpr
 - [ ] VisitUteachConsentExpr
 - [ ] VisitWorkshopSectionCondition

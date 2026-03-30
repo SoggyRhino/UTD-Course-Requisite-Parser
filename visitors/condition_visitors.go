@@ -391,31 +391,40 @@ func (v *RequisiteVisitor) visitSemesterCreditHoursCondition(ctx *parser.Semeste
 
 // VisitMinimumHoursCondition
 //
-// Rule: MINIMUM_OF SMALL_INT SEMESTER_CREDIT_HOURS 'in any combination of' course_list
+// Rule: AT_LEAST SMALL_INT 'semester credits of' course_list
 func (v *RequisiteVisitor) VisitMinimumHoursCondition(ctx *parser.MinimumHoursConditionContext) any {
 	return v.visitMinimumHoursCondition(ctx)
 }
 
 func (v *RequisiteVisitor) visitMinimumHoursCondition(ctx *parser.MinimumHoursConditionContext) *conditions.CreditHoursFromCondition {
 	hours := mapInt(ctx.SMALL_INT().GetText())
-	courses := make([]conditions.Course, 0)
-
-	switch cond := v.Visit(ctx.Course_list()); cond := cond.(type) {
-	case *conditions.CourseCondition:
-		courses = []conditions.Course{cond.Course}
-	case *conditions.OrCondition:
-		for _, c := range cond.Conditions {
-			course := c.(*conditions.CourseCondition).Course
-			courses = append(courses, course)
-		}
-	case *conditions.AndCondition:
-		for _, c := range cond.Conditions {
-			course := c.(*conditions.CourseCondition).Course
-			courses = append(courses, course)
-		}
-	default:
-		panic("invalid course list")
-	}
-
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions.Condition))
 	return conditions.NewCreditHoursFromCondition(hours, courses)
+}
+
+// VisitMinimumHoursOfCondition
+//
+// Rule: MINIMUM_OF SMALL_INT SEMESTER_CREDIT_HOURS 'in any combination of' course_list
+func (v *RequisiteVisitor) VisitMinimumHoursOfCondition(ctx *parser.MinimumHoursOfConditionContext) any {
+	return v.visitMinimumHoursOfCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitMinimumHoursOfCondition(ctx *parser.MinimumHoursOfConditionContext) *conditions.CreditHoursFromCondition {
+	hours := mapInt(ctx.SMALL_INT().GetText())
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions.Condition))
+	return conditions.NewCreditHoursFromCondition(hours, courses)
+}
+
+// VisitUpperDivisionSCHCondition
+//
+// Rule: SMALL_INT 'SCH of upper-division' PREFIX COURSE_KW
+func (v *RequisiteVisitor) VisitUpperDivisionSCHCondition(ctx *parser.UpperDivisionSCHConditionContext) any {
+	return v.visitUpperDivisionSCHCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitUpperDivisionSCHCondition(ctx *parser.UpperDivisionSCHConditionContext) *conditions.UpperDivisionCreditHoursCondition {
+	hours := mapInt(ctx.SMALL_INT().GetText())
+	prefix := ctx.PREFIX().GetText()
+
+	return conditions.NewUpperDivisionCreditHoursCondition(hours, prefix)
 }

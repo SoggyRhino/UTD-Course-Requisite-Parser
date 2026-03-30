@@ -127,3 +127,26 @@ func (v *RequisiteVisitor) visitParenGradeCourseList(ctx *parser.ParenGradeCours
 	}
 	return conditions.NewOrCondition(list...)
 }
+
+func extractCoursesFromCourseList(condition conditions.Condition) []conditions.Course {
+	courses := make([]conditions.Course, 0)
+
+	switch cond := condition.(type) {
+	case *conditions.CourseCondition:
+		courses = []conditions.Course{cond.Course}
+	case *conditions.OrCondition:
+		for _, c := range cond.Conditions {
+			course := c.(*conditions.CourseCondition).Course
+			courses = append(courses, course)
+		}
+	case *conditions.AndCondition:
+		for _, c := range cond.Conditions {
+			course := c.(*conditions.CourseCondition).Course
+			courses = append(courses, course)
+		}
+	default:
+		panic("invalid course list")
+	}
+
+	return courses
+}

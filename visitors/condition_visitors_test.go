@@ -363,3 +363,20 @@ func TestVisitMinimumHoursCondition(t *testing.T) {
 	}
 
 }
+
+func TestVisitUpperDivisionHoursCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"SCH of upper-division prefix courses": {
+			Input:  "6 SCH of upper-division ARTS courses",
+			Result: conditions.NewUpperDivisionCreditHoursCondition(6, "ARTS"),
+		},
+	}
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Upper_division_hours_condition), tc.Result)
+		})
+	}
+}

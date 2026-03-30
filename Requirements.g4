@@ -162,11 +162,11 @@ semester_credit_hours_condition
 
 minimum_hours_condition
     : MINIMUM_OF SMALL_INT SEMESTER_CREDIT_HOURS 'in any combination of' course_list   # minimumHoursCondition
+    | AT_LEAST SMALL_INT 'semester credits of' course_list                             # minimumHoursOfCondition
     ;
 
 upper_division_hours_condition
     : SMALL_INT 'SCH of upper-division' PREFIX COURSE_KW        # upperDivisionSCHCondition
-    | AT_LEAST SMALL_INT 'semester credits of' course_list      # upperDivisionCreditsCondition
     ;
 
 uppper_division_classes_condition

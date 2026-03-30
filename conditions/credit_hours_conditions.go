@@ -29,3 +29,19 @@ func NewCreditHoursFromCondition(hours int, courses []Course) *CreditHoursFromCo
 func (c *CreditHoursFromCondition) Fulfils(userInfo UserInfo) (bool, error) {
 	return false, nil
 }
+
+type UpperDivisionCreditHoursCondition struct {
+	Hours  int
+	Prefix string
+}
+
+func NewUpperDivisionCreditHoursCondition(hours int, prefix string) *UpperDivisionCreditHoursCondition {
+	return &UpperDivisionCreditHoursCondition{
+		Hours:  hours,
+		Prefix: prefix,
+	}
+}
+
+func (c *UpperDivisionCreditHoursCondition) Fulfils(userInfo UserInfo) (bool, error) {
+	return false, nil
+}
