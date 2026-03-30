@@ -30,18 +30,26 @@ func (c *CreditHoursFromCondition) Fulfils(userInfo UserInfo) (bool, error) {
 	return false, nil
 }
 
-type UpperDivisionCreditHoursCondition struct {
+type UpperDivisionCoursesCondition struct {
 	Hours  int
+	Count  int
 	Prefix string
 }
 
-func NewUpperDivisionCreditHoursCondition(hours int, prefix string) *UpperDivisionCreditHoursCondition {
-	return &UpperDivisionCreditHoursCondition{
+func NewUpperDivisionCreditHoursCondition(hours int, prefix string) *UpperDivisionCoursesCondition {
+	return &UpperDivisionCoursesCondition{
 		Hours:  hours,
 		Prefix: prefix,
 	}
 }
 
-func (c *UpperDivisionCreditHoursCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func NewUpperDivisionCountCondition(count int, prefix string) *UpperDivisionCoursesCondition {
+	return &UpperDivisionCoursesCondition{
+		Count:  count,
+		Prefix: prefix,
+	}
+}
+
+func (c *UpperDivisionCoursesCondition) Fulfils(userInfo UserInfo) (bool, error) {
 	return false, nil
 }

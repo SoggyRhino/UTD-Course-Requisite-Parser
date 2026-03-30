@@ -170,8 +170,8 @@ upper_division_hours_condition
     ;
 
 uppper_division_classes_condition
-    : AT_LEAST NUMBER_STRING PREFIX UPPER_DIVISION_COURSE_NUMBER COURSE_KW   # upperDivisionClassesCondition
-    | 'a 4000-level' PREFIX COURSE_KW                                        # fourThousandLevelCondition
+    : AT_LEAST NUMBER_STRING PREFIX UPPER_DIVISION_COURSE_NUMBER COURSE_KW   # upperDivisionCountCondition
+    | 'a 4000-level' PREFIX COURSE_KW                                        # upperDivisionSingleCondition
     ;
 
 research_condition

@@ -84,6 +84,33 @@ func mapInt(text string) int {
 	return num
 }
 
+func mapNumberString(text string) int {
+	switch strings.ToLower(text) {
+	case "one":
+		return 1
+	case "two":
+		return 2
+	case "three":
+		return 3
+	case "four":
+		return 4
+	case "five":
+		return 5
+	case "six":
+		return 6
+	case "seven":
+		return 7
+	case "eight":
+		return 8
+	case "nine":
+		return 9
+	case "ten":
+		return 10
+	default:
+		panic("Invalid Number String: " + text)
+	}
+}
+
 func stripChars(text string, chars ...string) string {
 	for _, char := range chars {
 		text = strings.Replace(text, char, "", -1)

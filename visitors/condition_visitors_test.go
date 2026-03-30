@@ -380,3 +380,25 @@ func TestVisitUpperDivisionHoursCondition(t *testing.T) {
 		})
 	}
 }
+
+func TestVisitUpperDivisionClassesCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"At least three CS 43XX classes": {
+			Input:  "at least three CS 43XX classes",
+			Result: conditions.NewUpperDivisionCountCondition(3, "CS"),
+		},
+		"A 4000-level course": {
+			Input:  "a 4000-level HIST course",
+			Result: conditions.NewUpperDivisionCountCondition(1, "HIST"),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Uppper_division_classes_condition), tc.Result)
+		})
+	}
+}

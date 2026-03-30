@@ -415,6 +415,8 @@ func (v *RequisiteVisitor) visitMinimumHoursOfCondition(ctx *parser.MinimumHours
 	return conditions.NewCreditHoursFromCondition(hours, courses)
 }
 
+// ======================= Upper Division condition =======================
+
 // VisitUpperDivisionSCHCondition
 //
 // Rule: SMALL_INT 'SCH of upper-division' PREFIX COURSE_KW
@@ -422,9 +424,34 @@ func (v *RequisiteVisitor) VisitUpperDivisionSCHCondition(ctx *parser.UpperDivis
 	return v.visitUpperDivisionSCHCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitUpperDivisionSCHCondition(ctx *parser.UpperDivisionSCHConditionContext) *conditions.UpperDivisionCreditHoursCondition {
+func (v *RequisiteVisitor) visitUpperDivisionSCHCondition(ctx *parser.UpperDivisionSCHConditionContext) *conditions.UpperDivisionCoursesCondition {
 	hours := mapInt(ctx.SMALL_INT().GetText())
 	prefix := ctx.PREFIX().GetText()
 
 	return conditions.NewUpperDivisionCreditHoursCondition(hours, prefix)
+}
+
+// VisitUpperDivisionCountCondition
+//
+// Rule: AT_LEAST NUMBER_STRING PREFIX UPPER_DIVISION_COURSE_NUMBER COURSE_KW
+func (v *RequisiteVisitor) VisitUpperDivisionCountCondition(ctx *parser.UpperDivisionCountConditionContext) any {
+	return v.visitUpperDivisionCountCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitUpperDivisionCountCondition(ctx *parser.UpperDivisionCountConditionContext) *conditions.UpperDivisionCoursesCondition {
+	count := mapNumberString(ctx.NUMBER_STRING().GetText())
+	prefix := ctx.PREFIX().GetText()
+	return conditions.NewUpperDivisionCountCondition(count, prefix)
+}
+
+// VisitUpperDivisionSingleCondition
+//
+// Rule: 'a 4000-level' PREFIX COURSE_KW
+func (v *RequisiteVisitor) VisitUpperDivisionSingleCondition(ctx *parser.UpperDivisionSingleConditionContext) any {
+	return v.visitUpperDivisionSingleCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitUpperDivisionSingleCondition(ctx *parser.UpperDivisionSingleConditionContext) *conditions.UpperDivisionCoursesCondition {
+	prefix := ctx.PREFIX().GetText()
+	return conditions.NewUpperDivisionCountCondition(1, prefix)
 }
