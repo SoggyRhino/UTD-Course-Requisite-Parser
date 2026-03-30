@@ -5,7 +5,7 @@ ANTLR4 based approach for parsing course requirements.
 Currently, the grammar successfully parses* ~97% of the unique, 25f course requirements. At this point adding the remaining 20 ish 
  inputs is not worth focusing on since they are all mostly unique edge cases and/or typos.
 
-> \*Antlr parses them into an AST, not parsed yet into a useful JSON object. Currently, only 23% are done, but the hardest 
+> \*Antlr parses them into an AST, not parsed yet into a useful JSON object. Currently, only 24% are done, but the hardest 
 > visitors are done.
 
 # Build 
@@ -39,7 +39,7 @@ extract_inputs.bat
 test_grammar.bat 
  - Runs the grammar and makes sure that changes don't make the grammar worse 
 
-# Visitor Completion (35 / 151 = 23%)
+# Visitor Completion (37 / 151 = 24%)
 - [x] VisitAllGradeCourseList
 - [x] VisitAnyCoreSCHCondition
 - [x] VisitAtLeastGradeLevelStandingCondition
@@ -63,12 +63,14 @@ test_grammar.bat
 - [x] VisitGraduateStandingInCondition
 - [x] VisitMinimumGpaCondition
 - [x] VisitMinimumGradeLevelStandingCondition
+- [x] VisitMinimumHoursCondition
 - [x] VisitNamedDegreeTypeMajorCondition
 - [x] VisitNamedMajorCondition
 - [x] VisitParenCourse
 - [x] VisitParenGradeCourseList
 - [x] VisitPrefixGradeLevelStandingCondition
 - [x] VisitPrefixMajorCondition
+- [x] VisitSemesterCreditHoursCondition
 - [x] VisitShorthandCourseList
 - [x] VisitSimpleCourse
 - [x] VisitSimpleGradeCondition
@@ -139,7 +141,6 @@ test_grammar.bat
 - [ ] VisitMajorExpr
 - [ ] VisitMajorReq
 - [ ] VisitMathDegreeSatisfactionRule
-- [ ] VisitMinimumHoursCondition
 - [ ] VisitMinimumHoursExpr
 - [ ] VisitMultiPrefixDegreeSatisfactionRule
 - [ ] VisitMultiPrefixForDegreeSatisfactionRule
@@ -176,7 +177,6 @@ test_grammar.bat
 - [ ] VisitSchoolDegreeSatisfactionRule
 - [ ] VisitSchoolReq
 - [ ] VisitSchoolsDegreeSatisfactionRule
-- [ ] VisitSemesterCreditHoursCondition
 - [ ] VisitSemesterCreditHoursExpr
 - [ ] VisitSentence
 - [ ] VisitSingleHonorsCondition

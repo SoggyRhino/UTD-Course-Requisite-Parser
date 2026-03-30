@@ -366,9 +366,56 @@ func (v *RequisiteVisitor) VisitAnyCoreSCHCondition(ctx *parser.AnyCoreSCHCondit
 }
 
 func (v *RequisiteVisitor) visitAnyCoreSCHCondition(ctx *parser.AnyCoreSCHConditionContext) *conditions.CoreCondition {
-	hours := mapSmallInt(ctx.SMALL_INT().GetText())
+	hours := mapInt(ctx.SMALL_INT().GetText())
 	coreNumber := ctx.CORE_NUMBER().GetText()
 
 	//todo map core number to title / vice versa
 	return conditions.NewCoreConditionWithSemesterHours(coreNumber, "", hours)
+}
+
+// ======================= SCH condition =======================
+
+// VisitSemesterCreditHoursCondition
+//
+// Rule: INT SEMESTER_CREDIT_HOURS
+func (v *RequisiteVisitor) VisitSemesterCreditHoursCondition(ctx *parser.SemesterCreditHoursConditionContext) any {
+	return v.visitSemesterCreditHoursCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitSemesterCreditHoursCondition(ctx *parser.SemesterCreditHoursConditionContext) *conditions.CreditHoursCondition {
+	hours := mapInt(ctx.INT().GetText())
+	return conditions.NewCreditHoursCondition(hours)
+}
+
+// ======================= SCH in Courses condition =======================
+
+// VisitMinimumHoursCondition
+//
+// Rule: MINIMUM_OF SMALL_INT SEMESTER_CREDIT_HOURS 'in any combination of' course_list
+func (v *RequisiteVisitor) VisitMinimumHoursCondition(ctx *parser.MinimumHoursConditionContext) any {
+	return v.visitMinimumHoursCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitMinimumHoursCondition(ctx *parser.MinimumHoursConditionContext) *conditions.CreditHoursFromCondition {
+	hours := mapInt(ctx.SMALL_INT().GetText())
+	courses := make([]conditions.Course, 0)
+
+	switch cond := v.Visit(ctx.Course_list()); cond := cond.(type) {
+	case *conditions.CourseCondition:
+		courses = []conditions.Course{cond.Course}
+	case *conditions.OrCondition:
+		for _, c := range cond.Conditions {
+			course := c.(*conditions.CourseCondition).Course
+			courses = append(courses, course)
+		}
+	case *conditions.AndCondition:
+		for _, c := range cond.Conditions {
+			course := c.(*conditions.CourseCondition).Course
+			courses = append(courses, course)
+		}
+	default:
+		panic("invalid course list")
+	}
+
+	return conditions.NewCreditHoursFromCondition(hours, courses)
 }

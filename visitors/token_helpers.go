@@ -75,10 +75,11 @@ func mapGPA(text string) float64 {
 	return float
 }
 
-func mapSmallInt(text string) int {
+func mapInt(text string) int {
 	num, err := strconv.Atoi(text)
 	if err != nil || num < 0 {
-		panic("Invalid Small Int: " + text)
+		//todo look into if we need to separate small in and int
+		panic("Invalid Int: " + text)
 	}
 	return num
 }

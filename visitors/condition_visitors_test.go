@@ -320,3 +320,46 @@ func TestVisitAnyCoreSCHCondition(t *testing.T) {
 		})
 	}
 }
+
+func TestVisitCreditHoursCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		// semesterCreditHoursCondition
+		"90 semester credit hours": {
+			Input:  "90 semester credit hours",
+			Result: conditions.NewCreditHoursCondition(90),
+		},
+		"45 semester credit hours": {
+			Input:  "45 semester credit hours",
+			Result: conditions.NewCreditHoursCondition(45),
+		},
+	}
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Semester_credit_hours_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitMinimumHoursCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Minimum of 6 SCH in any combination": {
+			Input: "Minimum of 6 semester credit hours in any combination of DANC 2332 or DANC 2334",
+			Result: conditions.NewCreditHoursFromCondition(6, []conditions.Course{
+				{Prefix: "DANC", Number: "2332"},
+				{Prefix: "DANC", Number: "2334"},
+			}),
+		},
+	}
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Minimum_hours_condition), tc.Result)
+		})
+	}
+
+}
