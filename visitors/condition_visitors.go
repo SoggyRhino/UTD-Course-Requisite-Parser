@@ -510,3 +510,75 @@ func (v *RequisiteVisitor) visitCompleteNFromFollowingCondition(ctx *parser.Comp
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions.Condition))
 	return conditions.NewNCoursesCondition(count, courses)
 }
+
+// ======================= Placement Test condition =======================
+
+// VisitPlacementScoreComparisonCondition
+//
+// Rule: 'a'? placement_test_name SCORE_KW (LESS_THAN | GREATER_THAN) INT
+func (v *RequisiteVisitor) VisitPlacementScoreComparisonCondition(ctx *parser.PlacementScoreComparisonConditionContext) any {
+	return v.visitPlacementScoreComparisonCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitPlacementScoreComparisonCondition(ctx *parser.PlacementScoreComparisonConditionContext) *conditions.PlacementTestScoreCondition {
+	name := v.Visit(ctx.Placement_test_name()).(string)
+	score := mapInt(ctx.INT().GetText())
+
+	if ctx.LESS_THAN() != nil {
+		return conditions.NewPlacementTestScoreCondition(name, 0, score)
+	}
+	return conditions.NewPlacementTestScoreCondition(name, score, 100)
+}
+
+// VisitPlacementScoreRangeCondition
+//
+// Rule: 'a'? placement_test_name SCORE_KW 'of' INT DASH INT
+func (v *RequisiteVisitor) VisitPlacementScoreRangeCondition(ctx *parser.PlacementScoreRangeConditionContext) any {
+	return v.visitPlacementScoreRangeCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitPlacementScoreRangeCondition(ctx *parser.PlacementScoreRangeConditionContext) *conditions.PlacementTestScoreCondition {
+	name := v.Visit(ctx.Placement_test_name()).(string)
+	minScore := mapInt(ctx.INT(0).GetText())
+	maxScore := mapInt(ctx.INT(1).GetText())
+
+	return conditions.NewPlacementTestScoreCondition(name, minScore, maxScore)
+}
+
+// VisitPlacementScoreMinimumCondition
+//
+// Rule: 'a'? placement_test_name 'of'? INT OR_BETTER
+func (v *RequisiteVisitor) VisitPlacementScoreMinimumCondition(ctx *parser.PlacementScoreMinimumConditionContext) any {
+	return v.visitPlacementScoreMinimumCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitPlacementScoreMinimumCondition(ctx *parser.PlacementScoreMinimumConditionContext) *conditions.PlacementTestScoreCondition {
+	name := v.Visit(ctx.Placement_test_name()).(string)
+	score := mapInt(ctx.INT().GetText())
+
+	return conditions.NewPlacementTestScoreCondition(name, score, 100)
+}
+
+// VisitApScoreCondition
+//
+// Rule: 'AP score of' AT_LEAST SMALL_INT
+func (v *RequisiteVisitor) VisitApScoreCondition(ctx *parser.ApScoreConditionContext) any {
+	return v.visitApScoreCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitApScoreCondition(ctx *parser.ApScoreConditionContext) *conditions.APScoreCondition {
+	score := mapInt(ctx.SMALL_INT().GetText())
+	return conditions.NewAPScoreCondition(score)
+}
+
+// VisitAleksScoreCondition
+//
+// Rule: A_SCORE_OF INT '%' 'on ALEKS math placement exam'
+func (v *RequisiteVisitor) VisitAleksScoreCondition(ctx *parser.AleksScoreConditionContext) any {
+	return v.visitAleksScoreCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitAleksScoreCondition(ctx *parser.AleksScoreConditionContext) *conditions.AleksScoreCondition {
+	score := mapInt(ctx.INT().GetText())
+	return conditions.NewAleksScoreCondition(score)
+}

@@ -5,12 +5,6 @@ import (
 	"testing"
 )
 
-/*
-
-title : (CAPITALIZED | CORE)+ ( 'and' (CAPITALIZED | CORE)+ )* ;
-
-*/
-
 func TestVisitTitle(t *testing.T) {
 
 	testCases := map[string]struct {
@@ -35,13 +29,6 @@ func TestVisitTitle(t *testing.T) {
 	}
 }
 
-/*
-Note: Degree is not necessarily a degree, but more so a general name.
-Depending on context it can be a school.
-
-degree_atom : CAPITALIZED | CORE | WORD ;
-degree : degree_atom+ (AND degree_atom+)* ;
-*/
 func TestVisitDegree(t *testing.T) {
 	testCases := map[string]struct {
 		Input  string

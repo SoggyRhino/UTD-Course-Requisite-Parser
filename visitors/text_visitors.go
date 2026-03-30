@@ -41,3 +41,14 @@ func (v *RequisiteVisitor) visitDegreeList(ctx *parser.Degree_listContext) []str
 
 	return degrees
 }
+
+// VisitPlacement_test_name
+//
+// Rule : PREFIX PLACEMENT_KW TEST_KW | title PLACEMENT_KW TEST_KW?
+func (v *RequisiteVisitor) VisitPlacement_test_name(ctx *parser.Placement_test_nameContext) any {
+	return v.visitPlacementTestName(ctx)
+}
+
+func (v *RequisiteVisitor) visitPlacementTestName(ctx *parser.Placement_test_nameContext) string {
+	return v.getText(ctx.BaseParserRuleContext)
+}

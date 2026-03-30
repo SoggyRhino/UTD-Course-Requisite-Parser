@@ -437,3 +437,81 @@ func TestVisitResearchCondition(t *testing.T) {
 		})
 	}
 }
+
+func TestVisitPlacementTestCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Placement score less than": {
+			Input:  "Arabic Language Placement Test Score less than 20",
+			Result: conditions.NewPlacementTestScoreCondition("Arabic Language Placement Test", 0, 20),
+		},
+		"Placement score greater than": {
+			Input:  "Chinese Language Placement score greater than 80",
+			Result: conditions.NewPlacementTestScoreCondition("Chinese Language Placement", 80, 100),
+		},
+		"Placement score range": {
+			Input:  "Arabic Language Placement score of 20-39",
+			Result: conditions.NewPlacementTestScoreCondition("Arabic Language Placement", 20, 39),
+		},
+		"Placement score range with Test in name": {
+			Input:  "Japanese Language Place Test Score of 51-60",
+			Result: conditions.NewPlacementTestScoreCondition("Japanese Language Place Test", 51, 60),
+		},
+		"Placement score minimum": {
+			Input:  "CS Placement Test 70 or higher",
+			Result: conditions.NewPlacementTestScoreCondition("CS Placement Test", 70, 100),
+		},
+		"Placement score minimum with 'a' and 'of'": {
+			Input:  "a CS placement test of 70 or higher",
+			Result: conditions.NewPlacementTestScoreCondition("CS placement test", 70, 100),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Placement_test_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitApScoreCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"AP score of at least 4": {
+			Input:  "AP score of at least 4",
+			Result: conditions.NewAPScoreCondition(4),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Ap_score_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitAleksScoreCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Score of 35% on ALEKS": {
+			Input:  "A score of 35% on ALEKS math placement exam",
+			Result: conditions.NewAleksScoreCondition(35),
+		},
+		"Minimal placement score of 85% on ALEKS": {
+			Input:  "A minimal placement score of 85% on ALEKS math placement exam",
+			Result: conditions.NewAleksScoreCondition(85),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Aleks_score_condition), tc.Result)
+		})
+	}
+}
