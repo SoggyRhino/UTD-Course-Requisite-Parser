@@ -2,18 +2,10 @@ package conditions
 
 import "parser/utils"
 
-type DegreeLevel string
-
-const (
-	Undergraduate DegreeLevel = "Undergraduate"
-	Graduate      DegreeLevel = "Graduate"
-	PhD           DegreeLevel = "PhD"
-)
-
 type MajorCondition struct {
 	Degree      string
-	DegreeLevel DegreeLevel
-	GradeLevel  GradeLevel
+	DegreeLevel utils.DegreeLevel
+	GradeLevel  utils.GradeLevel
 }
 
 func NewMajorCondition(degree string) *MajorCondition {
@@ -22,21 +14,21 @@ func NewMajorCondition(degree string) *MajorCondition {
 	}
 }
 
-func NewMajorConditionWithGradeLevel(degree string, level GradeLevel) *MajorCondition {
+func NewMajorConditionWithGradeLevel(degree string, level utils.GradeLevel) *MajorCondition {
 	return &MajorCondition{
 		Degree:     degree,
 		GradeLevel: level,
 	}
 }
 
-func NewMajorConditionWithDegreeLevel(degree string, level DegreeLevel) *MajorCondition {
+func NewMajorConditionWithDegreeLevel(degree string, level utils.DegreeLevel) *MajorCondition {
 	return &MajorCondition{
 		Degree:      degree,
 		DegreeLevel: level,
 	}
 }
 
-func NewMajorConditionWithDegreeAndGradeLevel(degree string, level DegreeLevel, gradeLevel GradeLevel) *MajorCondition {
+func NewMajorConditionWithDegreeAndGradeLevel(degree string, level utils.DegreeLevel, gradeLevel utils.GradeLevel) *MajorCondition {
 	return &MajorCondition{
 		Degree:      degree,
 		DegreeLevel: level,

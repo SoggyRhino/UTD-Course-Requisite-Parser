@@ -96,27 +96,27 @@ func TestVisitGradeLevelStandingCondition(t *testing.T) {
 		"Basic": {
 			Input: "Junior or Senior standing",
 			Result: conditions.NewOrCondition(
-				conditions.NewGradeLevelCondition(conditions.Junior),
-				conditions.NewGradeLevelCondition(conditions.Senior),
+				conditions.NewGradeLevelCondition(utils.Junior),
+				conditions.NewGradeLevelCondition(utils.Senior),
 			),
 		},
 		"Senior History Major standing": {
 			Input:  "Senior History Major standing",
-			Result: conditions.NewGradeLevelConditionWithDegree(conditions.Senior, "History"),
+			Result: conditions.NewGradeLevelConditionWithDegree(utils.Senior, "History"),
 		},
 		"Minimum of Sophomore standing": {
 			Input:  "Minimum of Sophomore standing",
-			Result: conditions.NewGradeLevelCondition(conditions.Sophomore),
+			Result: conditions.NewGradeLevelCondition(utils.Sophomore),
 		},
 		"At least Senior-level Standing": {
 			Input:  "At least Senior-level Standing",
-			Result: conditions.NewGradeLevelCondition(conditions.Senior),
+			Result: conditions.NewGradeLevelCondition(utils.Senior),
 		},
 		"PSY Majors Only with Junior or Senior standing": {
 			Input: "PSY Majors Only with Junior or Senior standing",
 			Result: conditions.NewOrCondition(
-				conditions.NewGradeLevelConditionWithDegree(conditions.Junior, "PSY"),
-				conditions.NewGradeLevelConditionWithDegree(conditions.Senior, "PSY"),
+				conditions.NewGradeLevelConditionWithDegree(utils.Junior, "PSY"),
+				conditions.NewGradeLevelConditionWithDegree(utils.Senior, "PSY"),
 			),
 		},
 	}
@@ -201,26 +201,26 @@ func TestVisitMajorCondition(t *testing.T) {
 		},
 		"Prefix with degree type": {
 			Input:  "BBSC GRAD majors only",
-			Result: conditions.NewMajorConditionWithDegreeLevel("BBSC", conditions.Graduate),
+			Result: conditions.NewMajorConditionWithDegreeLevel("BBSC", utils.Graduate),
 		},
 		"Prefixes with grade level": {
 			Input: "CE or EE Freshman Majors only",
 			Result: conditions.NewOrCondition(
-				conditions.NewMajorConditionWithGradeLevel("CE", conditions.Freshman),
-				conditions.NewMajorConditionWithGradeLevel("EE", conditions.Freshman),
+				conditions.NewMajorConditionWithGradeLevel("CE", utils.Freshman),
+				conditions.NewMajorConditionWithGradeLevel("EE", utils.Freshman),
 			),
 		},
 		"Prefix with degree level": {
 			Input:  "ENCS PhD majors only",
-			Result: conditions.NewMajorConditionWithDegreeLevel("ENCS", conditions.PhD),
+			Result: conditions.NewMajorConditionWithDegreeLevel("ENCS", utils.PhD),
 		},
 		"Grade level prefix major": {
 			Input:  "Freshman ENCS Majors only",
-			Result: conditions.NewMajorConditionWithGradeLevel("ENCS", conditions.Freshman),
+			Result: conditions.NewMajorConditionWithGradeLevel("ENCS", utils.Freshman),
 		},
 		"Degree type prefix major": {
 			Input:  "MS ITM Major only",
-			Result: conditions.NewMajorConditionWithDegreeLevel("ITM", conditions.Graduate),
+			Result: conditions.NewMajorConditionWithDegreeLevel("ITM", utils.Graduate),
 		},
 		"Named major": {
 			Input:  "Data Science major",
@@ -232,7 +232,7 @@ func TestVisitMajorCondition(t *testing.T) {
 		},
 		"Named degree type major": {
 			Input:  "International Management Studies PhD majors only",
-			Result: conditions.NewMajorConditionWithDegreeLevel("International Management Studies", conditions.PhD),
+			Result: conditions.NewMajorConditionWithDegreeLevel("International Management Studies", utils.PhD),
 		},
 	}
 
@@ -428,7 +428,7 @@ func TestVisitResearchCondition(t *testing.T) {
 	}{
 		"Undergraduate research": {
 			Input:  "at least 3 semester credit hours of undergraduate research",
-			Result: conditions.NewResearchCondition(3, conditions.Undergraduate),
+			Result: conditions.NewResearchCondition(3, utils.Undergraduate),
 		},
 	}
 
@@ -556,24 +556,24 @@ func TestVisitStudentGroupCondition(t *testing.T) {
 		"Students in both groups": {
 			Input: "Students in both Liberal Arts Honors /Collegium V Honors Group only",
 			Result: conditions.NewAndCondition(
-				conditions.NewStudentGroupCondition(conditions.LiberalArtsHonors),
-				conditions.NewStudentGroupCondition(conditions.CollegeVHonors),
+				conditions.NewStudentGroupCondition(utils.LiberalArtsHonors),
+				conditions.NewStudentGroupCondition(utils.CollegeVHonors),
 			),
 		},
 		"Multiple groups": {
 			Input: "SCVG and DLAH student groups only",
 			Result: conditions.NewOrCondition(
-				conditions.NewStudentGroupCondition(conditions.SCVG),
-				conditions.NewStudentGroupCondition(conditions.DLAH),
+				conditions.NewStudentGroupCondition(utils.SCVG),
+				conditions.NewStudentGroupCondition(utils.DLAH),
 			),
 		},
 		"CV Honors students only": {
 			Input:  "CV Honors Students only",
-			Result: conditions.NewStudentGroupCondition(conditions.CollegeVHonors),
+			Result: conditions.NewStudentGroupCondition(utils.CollegeVHonors),
 		},
 		"SCVG group": {
 			Input:  "SCVG Student Group",
-			Result: conditions.NewStudentGroupCondition(conditions.SCVG),
+			Result: conditions.NewStudentGroupCondition(utils.SCVG),
 		},
 	}
 

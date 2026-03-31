@@ -151,6 +151,9 @@ func (v *RequisiteVisitor) visitRepeatMaxTimesRule(ctx *parser.RepeatMaxTimesRul
 	return rules.NewRepeatRule(count, 0, courses, "")
 }
 
+// VisitGpaRepeatRule
+//
+// Rule: 'GPA Repeat Restriction' DASH course
 func (v *RequisiteVisitor) VisitGpaRepeatRule(ctx *parser.GpaRepeatRuleContext) any {
 	return v.visitGpaRepeatRule(ctx)
 }
@@ -158,4 +161,167 @@ func (v *RequisiteVisitor) VisitGpaRepeatRule(ctx *parser.GpaRepeatRuleContext) 
 func (v *RequisiteVisitor) visitGpaRepeatRule(ctx *parser.GpaRepeatRuleContext) *rules.GpaRepeatRule {
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
 	return rules.NewGpaRepeatRule(courses[0])
+}
+
+// ======================= Degree Satisfaction Rule ======================
+
+// VisitPrefixDegreeSatisfactionRule
+//
+// Rule: MAY_NOT_BE_USED_TO_SATISFY DEGREE_LEVEL? PREFIX 'degree requirements'
+func (v *RequisiteVisitor) VisitPrefixDegreeSatisfactionRule(ctx *parser.PrefixDegreeSatisfactionRuleContext) any {
+	return v.visitPrefixDegreeSatisfactionRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitPrefixDegreeSatisfactionRule(ctx *parser.PrefixDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
+	prefix := ctx.PREFIX().GetText()
+	degreeLevel := mapDegreeLevel(v.getTextOrDefault(ctx.DEGREE_LEVEL(), ""))
+	return rules.NewDegreeSatisfactionRuleFromPrefix([]string{prefix}, degreeLevel)
+}
+
+// VisitNamedDegreeSatisfactionRule
+//
+// Rule: MAY_NOT_BE_USED_TO_SATISFY 'degree requirements in' DEGREE_LEVEL? degree
+func (v *RequisiteVisitor) VisitNamedDegreeSatisfactionRule(ctx *parser.NamedDegreeSatisfactionRuleContext) any {
+	return v.visitNamedDegreeSatisfactionRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitNamedDegreeSatisfactionRule(ctx *parser.NamedDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
+	degree := v.Visit(ctx.Degree()).(string)
+	degreeLevel := mapDegreeLevel(v.getTextOrDefault(ctx.DEGREE_LEVEL(), ""))
+	return rules.NewDegreeSatisfactionRuleFromDegree([]string{degree}, degreeLevel)
+}
+
+// VisitMultiPrefixForDegreeSatisfactionRule
+//
+// Rule: MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' (OR? THE? DEGREE_LEVEL? PREFIX)+ 'degree plans'
+func (v *RequisiteVisitor) VisitMultiPrefixForDegreeSatisfactionRule(ctx *parser.MultiPrefixForDegreeSatisfactionRuleContext) any {
+	return v.visitMultiPrefixForDegreeSatisfactionRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitMultiPrefixForDegreeSatisfactionRule(ctx *parser.MultiPrefixForDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
+	prefixes := make([]string, 0, len(ctx.AllPREFIX()))
+	for _, p := range ctx.AllPREFIX() {
+		prefixes = append(prefixes, p.GetText())
+	}
+	degreeLevels := ctx.AllDEGREE_LEVEL()
+	degreeLevel := mapDegreeLevel(v.getTextOrDefault(v.firstOrNil(degreeLevels), ""))
+	return rules.NewDegreeSatisfactionRuleFromPrefix(prefixes, degreeLevel)
+
+}
+
+// VisitOfMultiPrefixDegreeSatisfactionRule
+//
+// Rule: MAY_NOT_BE_USED_TO_SATISFY 'the degree requirements of' (OR? THE? DEGREE_LEVEL? PREFIX)+ 'degree plans'
+func (v *RequisiteVisitor) VisitOfMultiPrefixDegreeSatisfactionRule(ctx *parser.OfMultiPrefixDegreeSatisfactionRuleContext) any {
+	return v.visitOfMultiPrefixDegreeSatisfactionRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitOfMultiPrefixDegreeSatisfactionRule(ctx *parser.OfMultiPrefixDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
+	prefixes := make([]string, 0, len(ctx.AllPREFIX()))
+	for _, p := range ctx.AllPREFIX() {
+		prefixes = append(prefixes, p.GetText())
+	}
+	degreeLevels := ctx.AllDEGREE_LEVEL()
+	degreeLevel := mapDegreeLevel(v.getTextOrDefault(v.firstOrNil(degreeLevels), ""))
+	return rules.NewDegreeSatisfactionRuleFromPrefix(prefixes, degreeLevel)
+}
+
+// VisitSchoolDegreeSatisfactionRule
+//
+// Rule: MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' DEGREE_LEVEL? 'majors in'? 'the School of' degree+
+func (v *RequisiteVisitor) VisitSchoolDegreeSatisfactionRule(ctx *parser.SchoolDegreeSatisfactionRuleContext) any {
+	return v.visitSchoolDegreeSatisfactionRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitSchoolDegreeSatisfactionRule(ctx *parser.SchoolDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
+	schools := make([]string, 0, len(ctx.AllDegree()))
+	for _, d := range ctx.AllDegree() {
+		schools = append(schools, v.Visit(d).(string))
+	}
+	degreeLevel := mapDegreeLevel(v.getTextOrDefault(ctx.DEGREE_LEVEL(), ""))
+	return rules.NewDegreeSatisfactionRuleFromSchool(schools, degreeLevel)
+}
+
+// VisitSchoolsDegreeSatisfactionRule
+//
+// Rule: MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' DEGREE_LEVEL? 'majors in'? 'Schools of'? degree_list+
+func (v *RequisiteVisitor) VisitSchoolsDegreeSatisfactionRule(ctx *parser.SchoolsDegreeSatisfactionRuleContext) any {
+	return v.visitSchoolsDegreeSatisfactionRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitSchoolsDegreeSatisfactionRule(ctx *parser.SchoolsDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
+	schools := make([]string, 0)
+	for _, degrees := range ctx.AllDegree_list() {
+		courses := v.Visit(degrees).([]string)
+		schools = append(schools, courses...)
+	}
+	degreeLevel := mapDegreeLevel(v.getTextOrDefault(ctx.DEGREE_LEVEL(), ""))
+	return rules.NewDegreeSatisfactionRuleFromSchool(schools, degreeLevel)
+}
+
+// VisitStudentDegreeSatisfactionRule
+//
+// Rule: MAY_NOT_BE_USED_TO_SATISFY 'degree requirements by students in' degree
+func (v *RequisiteVisitor) VisitStudentDegreeSatisfactionRule(ctx *parser.StudentDegreeSatisfactionRuleContext) any {
+	return v.visitStudentDegreeSatisfactionRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitStudentDegreeSatisfactionRule(ctx *parser.StudentDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
+	degree := v.Visit(ctx.Degree()).(string)
+	return rules.NewDegreeSatisfactionRuleFromDegree([]string{degree}, utils.AnyDegree)
+
+}
+
+// VisitMathDegreeSatisfactionRule
+//
+// Rule: MAY_NOT_BE_USED_TO_SATISFY 'mathematics requirements by students in Mathematics'
+func (v *RequisiteVisitor) VisitMathDegreeSatisfactionRule(ctx *parser.MathDegreeSatisfactionRuleContext) any {
+	return v.visitMathDegreeSatisfactionRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitMathDegreeSatisfactionRule(ctx *parser.MathDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
+	return rules.NewMathDegreeSatisfactionRule()
+}
+
+// VisitElectivesDegreeSatisfactionRule
+//
+// Rule: degree_satisfaction_rule AND 'may not be used to satisfy electives'
+func (v *RequisiteVisitor) VisitElectivesDegreeSatisfactionRule(ctx *parser.ElectivesDegreeSatisfactionRuleContext) any {
+	return v.visitElectivesDegreeSatisfactionRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitElectivesDegreeSatisfactionRule(ctx *parser.ElectivesDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
+	inner := v.Visit(ctx.Degree_satisfaction_rule()).(*rules.DegreeSatisfactionRule)
+	return rules.NewDegreeSatisfactionRuleFromElectives(inner)
+}
+
+// ======================= Credit Rules ======================
+//todo need to fix grammar since it uses epxr
+
+// ======================= Living Learning Rules ======================
+
+// VisitPrefixLivingLearningRule
+//
+// Rule: PREFIX ('&' PREFIX)* LIVING_LEARNING_COMMUNITY
+func (v *RequisiteVisitor) VisitPrefixLivingLearningRule(ctx *parser.PrefixLivingLearningRuleContext) any {
+	return v.visitPrefixLivingLearningRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitPrefixLivingLearningRule(ctx *parser.PrefixLivingLearningRuleContext) *rules.LivingLearningRule {
+	prefixes := make([]string, len(ctx.AllPREFIX()))
+	for i, p := range ctx.AllPREFIX() {
+		prefixes[i] = p.GetText()
+	}
+	return rules.NewLivingLearningRuleFromPrefixes(prefixes)
+}
+
+// VisitDegreeLivingLearningRule
+//
+// Rule: degree_list LIVING_LEARNING_COMMUNITY
+func (v *RequisiteVisitor) VisitDegreeLivingLearningRule(ctx *parser.DegreeLivingLearningRuleContext) any {
+	return v.visitDegreeLivingLearningRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitDegreeLivingLearningRule(ctx *parser.DegreeLivingLearningRuleContext) *rules.LivingLearningRule {
+	return rules.NewLivingLearningRuleFromDegrees(v.Visit(ctx.Degree_list()).([]string))
 }

@@ -126,3 +126,83 @@ func TestVisitGpaRepeatRule(t *testing.T) {
 		})
 	}
 }
+
+func TestVisitDegreeSatisfactionRule(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result *rules.DegreeSatisfactionRule
+	}{
+		"Prefix degree satisfaction": {
+			Input:  "May not be used to satisfy BS INTS degree requirements",
+			Result: rules.NewDegreeSatisfactionRuleFromPrefix([]string{"INTS"}, utils.Undergraduate),
+		},
+		"Named degree satisfaction": {
+			Input:  "May not be used to fulfill degree requirements in MS Information Technology and Management",
+			Result: rules.NewDegreeSatisfactionRuleFromDegree([]string{"Information Technology and Management"}, utils.Graduate),
+		},
+		"Multi prefix for degree satisfaction": {
+			Input:  "May not be used to satisfy degree requirements for MS CS or the MS SE degree plans",
+			Result: rules.NewDegreeSatisfactionRuleFromPrefix([]string{"CS", "SE"}, utils.Graduate),
+		},
+		"Of multi prefix degree satisfaction": {
+			Input:  "May not be used to satisfy the degree requirements of the MS CS or the MS SE degree plans",
+			Result: rules.NewDegreeSatisfactionRuleFromPrefix([]string{"CS", "SE"}, utils.Graduate),
+		},
+		"School degree satisfaction": {
+			Input:  "May not be used to satisfy degree requirements for the School of Engineering and Computer Science",
+			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Engineering and Computer Science"}, utils.AnyDegree),
+		},
+		"School degree satisfaction with majors in": {
+			Input:  "May not be used to satisfy degree requirements for majors in the School of Engineering and Computer Science",
+			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Engineering and Computer Science"}, utils.AnyDegree),
+		},
+		"Schools degree satisfaction named list": {
+			Input:  "May not be used to satisfy degree requirements for majors in Computer Engineering, Computer Science, and Software Engineering",
+			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Computer Engineering", "Computer Science", "Software Engineering"}, utils.AnyDegree),
+		},
+		"Schools degree satisfaction with level": {
+			Input:  "May not be used to satisfy degree requirements for BS majors in Schools of Engineering and Computer Science or Natural Sciences and Mathematics",
+			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Engineering and Computer Science", "Natural Sciences and Mathematics"}, utils.Undergraduate),
+		},
+		"Student degree satisfaction": {
+			Input:  "May not be used to satisfy degree requirements by students in Mathematics",
+			Result: rules.NewDegreeSatisfactionRuleFromDegree([]string{"Mathematics"}, utils.AnyDegree),
+		},
+		"Math degree satisfaction": {
+			Input:  "May not be used to satisfy mathematics requirements by students in Mathematics",
+			Result: rules.NewMathDegreeSatisfactionRule(),
+		},
+		"Electives degree satisfaction": {
+			Input:  "May not be used to satisfy mathematics requirements by students in Mathematics and may not be used to satisfy electives",
+			Result: rules.NewDegreeSatisfactionRuleFromElectives(rules.NewMathDegreeSatisfactionRule()),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[*rules.DegreeSatisfactionRule](t, tc.Input, rule((*parser.RequirementsParser).Degree_satisfaction_rule), tc.Result)
+		})
+	}
+}
+
+func TestVisitLivingLearningRule(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result *rules.LivingLearningRule
+	}{
+		"Prefix": {
+			Input:  "ARHM & ATEC Living Learning Community",
+			Result: rules.NewLivingLearningRuleFromPrefixes([]string{"ARHM", "ATEC"}),
+		},
+		"Degree": {
+			Input:  "Engineering or Computer Science Living Learning Community",
+			Result: rules.NewLivingLearningRuleFromDegrees([]string{"Engineering", "Computer Science"}),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[*rules.LivingLearningRule](t, tc.Input, rule((*parser.RequirementsParser).Living_learning_rule), tc.Result)
+		})
+	}
+}

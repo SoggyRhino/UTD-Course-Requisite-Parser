@@ -2,28 +2,19 @@ package conditions
 
 import "parser/utils"
 
-type GradeLevel string
-
-const (
-	Senior    GradeLevel = "Senior"
-	Junior    GradeLevel = "Junior"
-	Sophomore GradeLevel = "Sophomore"
-	Freshman  GradeLevel = "Freshman"
-)
-
 type GradeLevelCondition struct {
-	GradeLevel GradeLevel
+	GradeLevel utils.GradeLevel
 	Degree     string
 	School     string
 }
 
-func NewGradeLevelCondition(level GradeLevel) *GradeLevelCondition {
+func NewGradeLevelCondition(level utils.GradeLevel) *GradeLevelCondition {
 	return &GradeLevelCondition{
 		GradeLevel: level,
 	}
 }
 
-func NewGradeLevelConditionWithDegree(level GradeLevel, degree string) *GradeLevelCondition {
+func NewGradeLevelConditionWithDegree(level utils.GradeLevel, degree string) *GradeLevelCondition {
 	return &GradeLevelCondition{
 		GradeLevel: level,
 		Degree:     degree,

@@ -5,9 +5,7 @@ ANTLR4 based approach for parsing course requirements.
 Currently, the grammar successfully parses* ~97% of the unique, 25f course requirements. At this point adding the remaining 20 ish 
  inputs is not worth focusing on since they are all mostly unique edge cases and/or typos.
 
-> \*Antlr parses them into an AST, not parsed yet into a useful JSON object. Currently, only 24% are done, but the hardest 
-> visitors are done.
-
+> \*Antlr parses them into an AST, not parsed yet into a useful JSON object.
 # Build 
 
 Currently, this is a work in progress. I am building up the visitors from the leaf nodes, so everything will pretty
@@ -34,7 +32,7 @@ completed.bat
 
 extract_inputs.bat 
  - Prints out all the inputs that are captured for a specific rule 
- - Useful for creating the unit tests 
+ - Useful for creating the unit tests
 
 test_grammar.bat 
  - Runs the grammar and makes sure that changes don't make the grammar worse 
@@ -42,7 +40,7 @@ test_grammar.bat
 
 # Visitor Progress
 
- -  Implemented : 70
- -  Missing     : 75
- -  Total       : 145
- -  Coverage    : 48%
+ - Implemented : 81
+ - Missing     : 63
+ - Total       : 144
+ - Coverage    : 56%

@@ -272,11 +272,10 @@ gpa_repeate_rule
 
 degree_satisfaction_rule
     : MAY_NOT_BE_USED_TO_SATISFY DEGREE_LEVEL? PREFIX 'degree requirements'                                          # prefixDegreeSatisfactionRule
-    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements in' DEGREE_LEVEL? title                                        # namedDegreeSatisfactionRule
-    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements' (OR? THE? DEGREE_LEVEL? PREFIX)+ 'degree plans'               # multiPrefixDegreeSatisfactionRule
+    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements in' DEGREE_LEVEL? degree                                       # namedDegreeSatisfactionRule
     | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' (OR? THE? DEGREE_LEVEL? PREFIX)+ 'degree plans'           # multiPrefixForDegreeSatisfactionRule
     | MAY_NOT_BE_USED_TO_SATISFY 'the degree requirements of' (OR? THE? DEGREE_LEVEL? PREFIX)+ 'degree plans'        # ofMultiPrefixDegreeSatisfactionRule
-    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' DEGREE_LEVEL? 'majors in'? 'the School of'? degree+       # schoolDegreeSatisfactionRule
+    | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' DEGREE_LEVEL? 'majors in'? 'the School of' degree+        # schoolDegreeSatisfactionRule
     | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements for' DEGREE_LEVEL? 'majors in'? 'Schools of'? degree_list+     # schoolsDegreeSatisfactionRule
     | MAY_NOT_BE_USED_TO_SATISFY 'degree requirements by students in' degree                                         # studentDegreeSatisfactionRule
     | MAY_NOT_BE_USED_TO_SATISFY 'mathematics requirements by students in Mathematics'                               # mathDegreeSatisfactionRule
@@ -289,12 +288,14 @@ credit_for_rule
 
 living_learning_rule
     : PREFIX ('&' PREFIX)* LIVING_LEARNING_COMMUNITY    # prefixLivingLearningRule
-    | degree_list LIVING_LEARNING_COMMUNITY             # namedLivingLearningRule
+    | degree_list LIVING_LEARNING_COMMUNITY             # degreeLivingLearningRule
     ;
 
 school_rule
     : 'Open to students in the School of' degree_list ONLY_KW?
     ;
+
+
 
 // Lexer
 

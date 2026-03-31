@@ -105,10 +105,10 @@ func (c *UpperDivisionCoursesCondition) Fulfils(userInfo utils.UserInfo) (bool, 
 
 type ResearchCondition struct {
 	Hours       int
-	DegreeLevel DegreeLevel
+	DegreeLevel utils.DegreeLevel
 }
 
-func NewResearchCondition(hours int, degreeLevel DegreeLevel) *ResearchCondition {
+func NewResearchCondition(hours int, degreeLevel utils.DegreeLevel) *ResearchCondition {
 	return &ResearchCondition{
 		Hours:       hours,
 		DegreeLevel: degreeLevel,

@@ -43,3 +43,10 @@ func (v *RequisiteVisitor) getTextOrDefault(node antlr.TerminalNode, str string)
 	}
 	return str
 }
+
+func (v *RequisiteVisitor) firstOrNil(nodes []antlr.TerminalNode) antlr.TerminalNode {
+	if len(nodes) == 0 {
+		return nil
+	}
+	return nodes[0]
+}

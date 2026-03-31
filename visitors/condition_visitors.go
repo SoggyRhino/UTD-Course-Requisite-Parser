@@ -227,7 +227,7 @@ func (v *RequisiteVisitor) VisitPrefixMajorCondition(ctx *parser.PrefixMajorCond
 
 func (v *RequisiteVisitor) visitPrefixMajorCondition(ctx *parser.PrefixMajorConditionContext) conditions.Condition {
 
-	var degreeLevel conditions.DegreeLevel
+	var degreeLevel utils.DegreeLevel
 	if ctx.DIVISION_TYPE() != nil {
 		degreeLevel = mapDivisionType(ctx.DIVISION_TYPE().GetText())
 	}
@@ -236,7 +236,7 @@ func (v *RequisiteVisitor) visitPrefixMajorCondition(ctx *parser.PrefixMajorCond
 		degreeLevel = mapDegreeLevel(ctx.DEGREE_LEVEL().GetText())
 	}
 
-	var gradeLevel conditions.GradeLevel
+	var gradeLevel utils.GradeLevel
 	if ctx.GRADE_LEVEL() != nil {
 		gradeLevel = mapGradeLevel(ctx.GRADE_LEVEL().GetText())
 	}
