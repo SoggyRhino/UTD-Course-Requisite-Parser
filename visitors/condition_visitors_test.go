@@ -551,3 +551,115 @@ func TestVisitStudentGroupCondition(t *testing.T) {
 		})
 	}
 }
+
+func TestVisitConcurrentEnrollmentCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Concurrent enrollment in single course": {
+			Input: "concurrent enrollment in MATH 1314",
+			Result: conditions.NewAndCondition(
+				conditions.NewConcurrentEnrollmentCondition(conditions.Course{Prefix: "MATH", Number: "1314"}),
+			),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Concurrent_enrollment_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitExactSectionCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"BIOL 2311.001": {
+			Input: "BIOL 2311.001",
+			Result: conditions.NewAndCondition(
+				conditions.NewConcurrentEnrollmentCondition(conditions.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
+			),
+		},
+		"BIOL 2311.501": {
+			Input: "BIOL 2311.501",
+			Result: conditions.NewAndCondition(
+				conditions.NewConcurrentEnrollmentCondition(conditions.Course{Prefix: "BIOL", Number: "2311", Section: "501"}),
+			),
+		},
+		"BIOL 2111.502": {
+			Input: "BIOL 2111.502",
+			Result: conditions.NewAndCondition(
+				conditions.NewConcurrentEnrollmentCondition(conditions.Course{Prefix: "BIOL", Number: "2111", Section: "502"}),
+			),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Exact_section_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitWorkshopSectionCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Workshop section": {
+			Input: "BIOL 2112 workshop 501",
+			Result: conditions.NewAndCondition(
+				conditions.NewConcurrentEnrollmentCondition(conditions.Course{Prefix: "BIOL", Number: "2112", Section: "501"}),
+			),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Exact_section_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitAnyPreviousMajorCourseCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Any previous course lowercase": {
+			Input:  "any previous PHIL course",
+			Result: conditions.NewAnyPreviousMajorCourseCondition("PHIL"),
+		},
+		"Any previous course uppercase": {
+			Input:  "Any previous PHIL course",
+			Result: conditions.NewAnyPreviousMajorCourseCondition("PHIL"),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Any_major_course_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitAcademicPlanCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Academic Plan Not Equal": {
+			Input:  "Academic Plan Not Equal to BSANMSNF",
+			Result: conditions.NewAcademicYearCondition("BSANMSNF", false),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Academic_plan_condition), tc.Result)
+		})
+	}
+}

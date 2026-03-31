@@ -221,12 +221,12 @@ group
     | DLAH
     ;
 
+
+// Misc conditions
 concurrent_enrollment_condition
     : CONCURRENT_ENROLLMENT_IN course   # concurrentEnrollmentCondition
     ;
 
-
-// Misc conditions
 exact_section_condition
     : course PERIOD SECTION_NUMBER     # exactSectionCondition
     | course 'workshop' SECTION_NUMBER # workshopSectionCondition
@@ -237,7 +237,7 @@ any_major_course_condition
     ;
 
 academic_plan_condition
-    : 'Academic Plan' (NOT_EQUAL | EQUAL) 'to' ACADEMIC_PLAN
+    : 'Academic Plan' (NOT_EQUAL | EQUAL) 'to' ACADEMIC_PLAN # academicPlanCondition
     ;
 
 

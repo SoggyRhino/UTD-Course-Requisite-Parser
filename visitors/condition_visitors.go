@@ -617,3 +617,91 @@ func (v *RequisiteVisitor) visitGroupListCondition(ctx *parser.GroupListConditio
 
 	return conditions.NewOrCondition(groupsConditions...)
 }
+
+// ======================= Misc conditions =======================
+
+// VisitConcurrentEnrollmentCondition
+//
+// Rule: CONCURRENT_ENROLLMENT_IN course
+func (v *RequisiteVisitor) VisitConcurrentEnrollmentCondition(ctx *parser.ConcurrentEnrollmentConditionContext) any {
+	return v.visitConcurrentEnrollmentCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitConcurrentEnrollmentCondition(ctx *parser.ConcurrentEnrollmentConditionContext) conditions.Condition {
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
+	conds := make([]conditions.Condition, len(courses))
+	for i, course := range courses {
+		conds[i] = conditions.NewConcurrentEnrollmentCondition(course)
+	}
+	return conditions.NewAndCondition(conds...)
+}
+
+// VisitExactSectionCondition
+//
+// Rule: course PERIOD SECTION_NUMBER
+func (v *RequisiteVisitor) VisitExactSectionCondition(ctx *parser.ExactSectionConditionContext) any {
+	return v.visitExactSectionCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitExactSectionCondition(ctx *parser.ExactSectionConditionContext) conditions.Condition {
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
+	conds := make([]conditions.Condition, len(courses))
+	for i, course := range courses {
+		conds[i] = conditions.NewConcurrentEnrollmentCondition(
+			conditions.Course{
+				Prefix:  course.Prefix,
+				Number:  course.Number,
+				Section: ctx.SECTION_NUMBER().GetText(),
+			},
+		)
+	}
+	return conditions.NewAndCondition(conds...)
+}
+
+// VisitWorkshopSectionCondition
+//
+// Rule: course 'workshop' SECTION_NUMBER
+func (v *RequisiteVisitor) VisitWorkshopSectionCondition(ctx *parser.WorkshopSectionConditionContext) any {
+	return v.visitWorkshopSectionCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitWorkshopSectionCondition(ctx *parser.WorkshopSectionConditionContext) conditions.Condition {
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
+	conds := make([]conditions.Condition, len(courses))
+	for i, course := range courses {
+		conds[i] = conditions.NewConcurrentEnrollmentCondition(
+			conditions.Course{
+				Prefix:  course.Prefix,
+				Number:  course.Number,
+				Section: ctx.SECTION_NUMBER().GetText(),
+			},
+		)
+	}
+	return conditions.NewAndCondition(conds...)
+}
+
+// VisitAnyPreviousMajorCourseCondition
+//
+// Rule: ANY_PREVIOUS PREFIX COURSE_KW
+func (v *RequisiteVisitor) VisitAnyPreviousMajorCourseCondition(ctx *parser.AnyPreviousMajorCourseConditionContext) any {
+	return v.visitAnyPreviousMajorCourseCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitAnyPreviousMajorCourseCondition(ctx *parser.AnyPreviousMajorCourseConditionContext) *conditions.AnyPreviousMajorCourseCondition {
+	prefix := ctx.PREFIX().GetText()
+
+	return conditions.NewAnyPreviousMajorCourseCondition(prefix)
+}
+
+// VisitAcademicPlanCondition
+//
+// Rule: 'Academic Plan' (NOT_EQUAL | EQUAL) 'to' ACADEMIC_PLAN
+func (v *RequisiteVisitor) VisitAcademicPlanCondition(ctx *parser.AcademicPlanConditionContext) any {
+	return v.visitAcademicPlanCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitAcademicPlanCondition(ctx *parser.AcademicPlanConditionContext) *conditions.AcademicYearCondition {
+	plan := ctx.ACADEMIC_PLAN().GetText()
+	equal := ctx.EQUAL() != nil
+	return conditions.NewAcademicYearCondition(plan, equal)
+}
