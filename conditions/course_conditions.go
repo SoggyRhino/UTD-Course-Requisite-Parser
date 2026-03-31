@@ -1,25 +1,27 @@
 package conditions
 
+import "parser/utils"
+
 type CourseCondition struct {
-	Course   Course
-	MinGrade Grade
+	Course   utils.Course
+	MinGrade utils.Grade
 }
 
 func NewCourseCondition(prefix, number, grade string) *CourseCondition {
 	return &CourseCondition{
-		Course: Course{
+		Course: utils.Course{
 			Prefix: prefix,
 			Number: number,
 		},
-		MinGrade: Grade(grade),
+		MinGrade: utils.Grade(grade),
 	}
 }
 
-func (c *CourseCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *CourseCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
-func (c *CourseCondition) AppendGrade(grade Grade) {
+func (c *CourseCondition) AppendGrade(grade utils.Grade) {
 	c.MinGrade = grade
 }
 
@@ -29,7 +31,7 @@ type CoreCondition struct {
 	SemesterHours int
 }
 
-func (c *CoreCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *CoreCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
@@ -57,23 +59,23 @@ func NewCreditHoursCondition(hours int) *CreditHoursCondition {
 	}
 }
 
-func (c *CreditHoursCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *CreditHoursCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
 type CreditHoursFromCondition struct {
 	Hours   int
-	Courses []Course
+	Courses []utils.Course
 }
 
-func NewCreditHoursFromCondition(hours int, courses []Course) *CreditHoursFromCondition {
+func NewCreditHoursFromCondition(hours int, courses []utils.Course) *CreditHoursFromCondition {
 	return &CreditHoursFromCondition{
 		Hours:   hours,
 		Courses: courses,
 	}
 }
 
-func (c *CreditHoursFromCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *CreditHoursFromCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
@@ -97,7 +99,7 @@ func NewUpperDivisionCountCondition(count int, prefix string) *UpperDivisionCour
 	}
 }
 
-func (c *UpperDivisionCoursesCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *UpperDivisionCoursesCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
@@ -113,22 +115,22 @@ func NewResearchCondition(hours int, degreeLevel DegreeLevel) *ResearchCondition
 	}
 }
 
-func (c *ResearchCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *ResearchCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
 type NCoursesCondition struct {
 	N       int
-	Courses []Course
+	Courses []utils.Course
 }
 
-func NewNCoursesCondition(n int, courses []Course) *NCoursesCondition {
+func NewNCoursesCondition(n int, courses []utils.Course) *NCoursesCondition {
 	return &NCoursesCondition{
 		N:       n,
 		Courses: courses,
 	}
 }
 
-func (c *NCoursesCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *NCoursesCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }

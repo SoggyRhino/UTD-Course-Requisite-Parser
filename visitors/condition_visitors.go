@@ -3,6 +3,7 @@ package visitors
 import (
 	"parser/conditions"
 	"parser/parser"
+	"parser/utils"
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
@@ -12,7 +13,7 @@ import (
 
 func (v *RequisiteVisitor) applyGrade(node antlr.ParseTree, gradeText string) conditions.Condition {
 	gradedCond, _ := v.Visit(node).(conditions.GradedCondition)
-	gradedCond.AppendGrade(conditions.Grade(gradeText))
+	gradedCond.AppendGrade(utils.Grade(gradeText))
 	return gradedCond
 }
 
@@ -648,7 +649,7 @@ func (v *RequisiteVisitor) visitExactSectionCondition(ctx *parser.ExactSectionCo
 	conds := make([]conditions.Condition, len(courses))
 	for i, course := range courses {
 		conds[i] = conditions.NewConcurrentEnrollmentCondition(
-			conditions.Course{
+			utils.Course{
 				Prefix:  course.Prefix,
 				Number:  course.Number,
 				Section: ctx.SECTION_NUMBER().GetText(),
@@ -670,7 +671,7 @@ func (v *RequisiteVisitor) visitWorkshopSectionCondition(ctx *parser.WorkshopSec
 	conds := make([]conditions.Condition, len(courses))
 	for i, course := range courses {
 		conds[i] = conditions.NewConcurrentEnrollmentCondition(
-			conditions.Course{
+			utils.Course{
 				Prefix:  course.Prefix,
 				Number:  course.Number,
 				Section: ctx.SECTION_NUMBER().GetText(),

@@ -1,5 +1,7 @@
 package conditions
 
+import "parser/utils"
+
 type GPAType float64
 type GPACondition struct {
 	GPA    GPAType
@@ -19,6 +21,6 @@ func NewGpaConditionWithDegree(gpa float64, degree string) *GPACondition {
 	}
 }
 
-func (g *GPACondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (g *GPACondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }

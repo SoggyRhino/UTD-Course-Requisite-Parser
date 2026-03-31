@@ -1,30 +1,32 @@
 package conditions
 
+import "parser/utils"
+
 type ConcurrentEnrollmentCondition struct {
-	Course Course
+	Course utils.Course
 }
 
-func NewConcurrentEnrollmentCondition(course Course) *ConcurrentEnrollmentCondition {
+func NewConcurrentEnrollmentCondition(course utils.Course) *ConcurrentEnrollmentCondition {
 	return &ConcurrentEnrollmentCondition{
 		Course: course,
 	}
 }
 
-func (c *ConcurrentEnrollmentCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *ConcurrentEnrollmentCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
 type ExactSectionCondition struct {
-	Course Course
+	Course utils.Course
 }
 
-func NewExactSectionCondition(course Course) *ExactSectionCondition {
+func NewExactSectionCondition(course utils.Course) *ExactSectionCondition {
 	return &ExactSectionCondition{
 		Course: course,
 	}
 }
 
-func (c *ExactSectionCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *ExactSectionCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
@@ -38,7 +40,7 @@ func NewAnyPreviousMajorCourseCondition(prefix string) *AnyPreviousMajorCourseCo
 	}
 }
 
-func (c *AnyPreviousMajorCourseCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *AnyPreviousMajorCourseCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
@@ -54,6 +56,6 @@ func NewAcademicYearCondition(plan string, equal bool) *AcademicYearCondition {
 	}
 }
 
-func (c *AcademicYearCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *AcademicYearCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }

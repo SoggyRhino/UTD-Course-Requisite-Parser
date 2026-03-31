@@ -63,8 +63,8 @@ expr
     | exact_section_condition               # exactSectionExpr
     | any_major_course_condition            # anyMajorCourseExpr
     | living_learning_rule                  # livingLearningExpr
-    | repeat_rule                           # repeatRuleExpr       // misplaced, hoisted in post-processing
-    | repeat_limit_hours_rule               # repeatLimitHoursExpr // misplaced, hoisted in post-processing
+    | repeat_rule                           # repeatRuleExpr
+    | repeat_limit_hours_rule               # repeatLimitHoursExpr
     | course                                # courseExpr
     ;
 

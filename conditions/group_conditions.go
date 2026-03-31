@@ -1,6 +1,9 @@
 package conditions
 
-import "fmt"
+import (
+	"fmt"
+	"parser/utils"
+)
 
 type OrCondition struct {
 	Conditions []Condition
@@ -13,7 +16,7 @@ func NewOrCondition(conditions ...Condition) Condition {
 	return &OrCondition{Conditions: conditions}
 }
 
-func (o *OrCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (o *OrCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	//todo or condition
 	for _, condition := range o.Conditions {
 		if pass, _ := condition.Fulfils(userInfo); pass {
@@ -23,7 +26,7 @@ func (o *OrCondition) Fulfils(userInfo UserInfo) (bool, error) {
 	return false, fmt.Errorf("no conditions met")
 }
 
-func (o *OrCondition) AppendGrade(grade Grade) {
+func (o *OrCondition) AppendGrade(grade utils.Grade) {
 	for _, condition := range o.Conditions {
 		if gradedCondition, ok := condition.(GradedCondition); ok {
 			gradedCondition.AppendGrade(grade)
@@ -45,12 +48,12 @@ func NewAndCondition(conditions ...Condition) Condition {
 	return &OrCondition{Conditions: conditions}
 }
 
-func (a *AndCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (a *AndCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	//todo and condition
 	return false, fmt.Errorf("no conditions met")
 }
 
-func (a *AndCondition) AppendGrade(grade Grade) {
+func (a *AndCondition) AppendGrade(grade utils.Grade) {
 	for _, condition := range a.Conditions {
 		if gradedCondition, ok := condition.(GradedCondition); ok {
 			gradedCondition.AppendGrade(grade)

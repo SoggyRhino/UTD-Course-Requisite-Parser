@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"parser/conditions"
 	"parser/parser"
+	"parser/utils"
 	"parser/visitors"
 
 	"github.com/antlr4-go/antlr/v4"
@@ -24,7 +24,7 @@ func main() {
 	}
 
 	result := visitor.Visit(tree)
-	if courses, ok := result.([]conditions.Course); ok {
+	if courses, ok := result.([]utils.Course); ok {
 		fmt.Printf("Parsed Courses: %v\n", courses)
 	} else {
 		fmt.Println("No courses found or unexpected result type")

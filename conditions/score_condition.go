@@ -1,5 +1,7 @@
 package conditions
 
+import "parser/utils"
+
 type PlacementTestScoreCondition struct {
 	Name     string
 	ScoreMin int
@@ -14,7 +16,7 @@ func NewPlacementTestScoreCondition(name string, scoreMin, scoreMax int) *Placem
 	}
 }
 
-func (c *PlacementTestScoreCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *PlacementTestScoreCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
@@ -28,7 +30,7 @@ func NewAPScoreCondition(score int) *APScoreCondition {
 	}
 }
 
-func (c *APScoreCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *APScoreCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
@@ -42,6 +44,6 @@ func NewAleksScoreCondition(score int) *AleksScoreCondition {
 	}
 }
 
-func (c *AleksScoreCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *AleksScoreCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }

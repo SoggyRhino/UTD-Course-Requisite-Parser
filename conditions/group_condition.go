@@ -1,5 +1,7 @@
 package conditions
 
+import "parser/utils"
+
 type StudentGroup string
 
 const (
@@ -20,6 +22,6 @@ func NewStudentGroupCondition(groups StudentGroup) *StudentGroupCondition {
 	}
 }
 
-func (c *StudentGroupCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (c *StudentGroupCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }

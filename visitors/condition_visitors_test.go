@@ -3,6 +3,7 @@ package visitors
 import (
 	"parser/conditions"
 	"parser/parser"
+	"parser/utils"
 	"testing"
 )
 
@@ -350,14 +351,14 @@ func TestVisitMinimumHoursCondition(t *testing.T) {
 	}{
 		"Minimum of 6 SCH in any combination": {
 			Input: "Minimum of 6 semester credit hours in any combination of DANC 2332 or DANC 2334",
-			Result: conditions.NewCreditHoursFromCondition(6, []conditions.Course{
+			Result: conditions.NewCreditHoursFromCondition(6, []utils.Course{
 				{Prefix: "DANC", Number: "2332"},
 				{Prefix: "DANC", Number: "2334"},
 			}),
 		},
 		"Minimum of 3 SCH of": {
 			Input: "At least 3 semester credits of ECS 1192 or 2192 or 3292",
-			Result: conditions.NewCreditHoursFromCondition(3, []conditions.Course{
+			Result: conditions.NewCreditHoursFromCondition(3, []utils.Course{
 				{Prefix: "ECS", Number: "1192"},
 				{Prefix: "ECS", Number: "2192"},
 				{Prefix: "ECS", Number: "3292"},
@@ -365,7 +366,7 @@ func TestVisitMinimumHoursCondition(t *testing.T) {
 		},
 		"Minimum of 6 SCH from": {
 			Input: "6 semester credit hours from the following: LIT 2320 or LIT 2321 or LIT 2322 or LIT 2331",
-			Result: conditions.NewCreditHoursFromCondition(6, []conditions.Course{
+			Result: conditions.NewCreditHoursFromCondition(6, []utils.Course{
 				{Prefix: "LIT", Number: "2320"},
 				{Prefix: "LIT", Number: "2321"},
 				{Prefix: "LIT", Number: "2322"},
@@ -434,6 +435,37 @@ func TestVisitResearchCondition(t *testing.T) {
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Research_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitCompleteNOfFollowingCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Completion of two of the following": {
+			Input: "Completion of two of the following: ANGM 2303 or ANGM 2309 or ATCM 2345",
+			Result: conditions.NewNCoursesCondition(2, []utils.Course{
+				{Prefix: "ANGM", Number: "2303"},
+				{Prefix: "ANGM", Number: "2309"},
+				{Prefix: "ATCM", Number: "2345"},
+			}),
+		},
+		"Two courses from the following": {
+			Input: "Two courses from the following - BIOL 5410 or BIOL 5420 or BIOL 5440 or BIOL 5460",
+			Result: conditions.NewNCoursesCondition(2, []utils.Course{
+				{Prefix: "BIOL", Number: "5410"},
+				{Prefix: "BIOL", Number: "5420"},
+				{Prefix: "BIOL", Number: "5440"},
+				{Prefix: "BIOL", Number: "5460"},
+			}),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Complete_n_condition), tc.Result)
 		})
 	}
 }
@@ -560,7 +592,7 @@ func TestVisitConcurrentEnrollmentCondition(t *testing.T) {
 		"Concurrent enrollment in single course": {
 			Input: "concurrent enrollment in MATH 1314",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(conditions.Course{Prefix: "MATH", Number: "1314"}),
+				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "MATH", Number: "1314"}),
 			),
 		},
 	}
@@ -580,19 +612,19 @@ func TestVisitExactSectionCondition(t *testing.T) {
 		"BIOL 2311.001": {
 			Input: "BIOL 2311.001",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(conditions.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
+				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
 			),
 		},
 		"BIOL 2311.501": {
 			Input: "BIOL 2311.501",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(conditions.Course{Prefix: "BIOL", Number: "2311", Section: "501"}),
+				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "BIOL", Number: "2311", Section: "501"}),
 			),
 		},
 		"BIOL 2111.502": {
 			Input: "BIOL 2111.502",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(conditions.Course{Prefix: "BIOL", Number: "2111", Section: "502"}),
+				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "BIOL", Number: "2111", Section: "502"}),
 			),
 		},
 	}
@@ -612,7 +644,7 @@ func TestVisitWorkshopSectionCondition(t *testing.T) {
 		"Workshop section": {
 			Input: "BIOL 2112 workshop 501",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(conditions.Course{Prefix: "BIOL", Number: "2112", Section: "501"}),
+				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "BIOL", Number: "2112", Section: "501"}),
 			),
 		},
 	}

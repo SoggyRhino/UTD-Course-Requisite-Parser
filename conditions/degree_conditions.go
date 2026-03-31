@@ -1,5 +1,7 @@
 package conditions
 
+import "parser/utils"
+
 type DegreeLevel string
 
 const (
@@ -42,7 +44,7 @@ func NewMajorConditionWithDegreeAndGradeLevel(degree string, level DegreeLevel, 
 	}
 }
 
-func (m *MajorCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (m *MajorCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
 
@@ -56,6 +58,6 @@ func NewDegreeCondition(degree string) *DegreeCondition {
 	}
 }
 
-func (d *DegreeCondition) Fulfils(userInfo UserInfo) (bool, error) {
+func (d *DegreeCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }

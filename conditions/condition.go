@@ -1,21 +1,12 @@
 package conditions
 
-type Course struct {
-	Prefix  string
-	Number  string
-	Section string
-}
-
-type Grade string
-type UserInfo struct {
-	Taken map[Course]Grade
-}
+import "parser/utils"
 
 type Condition interface {
-	Fulfils(UserInfo) (bool, error)
+	Fulfils(utils.UserInfo) (bool, error)
 }
 
 type GradedCondition interface {
 	Condition
-	AppendGrade(Grade)
+	AppendGrade(utils.Grade)
 }

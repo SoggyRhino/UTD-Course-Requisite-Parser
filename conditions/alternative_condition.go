@@ -1,6 +1,9 @@
 package conditions
 
-import "log"
+import (
+	"log"
+	"parser/utils"
+)
 
 type AlternativeCondition struct {
 	Condition Condition
@@ -12,7 +15,7 @@ func NewAlternativeCondition(condition Condition) *AlternativeCondition {
 	}
 }
 
-func (a *AlternativeCondition) Fulfils(info UserInfo) (bool, error) {
+func (a *AlternativeCondition) Fulfils(info utils.UserInfo) (bool, error) {
 	log.Println("AlternativeCondition Fulfils not implemented")
 	return a.Condition.Fulfils(info)
 }
