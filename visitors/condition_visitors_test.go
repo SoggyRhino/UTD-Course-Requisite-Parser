@@ -515,3 +515,39 @@ func TestVisitAleksScoreCondition(t *testing.T) {
 		})
 	}
 }
+
+func TestVisitStudentGroupCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Students in both groups": {
+			Input: "Students in both Liberal Arts Honors /Collegium V Honors Group only",
+			Result: conditions.NewAndCondition(
+				conditions.NewStudentGroupCondition(conditions.LiberalArtsHonors),
+				conditions.NewStudentGroupCondition(conditions.CollegeVHonors),
+			),
+		},
+		"Multiple groups": {
+			Input: "SCVG and DLAH student groups only",
+			Result: conditions.NewOrCondition(
+				conditions.NewStudentGroupCondition(conditions.SCVG),
+				conditions.NewStudentGroupCondition(conditions.DLAH),
+			),
+		},
+		"CV Honors students only": {
+			Input:  "CV Honors Students only",
+			Result: conditions.NewStudentGroupCondition(conditions.CollegeVHonors),
+		},
+		"SCVG group": {
+			Input:  "SCVG Student Group",
+			Result: conditions.NewStudentGroupCondition(conditions.SCVG),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Group_condition), tc.Result)
+		})
+	}
+}

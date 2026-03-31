@@ -582,3 +582,38 @@ func (v *RequisiteVisitor) visitAleksScoreCondition(ctx *parser.AleksScoreCondit
 	score := mapInt(ctx.INT().GetText())
 	return conditions.NewAleksScoreCondition(score)
 }
+
+// ======================= Group condition =======================
+
+// VisitBothGroupCondition
+//
+// Rule: 'Students in both' group '/' group STUDENT_GROUP ONLY_KW
+func (v *RequisiteVisitor) VisitBothGroupCondition(ctx *parser.BothGroupConditionContext) any {
+	return v.visitBothGroupCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitBothGroupCondition(ctx *parser.BothGroupConditionContext) conditions.Condition {
+	group1 := mapToStudentGroup(ctx.Group(0).GetText())
+	group2 := mapToStudentGroup(ctx.Group(1).GetText())
+
+	return conditions.NewAndCondition(
+		conditions.NewStudentGroupCondition(group1),
+		conditions.NewStudentGroupCondition(group2),
+	)
+}
+
+// VisitGroupListCondition
+//
+// Rule: group (AND group)* (STUDENT_GROUP | STUDENTS) ONLY_KW?
+func (v *RequisiteVisitor) VisitGroupListCondition(ctx *parser.GroupListConditionContext) any {
+	return v.visitGroupListCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitGroupListCondition(ctx *parser.GroupListConditionContext) conditions.Condition {
+	groupsConditions := make([]conditions.Condition, len(ctx.AllGroup()))
+	for i, group := range ctx.AllGroup() {
+		groupsConditions[i] = conditions.NewStudentGroupCondition(mapToStudentGroup(group.GetText()))
+	}
+
+	return conditions.NewOrCondition(groupsConditions...)
+}

@@ -41,7 +41,6 @@ expr
     | COMPUTER_SCHOLARS_PROGRAM             # computerScholarsExpr
     | GOOD_ACADEMIC_STANDING                # goodAcademicStandingExpr
     | gpa_condition                         # gpaExpr
-    | honors_condition                      # honorsExpr
     | group_condition                       # groupExpr
     | concurrent_enrollment_condition       # concurrentEnrollmentExpr
     | grade_condition                       # gradeExpr
@@ -209,13 +208,9 @@ aleks_score_condition
 
 // People / group conditions
 
-honors_condition
-    : 'Students in both' LIBERAL_ARTS_HONORS '/' COLLEGIUM_V_HONORS STUDENT_GROUP ONLY_KW   # bothHonorsCondition
-    | (LIBERAL_ARTS_HONORS | COLLEGIUM_V_HONORS) STUDENTS ONLY_KW                           # singleHonorsCondition
-    ;
-
 group_condition
-    : group (AND group)* STUDENT_GROUP ONLY_KW?   # groupCondition
+    : 'Students in both' group '/' group STUDENT_GROUP ONLY_KW                              # bothGroupCondition
+    | group (AND group)* (STUDENT_GROUP | STUDENTS) ONLY_KW?                                # groupListCondition
     ;
 
 group

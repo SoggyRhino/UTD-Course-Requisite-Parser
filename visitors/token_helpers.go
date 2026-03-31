@@ -117,3 +117,20 @@ func stripChars(text string, chars ...string) string {
 	}
 	return text
 }
+
+func mapToStudentGroup(text string) conditions.StudentGroup {
+	switch text {
+	case "Collegium V Honors", "CV Honors":
+		return conditions.CollegeVHonors
+	case "Liberal Arts Honors":
+		return conditions.LiberalArtsHonors
+	case "SCVG":
+		return conditions.SCVG
+	case "DMHP":
+		return conditions.DMHP
+	case "DLAH":
+		return conditions.DLAH
+	default:
+		panic("Invalid Student Group: " + text)
+	}
+}
