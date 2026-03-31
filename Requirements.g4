@@ -263,17 +263,11 @@ repeat_limit_times_rule
     | REPEAT_LIMIT DASH course 'may' ONLY_KW? 'be repeated' 'a maximum of' SMALL_INT 'times' # repeatMaxTimesRule
     ;
 
-repeate_expr
-    : repeate_expr AND repeate_expr   # andRepeateExpr
-    | course                          # courseRepeateExpr
-    | alternative_condition           # alternativeRepeateExpr
-    ;
-
 // Im not sure what this means but this is what gemini says it means
 // students not enrolled in "" program face a rule if they try
 // to retake course to improve their GPA.
 gpa_repeate_rule
-    : 'GPA Repeat Restriction' DASH repeate_expr
+    : 'GPA Repeat Restriction' DASH course  # gpaRepeatRule
     ;
 
 degree_satisfaction_rule
