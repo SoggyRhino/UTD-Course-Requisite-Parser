@@ -127,6 +127,8 @@ func stripChars(text string, chars ...string) string {
 
 func mapToStudentGroup(text string) utils.StudentGroup {
 	switch text {
+	case "Computer Scholars Program", "Computing Scholars Program":
+		return utils.ComputerScholarsProgram
 	case "Collegium V Honors", "CV Honors":
 		return utils.CollegeVHonors
 	case "Liberal Arts Honors":

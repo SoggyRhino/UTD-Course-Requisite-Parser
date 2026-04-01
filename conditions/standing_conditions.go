@@ -41,3 +41,17 @@ func NewGraduateStandingInConditionWithDegree(degree string) *GraduateStandingIn
 func (g *GraduateStandingInCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	return false, nil
 }
+
+type GenericStandingCondition struct {
+	Standing utils.Standing
+}
+
+func NewGenericStandingCondition(standing utils.Standing) *GenericStandingCondition {
+	return &GenericStandingCondition{
+		Standing: standing,
+	}
+}
+
+func (g *GenericStandingCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+	return false, nil
+}

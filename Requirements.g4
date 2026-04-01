@@ -34,12 +34,8 @@ expr
     | expr COMMA? AND expr                  # andExpr
     | expr COMMA? AMPERSAND expr            # ampersandExpr
     | expr OR EQUIVALENT                    # equivalentExpr
-    | INTRUCTOR_CONSENT                     # instructorConsentExpr
-    | DEPARTMENT_CONSENT                    # departmentConsentExpr
-    | UTEACH_CONSENT                        # uteachConsentExpr
-    | UPPER_DVISION_STANDING                # upperDivisionStandingExpr
-    | COMPUTER_SCHOLARS_PROGRAM             # computerScholarsExpr
-    | GOOD_ACADEMIC_STANDING                # goodAcademicStandingExpr
+    | consent_condition                     # consentExpr
+    | standing_condition                    # standingExpr
     | gpa_condition                         # gpaExpr
     | group_condition                       # groupExpr
     | concurrent_enrollment_condition       # concurrentEnrollmentExpr
@@ -89,6 +85,17 @@ degree : degree_atom+ (AND degree_atom+)* ;
 
 degree_list : degree ((COMMA AND | COMMA | OR) degree)* ;
 
+consent_condition
+    : INSTRUCTOR_CONSENT                    # instructorConsentCondition
+    | DEPARTMENT_CONSENT                    # departmentConsentCondition
+    | UTEACH_CONSENT                        # uteachConsentCondition
+    ;
+
+standing_condition
+    : UPPER_DVISION_STANDING                # upperDivisionStandingCondition
+    | GOOD_ACADEMIC_STANDING                # goodAcademicStandingCondition
+    ;
+
 // Grade conditions
 grade_condition
     : course WITH_GRADE GRADE OR_BETTER?                                   # simpleGradeCondition
@@ -107,7 +114,6 @@ alternative_condition
     : course OR EQUIVALENT                    # courseAlternativeCondition
     | course_list OR EQUIVALENT               # gradeCourseListAlternativeCondition
     ;
-
 
 // Standing conditions
 grade_level_standing_condition
@@ -211,10 +217,12 @@ aleks_score_condition
 group_condition
     : 'Students in both' group '/' group STUDENT_GROUP ONLY_KW                              # bothGroupCondition
     | group (AND group)* (STUDENT_GROUP | STUDENTS) ONLY_KW?                                # groupListCondition
+    | group                                                                                 # singleGroupCondition
     ;
 
 group
-    : COLLEGIUM_V_HONORS
+    : COMPUTER_SCHOLARS_PROGRAM
+    | COLLEGIUM_V_HONORS
     | LIBERAL_ARTS_HONORS
     | SCVG
     | DMHP
@@ -240,9 +248,7 @@ academic_plan_condition
     : 'Academic Plan' (NOT_EQUAL | EQUAL) 'to' ACADEMIC_PLAN # academicPlanCondition
     ;
 
-
 // Rules
-
 repeat_rule
     : course REPEAT_RESTRICTION              # courseRepeatRule
     | PREFIX 'Internship' REPEAT_RESTRICTION # internshipRepeatRule
@@ -416,7 +422,7 @@ DLAH : 'DLAH';
 
 
 // Consent tokens
-INTRUCTOR_CONSENT  : 'instructor consent' | 'instructor consent required';
+INSTRUCTOR_CONSENT  : 'instructor consent' | 'instructor consent required';
 DEPARTMENT_CONSENT : 'department consent' | 'department consent required';
 UTEACH_CONSENT     : 'UTeach advisor consent required';
 

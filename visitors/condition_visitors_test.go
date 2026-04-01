@@ -7,6 +7,59 @@ import (
 	"testing"
 )
 
+func TestVisitConsentCondition(t *testing.T) {
+	//nothingburger but I want 100% coverage
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Instructor consent": {
+			Input:  "instructor consent",
+			Result: conditions.NewConsentCondition(utils.InstructorConsent),
+		},
+		"Instructor consent required": {
+			Input:  "instructor consent required",
+			Result: conditions.NewConsentCondition(utils.InstructorConsent),
+		},
+		"Department consent required": {
+			Input:  "department consent required",
+			Result: conditions.NewConsentCondition(utils.DepartmentConsent),
+		},
+		"UTeach advisor consent required": {
+			Input:  "UTeach advisor consent required",
+			Result: conditions.NewConsentCondition(utils.UTeachConsent),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Consent_condition), tc.Result)
+		})
+	}
+}
+
+func TestVisitStandingCondition(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result conditions.Condition
+	}{
+		"Upper-division standing": {
+			Input:  "Upper-division standing",
+			Result: conditions.NewGenericStandingCondition(utils.UpperDivisionStanding),
+		},
+		"Good academic standing": {
+			Input:  "good academic standing",
+			Result: conditions.NewGenericStandingCondition(utils.GoodAcademicStanding),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[conditions.Condition](t, tc.Input, rule((*parser.RequirementsParser).Standing_condition), tc.Result)
+		})
+	}
+}
+
 func TestVisitSimpleGradeCondition(t *testing.T) {
 
 	testCases := map[string]struct {

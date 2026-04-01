@@ -9,6 +9,65 @@ import (
 	"github.com/antlr4-go/antlr/v4"
 )
 
+// ======================= consent conditions =======================
+
+// VisitInstructorConsentCondition
+//
+// Rule: INSTRUCTOR_CONSENT
+func (v *RequisiteVisitor) VisitInstructorConsentCondition(ctx *parser.InstructorConsentConditionContext) any {
+	return v.visitInstructorConsentCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitInstructorConsentCondition(ctx *parser.InstructorConsentConditionContext) *conditions.ConsentCondition {
+	return conditions.NewConsentCondition(utils.InstructorConsent)
+}
+
+// VisitDepartmentConsentCondition
+//
+// Rule: DEPARTMENT_CONSENT
+func (v *RequisiteVisitor) VisitDepartmentConsentCondition(ctx *parser.DepartmentConsentConditionContext) any {
+	return v.visitDepartmentConsentCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitDepartmentConsentCondition(ctx *parser.DepartmentConsentConditionContext) *conditions.ConsentCondition {
+	return conditions.NewConsentCondition(utils.DepartmentConsent)
+}
+
+// VisitUteachConsentCondition
+//
+// Rule: UTEACH_CONSENT
+func (v *RequisiteVisitor) VisitUteachConsentCondition(ctx *parser.UteachConsentConditionContext) any {
+	return v.visitUteachConsentCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitUteachConsentCondition(ctx *parser.UteachConsentConditionContext) *conditions.ConsentCondition {
+	return conditions.NewConsentCondition(utils.UTeachConsent)
+}
+
+// ======================= standing conditions =======================
+
+// VisitUpperDivisionStandingCondition
+//
+// Rule: UPPER_DVISION_STANDING
+func (v *RequisiteVisitor) VisitUpperDivisionStandingCondition(ctx *parser.UpperDivisionStandingConditionContext) any {
+	return v.visitUpperDivisionStandingCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitUpperDivisionStandingCondition(ctx *parser.UpperDivisionStandingConditionContext) *conditions.GenericStandingCondition {
+	return conditions.NewGenericStandingCondition(utils.UpperDivisionStanding)
+}
+
+// VisitGoodAcademicStandingCondition
+//
+// Rule: GOOD_ACADEMIC_STANDING
+func (v *RequisiteVisitor) VisitGoodAcademicStandingCondition(ctx *parser.GoodAcademicStandingConditionContext) any {
+	return v.visitGoodAcademicStandingCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitGoodAcademicStandingCondition(ctx *parser.GoodAcademicStandingConditionContext) *conditions.GenericStandingCondition {
+	return conditions.NewGenericStandingCondition(utils.GoodAcademicStanding)
+}
+
 // ======================= grade condition =======================
 
 func (v *RequisiteVisitor) applyGrade(node antlr.ParseTree, gradeText string) conditions.Condition {
@@ -617,6 +676,18 @@ func (v *RequisiteVisitor) visitGroupListCondition(ctx *parser.GroupListConditio
 	}
 
 	return conditions.NewOrCondition(groupsConditions...)
+}
+
+// VisitSingleListCondition
+//
+// Rule: group
+func (v *RequisiteVisitor) VisitSingleListCondition(ctx *parser.SingleGroupConditionContext) any {
+	return v.visitSingleListCondition(ctx)
+}
+
+func (v *RequisiteVisitor) visitSingleListCondition(ctx *parser.SingleGroupConditionContext) conditions.Condition {
+	group := mapToStudentGroup(ctx.Group().GetText())
+	return conditions.NewStudentGroupCondition(group)
 }
 
 // ======================= Misc conditions =======================
