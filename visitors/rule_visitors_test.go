@@ -206,3 +206,28 @@ func TestVisitLivingLearningRule(t *testing.T) {
 		})
 	}
 }
+
+func TestVisitSchoolRule(t *testing.T) {
+
+	testCases := map[string]struct {
+		Input  string
+		Result *rules.SchoolRule
+	}{
+		"Basic": {
+			Input: "  Open to students in the School of Engineering and Computer Science, Actuarial Science, Data Science, and Cognitive Science only",
+			Result: rules.NewSchoolRule([]string{
+				"Engineering and Computer Science",
+				"Actuarial Science",
+				"Data Science",
+				"Cognitive Science",
+			}),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[*rules.SchoolRule](t, tc.Input, rule((*parser.RequirementsParser).School_rule), tc.Result)
+		})
+	}
+
+}

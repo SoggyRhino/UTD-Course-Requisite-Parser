@@ -292,7 +292,7 @@ living_learning_rule
     ;
 
 school_rule
-    : 'Open to students in the School of' degree_list ONLY_KW?
+    : 'Open to students in the School of' degree_list ONLY_KW? #schoolRule
     ;
 
 

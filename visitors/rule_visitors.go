@@ -298,7 +298,7 @@ func (v *RequisiteVisitor) visitElectivesDegreeSatisfactionRule(ctx *parser.Elec
 // ======================= Credit Rules ======================
 //todo need to fix grammar since it uses epxr
 
-// ======================= Living Learning Rules ======================
+// ======================= Living Learning Rule ======================
 
 // VisitPrefixLivingLearningRule
 //
@@ -324,4 +324,18 @@ func (v *RequisiteVisitor) VisitDegreeLivingLearningRule(ctx *parser.DegreeLivin
 
 func (v *RequisiteVisitor) visitDegreeLivingLearningRule(ctx *parser.DegreeLivingLearningRuleContext) *rules.LivingLearningRule {
 	return rules.NewLivingLearningRuleFromDegrees(v.Visit(ctx.Degree_list()).([]string))
+}
+
+// ======================= School Rule ======================
+
+// VisitSchoolRule
+//
+// Rule: 'Open to students in the School of' degree_list ONLY_KW? #schoolRule
+func (v *RequisiteVisitor) VisitSchoolRule(ctx *parser.SchoolRuleContext) any {
+	return v.visitSchoolRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitSchoolRule(ctx *parser.SchoolRuleContext) *rules.SchoolRule {
+	schools := v.Visit(ctx.Degree_list()).([]string)
+	return rules.NewSchoolRule(schools)
 }
