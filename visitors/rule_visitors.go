@@ -100,19 +100,6 @@ func (v *RequisiteVisitor) visitCombinedRepeatMaxHoursRule(ctx *parser.CombinedR
 	return rules.NewRepeatRule(0, hours, courses, "")
 }
 
-// VisitTopicsVaryRepeatRule
-//
-// Rule: course REPEAT_LIMIT DASH 'May be repeated for credit as topics vary' SMALL_INT SEMESTER_CREDIT_HOURS 'maximum'
-func (v *RequisiteVisitor) VisitTopicsVaryRepeatRule(ctx *parser.TopicsVaryRepeatRuleContext) any {
-	return v.visitTopicsVaryRepeatRule(ctx)
-}
-
-func (v *RequisiteVisitor) visitTopicsVaryRepeatRule(ctx *parser.TopicsVaryRepeatRuleContext) *rules.RepeatRule {
-	hours := mapInt(ctx.SMALL_INT().GetText())
-	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
-	return rules.NewRepeatRule(0, hours, courses, "")
-}
-
 // VisitCourseRepeatLimitRule
 //
 // Rule: course REPEAT_LIMIT
@@ -296,7 +283,83 @@ func (v *RequisiteVisitor) visitElectivesDegreeSatisfactionRule(ctx *parser.Elec
 }
 
 // ======================= Credit Rules ======================
-//todo need to fix grammar since it uses epxr
+
+// VisitCreditForRule
+//
+// Rule: CREDIT_PREFIX (COLON|COMMA)? credit_expr
+func (v *RequisiteVisitor) VisitCreditForRule(ctx *parser.CreditForRuleContext) any {
+	return v.visitCreditForRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitCreditForRule(ctx *parser.CreditForRuleContext) *rules.CreditForRule {
+	courseCollection := v.Visit(ctx.Credit_expr()).(rules.CourseCollection)
+	return rules.NewCreditForRule(courseCollection)
+}
+
+// VisitParenCreditExpr
+//
+// Rule: '(' credit_expr ')'
+func (v *RequisiteVisitor) VisitParenCreditExpr(ctx *parser.ParenCreditExprContext) any {
+	return v.visitParenCreditExpr(ctx)
+}
+
+func (v *RequisiteVisitor) visitParenCreditExpr(ctx *parser.ParenCreditExprContext) rules.CourseCollection {
+	return v.Visit(ctx.Credit_expr()).(rules.CourseCollection)
+}
+
+// VisitOrCreditExpr
+//
+// Rule: credit_expr COMMA? OR credit_expr
+func (v *RequisiteVisitor) VisitOrCreditExpr(ctx *parser.OrCreditExprContext) any {
+	return v.visitOrCreditExpr(ctx)
+}
+
+func (v *RequisiteVisitor) visitOrCreditExpr(ctx *parser.OrCreditExprContext) rules.CourseCollection {
+	col1 := v.Visit(ctx.Credit_expr(0)).(rules.CourseCollection)
+	col2 := v.Visit(ctx.Credit_expr(1)).(rules.CourseCollection)
+
+	return rules.NewOrCourseCollection(col1, col2)
+}
+
+// VisitAndCreditExpr
+//
+// Rule: credit_expr COMMA? AND credit_expr
+func (v *RequisiteVisitor) VisitAndCreditExpr(ctx *parser.AndCreditExprContext) any {
+	return v.visitAndCreditExpr(ctx)
+}
+
+func (v *RequisiteVisitor) visitAndCreditExpr(ctx *parser.AndCreditExprContext) rules.CourseCollection {
+	col1 := v.Visit(ctx.Credit_expr(0)).(rules.CourseCollection)
+	col2 := v.Visit(ctx.Credit_expr(1)).(rules.CourseCollection)
+
+	return rules.NewAndCourseCollection(col1, col2)
+}
+
+// VisitAmpersandCreditExpr
+//
+// Rule: credit_expr COMMA? AMPERSAND credit_expr
+func (v *RequisiteVisitor) VisitAmpersandCreditExpr(ctx *parser.AmpersandCreditExprContext) any {
+	return v.visitAmpersandCreditExpr(ctx)
+}
+
+func (v *RequisiteVisitor) visitAmpersandCreditExpr(ctx *parser.AmpersandCreditExprContext) rules.CourseCollection {
+	col1 := v.Visit(ctx.Credit_expr(0)).(rules.CourseCollection)
+	col2 := v.Visit(ctx.Credit_expr(1)).(rules.CourseCollection)
+
+	return rules.NewAndCourseCollection(col1, col2)
+}
+
+// VisitCourseCreditExpr
+//
+// Rule: course
+func (v *RequisiteVisitor) VisitCourseCreditExpr(ctx *parser.CourseCreditExprContext) any {
+	return v.visitCourseCreditExpr(ctx)
+}
+
+func (v *RequisiteVisitor) visitCourseCreditExpr(ctx *parser.CourseCreditExprContext) rules.CourseCollection {
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
+	return rules.NewSimpleCourseCollection(courses)
+}
 
 // ======================= Living Learning Rule ======================
 

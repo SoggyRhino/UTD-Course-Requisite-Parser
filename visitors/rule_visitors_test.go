@@ -207,6 +207,131 @@ func TestVisitLivingLearningRule(t *testing.T) {
 	}
 }
 
+func TestVisitCreditForRule(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result *rules.CreditForRule
+	}{
+		"Both simple courses": {
+			Input: "Credit cannot be received for both FIN 3300 and FIN 3330",
+			Result: rules.NewCreditForRule(
+				rules.NewAndCourseCollection(
+					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "FIN", Number: "3300"}}),
+					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "FIN", Number: "3330"}}),
+				),
+			),
+		},
+		"Both courses with courses prefix": {
+			Input: "Credit cannot be received for both courses, ENTP 6380 and MKT 6380",
+			Result: rules.NewCreditForRule(
+				rules.NewAndCourseCollection(
+					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "ENTP", Number: "6380"}}),
+					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "MKT", Number: "6380"}}),
+				),
+			),
+		},
+		"Single course and paren group": {
+			Input: "Credit cannot be received for both CS 2337 and (CS 2336 or CE 2336)",
+			Result: rules.NewCreditForRule(
+				rules.NewAndCourseCollection(
+					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "2337"}}),
+					rules.NewOrCourseCollection(
+						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "2336"}}),
+						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CE", Number: "2336"}}),
+					),
+				),
+			),
+		},
+		"Both paren groups": {
+			Input: "Credit cannot be received for both: (OPRE 6301 or SYSM 6303) and (OPRE 6359 or BUAN 6359)",
+			Result: rules.NewCreditForRule(
+				rules.NewAndCourseCollection(
+					rules.NewOrCourseCollection(
+						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "OPRE", Number: "6301"}}),
+						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "SYSM", Number: "6303"}}),
+					),
+					rules.NewOrCourseCollection(
+						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "OPRE", Number: "6359"}}),
+						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "BUAN", Number: "6359"}}),
+					),
+				),
+			),
+		},
+		"More than one of flat list": {
+			Input: "Credit cannot be received for more than one of the following: BMEN 1100 or CE 1100 or CS 1200 or EE 1100 or MECH 1100",
+			Result: rules.NewCreditForRule(
+				rules.NewOrCourseCollection(
+					rules.NewOrCourseCollection(
+						rules.NewOrCourseCollection(
+							rules.NewOrCourseCollection(
+								rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "BMEN", Number: "1100"}}),
+								rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CE", Number: "1100"}}),
+							),
+							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "1200"}}),
+						),
+						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "EE", Number: "1100"}}),
+					),
+					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "MECH", Number: "1100"}}),
+				),
+			),
+		},
+		"Multiple paren groups and bare course": {
+			Input: "Credit cannot be received for more than one of the following: (ACCT 6320 or MIS 6320 or OPRE 6393) and (BUAN 6320 or ACCT 6321) and MIS 6326",
+			Result: rules.NewCreditForRule(
+				rules.NewAndCourseCollection(
+					rules.NewAndCourseCollection(
+						rules.NewOrCourseCollection(
+							rules.NewOrCourseCollection(
+								rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "ACCT", Number: "6320"}}),
+								rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "MIS", Number: "6320"}}),
+							),
+							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "OPRE", Number: "6393"}}),
+						),
+						rules.NewOrCourseCollection(
+							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "BUAN", Number: "6320"}}),
+							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "ACCT", Number: "6321"}}),
+						),
+					),
+					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "MIS", Number: "6326"}}),
+				),
+			),
+		},
+		"Ampersand instead of and": {
+			Input: "Credit cannot be received for both courses, (CS 3341 or SE 3341 or STAT 3341) & ENGR 3341",
+			Result: rules.NewCreditForRule(
+				rules.NewAndCourseCollection(
+					rules.NewOrCourseCollection(
+						rules.NewOrCourseCollection(
+							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "3341"}}),
+							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "SE", Number: "3341"}}),
+						),
+						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "STAT", Number: "3341"}}),
+					),
+					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "ENGR", Number: "3341"}}),
+				),
+			),
+		},
+		"Nested and inside paren": {
+			Input: "Credit cannot be received for both courses, (CS 1336 and CS 1136) and CS 1436",
+			Result: rules.NewCreditForRule(
+				rules.NewAndCourseCollection(
+					rules.NewAndCourseCollection(
+						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "1336"}}),
+						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "1136"}}),
+					),
+					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "1436"}}),
+				),
+			),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[*rules.CreditForRule](t, tc.Input, rule((*parser.RequirementsParser).Credit_for_rule), tc.Result)
+		})
+	}
+}
+
 func TestVisitSchoolRule(t *testing.T) {
 
 	testCases := map[string]struct {

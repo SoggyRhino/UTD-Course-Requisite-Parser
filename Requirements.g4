@@ -254,7 +254,6 @@ repeat_limit_hours_rule
     | REPEAT_LIMIT DASH course ONLY_KW? 'may' ONLY_KW? 'be repeated' ONLY_KW? 'for'? SMALL_INT SEMESTER_CREDIT_HOURS 'maximum'                         # repeatHoursMaxSuffixRule
     | course REPEAT_LIMIT DASH 'This' COURSE_KW ('may' | 'can') ONLY_KW? 'be repeated' ONLY_KW? 'for'? 'a maximum of' SMALL_INT SEMESTER_CREDIT_HOURS  # courseRepeatMaxHoursRule
     | REPEAT_LIMIT DASH course AND course 'combined may only be repeated for a maximum of' SMALL_INT SEMESTER_CREDIT_HOURS                             # combinedRepeatMaxHoursRule
-    | course REPEAT_LIMIT DASH 'May be repeated for credit as topics vary' SMALL_INT SEMESTER_CREDIT_HOURS 'maximum'                                   # topicsVaryRepeatRule
     | course REPEAT_LIMIT                                                                                                                              # courseRepeatLimitRule
     ;
 
@@ -283,8 +282,16 @@ degree_satisfaction_rule
     ;
 
 credit_for_rule
-    : CREDIT_PREFIX (COLON|COMMA)? expr
+    : CREDIT_PREFIX (COLON|COMMA)? credit_expr              # creditForRule
     ;
+
+credit_expr
+             : '(' credit_expr ')'                          # parenCreditExpr
+             | credit_expr COMMA? OR credit_expr            # orCreditExpr
+             | credit_expr COMMA? AND credit_expr           # andCreditExpr
+             | credit_expr COMMA? AMPERSAND credit_expr     # ampersandCreditExpr
+             | course                                       # courseCreditExpr
+             ;
 
 living_learning_rule
     : PREFIX ('&' PREFIX)* LIVING_LEARNING_COMMUNITY    # prefixLivingLearningRule
