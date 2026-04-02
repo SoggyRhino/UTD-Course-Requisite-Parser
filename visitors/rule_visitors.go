@@ -41,7 +41,7 @@ func (v *RequisiteVisitor) VisitBareRepeatRule(ctx *parser.BareRepeatRuleContext
 
 func (v *RequisiteVisitor) visitBareRepeatRule(ctx *parser.BareRepeatRuleContext) *rules.RepeatRule {
 	//todo better blank value
-	return rules.NewRepeatRule(0, 0, []utils.Course{}, "")
+	return rules.NewRepeatRule(1, 0, []utils.Course{}, "")
 }
 
 // VisitRepeatMaxHoursRule

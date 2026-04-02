@@ -16,6 +16,24 @@ func NewOrCondition(conditions ...Condition) Condition {
 	return &OrCondition{Conditions: conditions}
 }
 
+func NewOrConditionFromExpr(cond1, cond2 Condition) *OrCondition {
+	var flattenedConditions []Condition
+
+	if or1, isOr1 := cond1.(*OrCondition); isOr1 {
+		flattenedConditions = append(flattenedConditions, or1.Conditions...)
+	} else {
+		flattenedConditions = append(flattenedConditions, cond1)
+	}
+
+	if or2, isOr2 := cond2.(*OrCondition); isOr2 {
+		flattenedConditions = append(flattenedConditions, or2.Conditions...)
+	} else {
+		flattenedConditions = append(flattenedConditions, cond2)
+	}
+
+	return &OrCondition{Conditions: flattenedConditions}
+}
+
 func (o *OrCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	//todo or condition
 	for _, condition := range o.Conditions {
@@ -46,6 +64,24 @@ func NewAndCondition(conditions ...Condition) Condition {
 		return conditions[0]
 	}
 	return &OrCondition{Conditions: conditions}
+}
+
+func NewAndConditionFromExpr(cond1, cond2 Condition) *AndCondition {
+	var flattenedConditions []Condition
+
+	if and1, isAnd1 := cond1.(*AndCondition); isAnd1 {
+		flattenedConditions = append(flattenedConditions, and1.Conditions...)
+	} else {
+		flattenedConditions = append(flattenedConditions, cond1)
+	}
+
+	if and2, isAnd2 := cond2.(*AndCondition); isAnd2 {
+		flattenedConditions = append(flattenedConditions, and2.Conditions...)
+	} else {
+		flattenedConditions = append(flattenedConditions, cond2)
+	}
+
+	return &AndCondition{Conditions: flattenedConditions}
 }
 
 func (a *AndCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {

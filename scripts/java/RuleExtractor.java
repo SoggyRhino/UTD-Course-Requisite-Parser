@@ -36,7 +36,7 @@ public class RuleExtractor {
             String rule = entry.getKey();
             LinkedHashSet<String> matches = entry.getValue();
             System.out.printf("\n[%s] — %d unique matches\n", rule, matches.size());
-            matches.forEach(m -> System.out.println("  " + m));
+            matches.stream().limit(10).forEach(m -> System.out.println("  " + m));
 
             Path out = Paths.get("out/extracted_" + rule + ".txt");
             Files.write(out, matches);
@@ -78,8 +78,12 @@ public class RuleExtractor {
 
                 if (matchFound == null) return;
 
+                // Guard: stop token can be null or have index -1 on empty/error nodes
+                if (ctx.getStart() == null || ctx.getStop() == null) return;
                 int a = ctx.getStart().getStartIndex();
                 int b = ctx.getStop().getStopIndex();
+                if (b < a) return;
+
                 Interval interval = new Interval(a, b);
                 String text = ctx.getStart().getInputStream().getText(interval);
 

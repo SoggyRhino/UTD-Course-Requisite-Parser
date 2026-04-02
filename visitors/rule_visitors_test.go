@@ -30,7 +30,7 @@ func TestVisitRepeatRule(t *testing.T) {
 		},
 		"Bare repeat restriction": {
 			Input:  "Repeat Restriction",
-			Result: rules.NewRepeatRule(0, 0, []utils.Course{}, ""),
+			Result: rules.NewRepeatRule(1, 0, []utils.Course{}, ""),
 		},
 	}
 

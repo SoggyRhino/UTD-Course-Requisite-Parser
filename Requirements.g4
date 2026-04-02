@@ -51,7 +51,7 @@ expr
     | semester_credit_hours_condition       # semesterCreditHoursExpr
     | minimum_hours_condition               # minimumHoursExpr
     | upper_division_hours_condition        # upperDivisionHoursExpr
-    | uppper_division_classes_condition     # upperDivisionClassesExpr
+    | upper_division_classes_condition      # upperDivisionClassesExpr
     | research_condition                    # researchExpr
     | placement_test_condition              # placementTestExpr
     | ap_score_condition                    # apScoreExpr
@@ -175,7 +175,7 @@ upper_division_hours_condition
     : SMALL_INT 'SCH of upper-division' PREFIX COURSE_KW        # upperDivisionSCHCondition
     ;
 
-uppper_division_classes_condition
+upper_division_classes_condition
     : AT_LEAST NUMBER_STRING PREFIX UPPER_DIVISION_COURSE_NUMBER COURSE_KW   # upperDivisionCountCondition
     | 'a 4000-level' PREFIX COURSE_KW                                        # upperDivisionSingleCondition
     ;
