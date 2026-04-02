@@ -402,3 +402,21 @@ func (v *RequisiteVisitor) visitSchoolRule(ctx *parser.SchoolRuleContext) *rules
 	schools := v.Visit(ctx.Degree_list()).([]string)
 	return rules.NewSchoolRule(schools)
 }
+
+// ======================= Same As Rule ======================
+
+// VisitSameAsRule
+//
+// Rule: '(' SAME_AS course (AND course)* ')'
+func (v *RequisiteVisitor) VisitSameAsRule(ctx *parser.SameAsRuleContext) any {
+	return v.visitSameAsRule(ctx)
+}
+
+func (v *RequisiteVisitor) visitSameAsRule(ctx *parser.SameAsRuleContext) *rules.SameAsRule {
+	courses := make([]utils.Course, 0, len(ctx.AllCourse()))
+	for _, course := range ctx.AllCourse() {
+		courses = append(courses, extractCoursesFromCourseList(v.Visit(course).(conditions.Condition))...)
+	}
+
+	return rules.NewSameAsRule(courses)
+}

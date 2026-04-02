@@ -356,3 +356,21 @@ func TestVisitSchoolRule(t *testing.T) {
 	}
 
 }
+
+func TestVisitSameAsRule(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result *rules.SameAsRule
+	}{
+		"Basic": {
+			Input:  "(Same as MATH 3335 and STAT 3335)",
+			Result: rules.NewSameAsRule([]utils.Course{{Prefix: "MATH", Number: "3335"}, {Prefix: "STAT", Number: "3335"}}),
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			testTree[*rules.SameAsRule](t, tc.Input, rule((*parser.RequirementsParser).Same_as_rule), tc.Result)
+		})
+	}
+}

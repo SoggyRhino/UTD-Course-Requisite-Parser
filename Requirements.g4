@@ -19,12 +19,11 @@ requisite
     | living_learning_rule                           # livingLearningReq
     | school_rule                                    # schoolReq
     | major_condition                                # majorReq
-    | PREREQ_KW COLON? expr (OR EQUIVALENT)?         # prereqReq
-    | COREQ_KW  COLON? expr (OR EQUIVALENT)?         # coreqReq
+    | PREREQ_KW COLON? expr                          # prereqReq
+    | COREQ_KW  COLON? expr                          # coreqReq
     | PREREQ_KW COLON? expr AND COREQ_KW COLON expr  # prereqAndCoreqReq
-    | PRE_OR_CO_KW COLON? expr (OR EQUIVALENT)?      # preOrCoReq
-    | '(' SAME_AS expr ')'                           # sameAsParenReq
-    | SAME_AS expr                                   # sameAsReq
+    | PRE_OR_CO_KW COLON? expr                       # preOrCoReq
+    | same_as_rule                                   # sameAsReq
     | expr                                           # exprReq
     ;
 
@@ -308,6 +307,10 @@ school_rule
     : 'Open to students in the School of' degree_list ONLY_KW? #schoolRule
     ;
 
+//todo make more rubust but there is only 1 occurence of this rule
+same_as_rule
+    : '(' SAME_AS course (AND course)* ')'                     # sameAsRule
+    ;
 
 
 // Lexer
