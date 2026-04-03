@@ -653,8 +653,8 @@ func (v *RequisiteVisitor) VisitBothGroupCondition(ctx *parser.BothGroupConditio
 }
 
 func (v *RequisiteVisitor) visitBothGroupCondition(ctx *parser.BothGroupConditionContext) conditions.Condition {
-	group1 := mapToStudentGroup(ctx.Group(0).GetText())
-	group2 := mapToStudentGroup(ctx.Group(1).GetText())
+	group1 := v.Visit(ctx.Group(0)).(utils.StudentGroup)
+	group2 := v.Visit(ctx.Group(1)).(utils.StudentGroup)
 
 	return conditions.NewAndCondition(
 		conditions.NewStudentGroupCondition(group1),
@@ -672,21 +672,21 @@ func (v *RequisiteVisitor) VisitGroupListCondition(ctx *parser.GroupListConditio
 func (v *RequisiteVisitor) visitGroupListCondition(ctx *parser.GroupListConditionContext) conditions.Condition {
 	groupsConditions := make([]conditions.Condition, len(ctx.AllGroup()))
 	for i, group := range ctx.AllGroup() {
-		groupsConditions[i] = conditions.NewStudentGroupCondition(mapToStudentGroup(group.GetText()))
+		groupsConditions[i] = conditions.NewStudentGroupCondition(v.Visit(group).(utils.StudentGroup))
 	}
 
 	return conditions.NewOrCondition(groupsConditions...)
 }
 
-// VisitSingleListCondition
+// VisitSingleGroupCondition
 //
 // Rule: group
-func (v *RequisiteVisitor) VisitSingleListCondition(ctx *parser.SingleGroupConditionContext) any {
-	return v.visitSingleListCondition(ctx)
+func (v *RequisiteVisitor) VisitSingleGroupCondition(ctx *parser.SingleGroupConditionContext) any {
+	return v.visitSingleGroupCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitSingleListCondition(ctx *parser.SingleGroupConditionContext) conditions.Condition {
-	group := mapToStudentGroup(ctx.Group().GetText())
+func (v *RequisiteVisitor) visitSingleGroupCondition(ctx *parser.SingleGroupConditionContext) conditions.Condition {
+	group := v.Visit(ctx.Group()).(utils.StudentGroup)
 	return conditions.NewStudentGroupCondition(group)
 }
 

@@ -2,6 +2,7 @@ package visitors
 
 import (
 	"parser/parser"
+	"parser/utils"
 )
 
 // VisitTitle matches what is essentially a name / propper noun
@@ -51,4 +52,13 @@ func (v *RequisiteVisitor) VisitPlacement_test_name(ctx *parser.Placement_test_n
 
 func (v *RequisiteVisitor) visitPlacementTestName(ctx *parser.Placement_test_nameContext) string {
 	return v.getText(ctx.BaseParserRuleContext)
+}
+
+// VisitGroup
+func (v *RequisiteVisitor) VisitGroup(ctx *parser.GroupContext) any {
+	return v.visitGroup(ctx)
+}
+
+func (v *RequisiteVisitor) visitGroup(ctx *parser.GroupContext) utils.StudentGroup {
+	return mapToStudentGroup(ctx.GetText())
 }

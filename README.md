@@ -2,14 +2,7 @@
 
 ANTLR4 based approach for parsing course requirements. 
 
-Currently, the grammar successfully parses* ~97% of the unique, 25f course requirements. At this point adding the remaining 20 ish 
- inputs is not worth focusing on since they are all mostly unique edge cases and/or typos.
-
-> \*Antlr parses them into an AST, not parsed yet into a useful JSON object.
-# Build 
-
-Currently, this is a work in progress. I am building up the visitors from the leaf nodes, so everything will pretty
-much not be functional until all visitors are completed. 
+# Build
 
 Antlr4 is uses grammar to generate go code for a parser, lexer and visitors. This project
 ignores the first 2 and only uses visitors. Visitors are functions that are called when a node in the ast is visited.
@@ -35,11 +28,4 @@ extract_inputs.bat
  - Useful for creating the unit tests
 
 test_grammar.bat 
- - Runs the grammar and makes sure that changes don't make the grammar worse 
-
-
-# Visitor Progress
- - Implemented : 126
- - Missing     : 24
- - Total       : 150
- - Coverage    : 84%
+ - Runs the grammar and makes sure that changes don't make the grammar worse
