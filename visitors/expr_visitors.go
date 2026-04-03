@@ -28,7 +28,7 @@ func (v *RequisiteVisitor) visitOrExpr(ctx *parser.OrExprContext) conditions.Con
 	cond1 := v.Visit(ctx.Expr(0)).(conditions.Condition)
 	cond2 := v.Visit(ctx.Expr(1)).(conditions.Condition)
 
-	return conditions.NewOrCondition(cond1, cond2)
+	return conditions.NewOrConditionFromExpr(cond1, cond2)
 }
 
 // VisitAndExpr

@@ -59,6 +59,7 @@ const (
 type Notice string
 
 const (
-	ExcludeDMHPLLCNotice Notice = "non-DMHP/non-LLC (DMLC, DFLC, DHLC) Student Group Only"
-	ExactCoReqNotice            = "Matching Corequisite Section Required"
+	ExcludeDMHPLLCNotice          Notice = "non-DMHP/non-LLC (DMLC, DFLC, DHLC) Student Group Only"
+	ExactCoReqNotice                     = "Matching Corequisite Section Required"
+	ComputerScholarsProgramNotice        = "Computer Scholars Program Only"
 )

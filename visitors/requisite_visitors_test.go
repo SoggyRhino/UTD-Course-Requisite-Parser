@@ -6,15 +6,12 @@ import (
 	"parser/rules"
 	"parser/utils"
 	"testing"
-
-	"github.com/antlr4-go/antlr/v4"
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestRequisiteVisitors(t *testing.T) {
 	testCases := map[string]struct {
 		Input  string
-		Result any
+		Result Requirements
 	}{
 		"First": {
 			Input: "Prerequisite: ACN 6340 or HCS 6340.",
@@ -60,7 +57,7 @@ func TestRequisiteVisitors(t *testing.T) {
 		"Computer Scholars Req": {
 			Input: "Computing Scholars Program",
 			Result: Requirements{
-				Notices: []utils.Notice{utils.ExcludeDMHPLLCNotice},
+				Notices: []utils.Notice{utils.ComputerScholarsProgramNotice},
 			},
 		},
 		"GPA Repeat Req": {
@@ -175,19 +172,7 @@ func TestRequisiteVisitors(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			stream := antlr.NewInputStream(tc.Input)
-			lexer := parser.NewRequirementsLexer(stream)
-			tokens := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
-			p := parser.NewRequirementsParser(tokens)
-
-			tree := p.Requisite()
-
-			visitor := NewRequisiteVisitor(tokens)
-			visitor.Visit(tree)
-
-			if diff := cmp.Diff(tc.Result, visitor.Requirements); diff != "" {
-				t.Errorf("Unexpected output (-want +got):\n%s", diff)
-			}
+			testTree[Requirements](t, tc.Input, rule((*parser.RequirementsParser).Prog), tc.Result)
 		})
 	}
 }

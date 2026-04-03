@@ -41,6 +41,30 @@ func (v *RequisiteVisitor) appendPreReq(condition conditions.Condition) {
 	}
 }
 
+func (v *RequisiteVisitor) appendCoReq(condition conditions.Condition) {
+	if v.Requirements.CoReqs == nil {
+		v.Requirements.CoReqs = condition
+	} else {
+		v.Requirements.CoReqs = conditions.NewAndConditionFromExpr(v.Requirements.CoReqs, condition)
+	}
+}
+
+func (v *RequisiteVisitor) appendPreOrCoReq(condition conditions.Condition) {
+	if v.Requirements.PreOrCoReqs == nil {
+		v.Requirements.PreOrCoReqs = condition
+	} else {
+		v.Requirements.PreOrCoReqs = conditions.NewAndConditionFromExpr(v.Requirements.PreOrCoReqs, condition)
+	}
+}
+
+func (v *RequisiteVisitor) appendRule(rule rules.Rule) {
+	v.Requirements.Rules = append(v.Requirements.Rules, rule)
+}
+
+func (v *RequisiteVisitor) appendNotice(notice utils.Notice) {
+	v.Requirements.Notices = append(v.Requirements.Notices, notice)
+}
+
 func (v *RequisiteVisitor) Visit(tree antlr.ParseTree) interface{} {
 	return tree.Accept(v)
 }
