@@ -55,3 +55,10 @@ const (
 	GoodAcademicStanding  Standing = "Good Academic Standing"
 	UpperDivisionStanding          = "Upper Division Standing"
 )
+
+type Notice string
+
+const (
+	ExcludeDMHPLLCNotice Notice = "non-DMHP/non-LLC (DMLC, DFLC, DHLC) Student Group Only"
+	ExactCoReqNotice            = "Matching Corequisite Section Required"
+)

@@ -34,3 +34,7 @@ func NewDegreeSatisfactionRuleFromElectives(rule *DegreeSatisfactionRule) *Degre
 	rule.Elective = true
 	return rule
 }
+
+func (r *DegreeSatisfactionRule) isRule() bool {
+	return true
+}

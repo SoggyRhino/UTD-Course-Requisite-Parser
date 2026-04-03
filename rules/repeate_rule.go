@@ -11,6 +11,10 @@ type RepeatRule struct {
 	MajorInternship string
 }
 
+func (r *RepeatRule) isRule() bool {
+	return true
+}
+
 func NewRepeatRule(count int, hours int, courses []utils.Course, internship string) *RepeatRule {
 	return &RepeatRule{
 		Count:           count,
@@ -34,7 +38,9 @@ func NewInternshipRepeatRule(internship string) *RepeatRule {
 	}
 }
 
-func (r *RepeatRule) IsRule() {}
+func (r *RepeatRule) IsRule() bool {
+	return true
+}
 
 type GpaRepeatRule struct {
 	Course       utils.Course
@@ -45,4 +51,8 @@ func NewGpaRepeatRule(course utils.Course) *GpaRepeatRule {
 	return &GpaRepeatRule{
 		Course: course,
 	}
+}
+
+func (r *GpaRepeatRule) isRule() bool {
+	return true
 }

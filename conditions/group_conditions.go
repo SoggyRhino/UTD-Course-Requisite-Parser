@@ -1,7 +1,6 @@
 package conditions
 
 import (
-	"fmt"
 	"parser/utils"
 )
 
@@ -35,13 +34,7 @@ func NewOrConditionFromExpr(cond1, cond2 Condition) *OrCondition {
 }
 
 func (o *OrCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
-	//todo or condition
-	for _, condition := range o.Conditions {
-		if pass, _ := condition.Fulfils(userInfo); pass {
-			return true, nil
-		}
-	}
-	return false, fmt.Errorf("no conditions met")
+	return false, nil
 }
 
 func (o *OrCondition) AppendGrade(grade utils.Grade) {
@@ -63,7 +56,7 @@ func NewAndCondition(conditions ...Condition) Condition {
 	if len(conditions) == 1 {
 		return conditions[0]
 	}
-	return &OrCondition{Conditions: conditions}
+	return &AndCondition{Conditions: conditions}
 }
 
 func NewAndConditionFromExpr(cond1, cond2 Condition) *AndCondition {
@@ -86,7 +79,7 @@ func NewAndConditionFromExpr(cond1, cond2 Condition) *AndCondition {
 
 func (a *AndCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
 	//todo and condition
-	return false, fmt.Errorf("no conditions met")
+	return false, nil
 }
 
 func (a *AndCondition) AppendGrade(grade utils.Grade) {

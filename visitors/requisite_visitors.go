@@ -4,6 +4,7 @@ import (
 	"parser/conditions"
 	"parser/parser"
 	"parser/rules"
+	"parser/utils"
 )
 
 // VisitExcludeNoticeReq
@@ -14,7 +15,8 @@ func (v *RequisiteVisitor) VisitExcludeNoticeReq(ctx *parser.ExcludeNoticeReqCon
 }
 
 func (v *RequisiteVisitor) visitExcludeNoticeReq(ctx *parser.ExcludeNoticeReqContext) any {
-	panic("not implemented")
+	v.Requirements.Notices = append(v.Requirements.Notices, utils.ExcludeDMHPLLCNotice)
+	return v.Visit(ctx.Requisite())
 }
 
 // VisitAppendAcademicPlanReq
@@ -25,7 +27,9 @@ func (v *RequisiteVisitor) VisitAppendAcademicPlanReq(ctx *parser.AppendAcademic
 }
 
 func (v *RequisiteVisitor) visitAppendAcademicPlanReq(ctx *parser.AppendAcademicPlanReqContext) any {
-	panic("not implemented")
+	condition := v.Visit(ctx.Academic_plan_condition()).(conditions.Condition)
+	v.appendPreReq(condition)
+	return v.Visit(ctx.Requisite())
 }
 
 // VisitAcademicPlanReq
@@ -35,8 +39,10 @@ func (v *RequisiteVisitor) VisitAcademicPlanReq(ctx *parser.AcademicPlanReqConte
 	return v.visitAcademicPlanReq(ctx)
 }
 
-func (v *RequisiteVisitor) visitAcademicPlanReq(ctx *parser.AcademicPlanReqContext) *conditions.AcademicYearCondition {
-	return v.Visit(ctx.Academic_plan_condition()).(*conditions.AcademicYearCondition)
+func (v *RequisiteVisitor) visitAcademicPlanReq(ctx *parser.AcademicPlanReqContext) any {
+	condition := v.Visit(ctx.Academic_plan_condition()).(conditions.Condition)
+	v.appendPreReq(condition)
+	return nil
 }
 
 // VisitExactCoreqNoticeReq
@@ -47,7 +53,8 @@ func (v *RequisiteVisitor) VisitExactCoreqNoticeReq(ctx *parser.ExactCoreqNotice
 }
 
 func (v *RequisiteVisitor) visitExactCoreqNoticeReq(ctx *parser.ExactCoreqNoticeReqContext) any {
-	panic("not implemented")
+	v.Requirements.Notices = append(v.Requirements.Notices, utils.ExactCoReqNotice)
+	return nil
 }
 
 // VisitComputerScholarsReq
@@ -58,7 +65,8 @@ func (v *RequisiteVisitor) VisitComputerScholarsReq(ctx *parser.ComputerScholars
 }
 
 func (v *RequisiteVisitor) visitComputerScholarsReq(ctx *parser.ComputerScholarsReqContext) any {
-	panic("not implemented")
+	v.Requirements.Notices = append(v.Requirements.Notices, utils.ExcludeDMHPLLCNotice)
+	return nil
 }
 
 // VisitGpaRepeatReq
@@ -69,7 +77,8 @@ func (v *RequisiteVisitor) VisitGpaRepeatReq(ctx *parser.GpaRepeatReqContext) an
 }
 
 func (v *RequisiteVisitor) visitGpaRepeatReq(ctx *parser.GpaRepeatReqContext) *rules.GpaRepeatRule {
-	return v.Visit(ctx.Gpa_repeate_rule()).(*rules.GpaRepeatRule)
+	v.Requirements.Rules = append(v.Requirements.Rules, v.Visit(ctx.Gpa_repeate_rule()).(rules.Rule))
+	return nil
 }
 
 // VisitRepeatLimitHoursReq
@@ -80,7 +89,8 @@ func (v *RequisiteVisitor) VisitRepeatLimitHoursReq(ctx *parser.RepeatLimitHours
 }
 
 func (v *RequisiteVisitor) visitRepeatLimitHoursReq(ctx *parser.RepeatLimitHoursReqContext) *rules.RepeatRule {
-	return v.Visit(ctx.Repeat_limit_hours_rule()).(*rules.RepeatRule)
+	v.Requirements.Rules = append(v.Requirements.Rules, v.Visit(ctx.Repeat_limit_hours_rule()).(rules.Rule))
+	return nil
 }
 
 // VisitRepeatLimitTimesReq
@@ -91,7 +101,8 @@ func (v *RequisiteVisitor) VisitRepeatLimitTimesReq(ctx *parser.RepeatLimitTimes
 }
 
 func (v *RequisiteVisitor) visitRepeatLimitTimesReq(ctx *parser.RepeatLimitTimesReqContext) *rules.RepeatRule {
-	return v.Visit(ctx.Repeat_limit_times_rule()).(*rules.RepeatRule)
+	v.Requirements.Rules = append(v.Requirements.Rules, v.Visit(ctx.Repeat_limit_times_rule()).(rules.Rule))
+	return nil
 }
 
 // VisitRepeatReq
@@ -102,7 +113,8 @@ func (v *RequisiteVisitor) VisitRepeatReq(ctx *parser.RepeatReqContext) any {
 }
 
 func (v *RequisiteVisitor) visitRepeatReq(ctx *parser.RepeatReqContext) *rules.RepeatRule {
-	return v.Visit(ctx.Repeat_rule()).(*rules.RepeatRule)
+	v.Requirements.Rules = append(v.Requirements.Rules, v.Visit(ctx.Repeat_rule()).(rules.Rule))
+	return nil
 }
 
 // VisitDegreeSatisfactionReq
@@ -113,7 +125,8 @@ func (v *RequisiteVisitor) VisitDegreeSatisfactionReq(ctx *parser.DegreeSatisfac
 }
 
 func (v *RequisiteVisitor) visitDegreeSatisfactionReq(ctx *parser.DegreeSatisfactionReqContext) *rules.DegreeSatisfactionRule {
-	return v.Visit(ctx.Degree_satisfaction_rule()).(*rules.DegreeSatisfactionRule)
+	v.Requirements.Rules = append(v.Requirements.Rules, v.Visit(ctx.Degree_satisfaction_rule()).(rules.Rule))
+	return nil
 }
 
 // VisitCreditForReq
@@ -124,7 +137,8 @@ func (v *RequisiteVisitor) VisitCreditForReq(ctx *parser.CreditForReqContext) an
 }
 
 func (v *RequisiteVisitor) visitCreditForReq(ctx *parser.CreditForReqContext) *rules.CreditForRule {
-	return v.Visit(ctx.Credit_for_rule()).(*rules.CreditForRule)
+	v.Requirements.Rules = append(v.Requirements.Rules, v.Visit(ctx.Credit_for_rule()).(rules.Rule))
+	return nil
 }
 
 // VisitLivingLearningReq
@@ -135,7 +149,8 @@ func (v *RequisiteVisitor) VisitLivingLearningReq(ctx *parser.LivingLearningReqC
 }
 
 func (v *RequisiteVisitor) visitLivingLearningReq(ctx *parser.LivingLearningReqContext) *rules.LivingLearningRule {
-	return v.Visit(ctx.Living_learning_rule()).(*rules.LivingLearningRule)
+	v.Requirements.Rules = append(v.Requirements.Rules, v.Visit(ctx.Living_learning_rule()).(rules.Rule))
+	return nil
 }
 
 // VisitSchoolReq
@@ -146,7 +161,8 @@ func (v *RequisiteVisitor) VisitSchoolReq(ctx *parser.SchoolReqContext) any {
 }
 
 func (v *RequisiteVisitor) visitSchoolReq(ctx *parser.SchoolReqContext) *rules.SchoolRule {
-	return v.Visit(ctx.School_rule()).(*rules.SchoolRule)
+	v.Requirements.Rules = append(v.Requirements.Rules, v.Visit(ctx.School_rule()).(rules.Rule))
+	return nil
 }
 
 // VisitMajorReq
@@ -157,7 +173,8 @@ func (v *RequisiteVisitor) VisitMajorReq(ctx *parser.MajorReqContext) any {
 }
 
 func (v *RequisiteVisitor) visitMajorReq(ctx *parser.MajorReqContext) conditions.Condition {
-	return v.Visit(ctx.Major_condition()).(conditions.Condition)
+	v.appendPreReq(v.Visit(ctx.Major_condition()).(conditions.Condition))
+	return nil
 }
 
 // VisitPrereqReq
@@ -168,7 +185,14 @@ func (v *RequisiteVisitor) VisitPrereqReq(ctx *parser.PrereqReqContext) any {
 }
 
 func (v *RequisiteVisitor) visitPrereqReq(ctx *parser.PrereqReqContext) any {
-	panic("not implemented")
+	condition := v.Visit(ctx.Expr())
+	switch res := condition.(type) {
+	case conditions.Condition:
+		v.appendPreReq(res)
+	case rules.Rule:
+		v.Requirements.Rules = append(v.Requirements.Rules, res)
+	}
+	return nil
 }
 
 // VisitCoreqReq
@@ -179,7 +203,14 @@ func (v *RequisiteVisitor) VisitCoreqReq(ctx *parser.CoreqReqContext) any {
 }
 
 func (v *RequisiteVisitor) visitCoreqReq(ctx *parser.CoreqReqContext) any {
-	panic("not implemented")
+	condition := v.Visit(ctx.Expr())
+	switch res := condition.(type) {
+	case conditions.Condition:
+		v.Requirements.CoReqs = res
+	case rules.Rule:
+		v.Requirements.Rules = append(v.Requirements.Rules, res)
+	}
+	return nil
 }
 
 // VisitPrereqAndCoreqReq
@@ -190,7 +221,24 @@ func (v *RequisiteVisitor) VisitPrereqAndCoreqReq(ctx *parser.PrereqAndCoreqReqC
 }
 
 func (v *RequisiteVisitor) visitPrereqAndCoreqReq(ctx *parser.PrereqAndCoreqReqContext) any {
-	panic("not implemented")
+	PreCond := v.Visit(ctx.Expr(0))
+	CoCond := v.Visit(ctx.Expr(1))
+
+	switch res := PreCond.(type) {
+	case conditions.Condition:
+		v.appendPreReq(res)
+	case rules.Rule:
+		v.Requirements.Rules = append(v.Requirements.Rules, res)
+	}
+
+	switch res := CoCond.(type) {
+	case conditions.Condition:
+		v.Requirements.CoReqs = res
+	case rules.Rule:
+		v.Requirements.Rules = append(v.Requirements.Rules, res)
+	}
+
+	return nil
 }
 
 // VisitPreOrCoReq
@@ -201,7 +249,15 @@ func (v *RequisiteVisitor) VisitPreOrCoReq(ctx *parser.PreOrCoReqContext) any {
 }
 
 func (v *RequisiteVisitor) visitPreOrCoReq(ctx *parser.PreOrCoReqContext) any {
-	panic("not implemented")
+	condition := v.Visit(ctx.Expr())
+
+	switch res := condition.(type) {
+	case conditions.Condition:
+		v.Requirements.PreOrCoReqs = res
+	case rules.Rule:
+		v.Requirements.Rules = append(v.Requirements.Rules, res)
+	}
+	return nil
 }
 
 // VisitSameAsReq
@@ -212,7 +268,8 @@ func (v *RequisiteVisitor) VisitSameAsReq(ctx *parser.SameAsReqContext) any {
 }
 
 func (v *RequisiteVisitor) visitSameAsReq(ctx *parser.SameAsReqContext) any {
-	return v.Visit(ctx.Same_as_rule())
+	v.Requirements.Rules = append(v.Requirements.Rules, v.Visit(ctx.Same_as_rule()).(rules.Rule))
+	return nil
 }
 
 // VisitExprReq
@@ -222,6 +279,14 @@ func (v *RequisiteVisitor) VisitExprReq(ctx *parser.ExprReqContext) any {
 	return v.visitExprReq(ctx)
 }
 
-func (v *RequisiteVisitor) visitExprReq(ctx *parser.ExprReqContext) conditions.Condition {
-	return v.Visit(ctx.Expr()).(conditions.Condition)
+func (v *RequisiteVisitor) visitExprReq(ctx *parser.ExprReqContext) any {
+	condition := v.Visit(ctx.Expr())
+
+	switch res := condition.(type) {
+	case conditions.Condition:
+		v.appendPreReq(res)
+	case rules.Rule:
+		v.Requirements.Rules = append(v.Requirements.Rules, res)
+	}
+	return nil
 }

@@ -1,23 +1,43 @@
 package visitors
 
 import (
+	"parser/conditions"
 	"parser/parser"
+	"parser/rules"
+	"parser/utils"
 
 	"github.com/antlr4-go/antlr/v4"
 )
 
 var _ parser.RequirementsVisitor = (*RequisiteVisitor)(nil)
 
+type Requirements struct {
+	PreReqs     conditions.Condition
+	CoReqs      conditions.Condition
+	PreOrCoReqs conditions.Condition
+	Rules       []rules.Rule
+	Notices     []utils.Notice
+}
+
 type RequisiteVisitor struct {
 	parser.BaseRequirementsVisitor
-	Tokens *antlr.CommonTokenStream
-	Errors []error
+	Tokens       *antlr.CommonTokenStream
+	Errors       []error
+	Requirements Requirements
 }
 
 func NewRequisiteVisitor(tokens *antlr.CommonTokenStream) *RequisiteVisitor {
 	return &RequisiteVisitor{
 		Tokens: tokens,
 		Errors: make([]error, 0),
+	}
+}
+
+func (v *RequisiteVisitor) appendPreReq(condition conditions.Condition) {
+	if v.Requirements.PreReqs == nil {
+		v.Requirements.PreReqs = condition
+	} else {
+		v.Requirements.PreReqs = conditions.NewAndConditionFromExpr(v.Requirements.PreReqs, condition)
 	}
 }
 

@@ -8,6 +8,10 @@ type CreditForRule struct {
 	Courses CourseCollection
 }
 
+func (c CreditForRule) isRule() bool {
+	return true
+}
+
 func NewCreditForRule(courses CourseCollection) *CreditForRule {
 	return &CreditForRule{Courses: courses}
 }

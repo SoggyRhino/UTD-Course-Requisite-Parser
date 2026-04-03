@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"parser/parser"
-	"parser/utils"
 	"parser/visitors"
 
 	"github.com/antlr4-go/antlr/v4"
@@ -22,11 +21,7 @@ func main() {
 			BaseParseTreeVisitor: &antlr.BaseParseTreeVisitor{},
 		},
 	}
+	tree.Accept(visitor)
 
-	result := visitor.Visit(tree)
-	if courses, ok := result.([]utils.Course); ok {
-		fmt.Printf("Parsed Courses: %v\n", courses)
-	} else {
-		fmt.Println("No courses found or unexpected result type")
-	}
+	fmt.Println(visitor.Requirements)
 }
