@@ -2,9 +2,9 @@ package visitors
 
 import (
 	"parser/conditions"
+	"parser/constants"
 	"parser/parser"
 	rules "parser/rules"
-	"parser/utils"
 )
 
 // ======================= Repeat Restriction Rule =======================
@@ -41,7 +41,7 @@ func (v *RequisiteVisitor) VisitBareRepeatRule(ctx *parser.BareRepeatRuleContext
 
 func (v *RequisiteVisitor) visitBareRepeatRule(ctx *parser.BareRepeatRuleContext) *rules.RepeatRule {
 	//todo better blank value
-	return rules.NewRepeatRule(1, 0, []utils.Course{}, "")
+	return rules.NewRepeatRule(1, 0, []constants.Course{}, "")
 }
 
 // VisitRepeatMaxHoursRule
@@ -93,7 +93,7 @@ func (v *RequisiteVisitor) VisitCombinedRepeatMaxHoursRule(ctx *parser.CombinedR
 func (v *RequisiteVisitor) visitCombinedRepeatMaxHoursRule(ctx *parser.CombinedRepeatMaxHoursRuleContext) *rules.RepeatRule {
 	hours := mapInt(ctx.SMALL_INT().GetText())
 
-	var courses []utils.Course
+	var courses []constants.Course
 	courses = append(courses, extractCoursesFromCourseList(v.Visit(ctx.Course(0)).(conditions.Condition))...)
 	courses = append(courses, extractCoursesFromCourseList(v.Visit(ctx.Course(1)).(conditions.Condition))...)
 
@@ -255,7 +255,7 @@ func (v *RequisiteVisitor) VisitStudentDegreeSatisfactionRule(ctx *parser.Studen
 
 func (v *RequisiteVisitor) visitStudentDegreeSatisfactionRule(ctx *parser.StudentDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
 	degree := v.Visit(ctx.Degree()).(string)
-	return rules.NewDegreeSatisfactionRuleFromDegree([]string{degree}, utils.AnyDegree)
+	return rules.NewDegreeSatisfactionRuleFromDegree([]string{degree}, constants.AnyDegree)
 
 }
 
@@ -413,7 +413,7 @@ func (v *RequisiteVisitor) VisitSameAsRule(ctx *parser.SameAsRuleContext) any {
 }
 
 func (v *RequisiteVisitor) visitSameAsRule(ctx *parser.SameAsRuleContext) *rules.SameAsRule {
-	courses := make([]utils.Course, 0, len(ctx.AllCourse()))
+	courses := make([]constants.Course, 0, len(ctx.AllCourse()))
 	for _, course := range ctx.AllCourse() {
 		courses = append(courses, extractCoursesFromCourseList(v.Visit(course).(conditions.Condition))...)
 	}

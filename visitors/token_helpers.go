@@ -1,7 +1,7 @@
 package visitors
 
 import (
-	"parser/utils"
+	"parser/constants"
 	"strconv"
 	"strings"
 )
@@ -14,18 +14,18 @@ import (
 //	| [Ss]'ophomore'
 //	| [Jj]'unior' | 'JR'
 //	| [Ss]'enior' | 'SR'
-func mapGradeLevel(text string) utils.GradeLevel {
+func mapGradeLevel(text string) constants.GradeLevel {
 	switch text {
 	case "Freshman", "freshman", "Freshmen", "freshmen":
-		return utils.Freshman
+		return constants.Freshman
 	case "Sophomore", "sophomore":
-		return utils.Sophomore
+		return constants.Sophomore
 	case "Junior", "junior", "Jr":
-		return utils.Junior
+		return constants.Junior
 	case "Senior", "senior", "Sr":
-		return utils.Senior
+		return constants.Senior
 	case "":
-		return utils.AnyGrade
+		return constants.AnyGrade
 
 	default:
 		//todo look into better option than panic
@@ -36,16 +36,16 @@ func mapGradeLevel(text string) utils.GradeLevel {
 // mapDegreeLevel maps variants of degree levels to a DegreeLevel
 //
 // DEGREE_LEVEL : 'MS' | 'BS' | 'PHD' | 'PhD';
-func mapDegreeLevel(text string) utils.DegreeLevel {
+func mapDegreeLevel(text string) constants.DegreeLevel {
 	switch text {
 	case "MS":
-		return utils.Graduate
+		return constants.Graduate
 	case "BS":
-		return utils.Undergraduate
+		return constants.Undergraduate
 	case "PHD", "PhD":
-		return utils.PhD
+		return constants.PhD
 	case "":
-		return utils.AnyDegree
+		return constants.AnyDegree
 	default:
 		panic("Invalid Degree Level: " + text)
 	}
@@ -58,16 +58,16 @@ func mapDegreeLevel(text string) utils.DegreeLevel {
 //	 : [Uu]'ndergraduate' | 'Ugrd' | 'ugrd'
 //		| [Gg]'raduate'      | 'GRAD' | 'grad'
 //		| [Dd]'octoral'
-func mapDivisionType(text string) utils.DegreeLevel {
+func mapDivisionType(text string) constants.DegreeLevel {
 	switch text {
 	case "Undergraduate", "undergraduate", "Ugrd", "ugrd":
-		return utils.Undergraduate
+		return constants.Undergraduate
 	case "Graduate", "graduate", "GRAD", "grad":
-		return utils.Graduate
+		return constants.Graduate
 	case "Doctoral", "doctoral":
-		return utils.PhD
+		return constants.PhD
 	case "":
-		return utils.AnyDegree
+		return constants.AnyDegree
 	default:
 		panic("Invalid Division Type: " + text)
 	}
@@ -125,20 +125,20 @@ func stripChars(text string, chars ...string) string {
 	return text
 }
 
-func mapToStudentGroup(text string) utils.StudentGroup {
+func mapToStudentGroup(text string) constants.StudentGroup {
 	switch text {
 	case "Computer Scholars Program", "Computing Scholars Program":
-		return utils.ComputerScholarsProgram
+		return constants.ComputerScholarsProgram
 	case "Collegium V Honors", "CV Honors":
-		return utils.CollegeVHonors
+		return constants.CollegeVHonors
 	case "Liberal Arts Honors":
-		return utils.LiberalArtsHonors
+		return constants.LiberalArtsHonors
 	case "SCVG":
-		return utils.SCVG
+		return constants.SCVG
 	case "DMHP":
-		return utils.DMHP
+		return constants.DMHP
 	case "DLAH":
-		return utils.DLAH
+		return constants.DLAH
 	default:
 		panic("Invalid Student Group: " + text)
 	}

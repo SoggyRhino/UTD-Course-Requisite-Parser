@@ -1,12 +1,39 @@
 package conditions
 
 import (
+	"encoding/json"
 	"log"
-	"parser/utils"
+	"parser/constants"
 )
 
 type AlternativeCondition struct {
-	Condition Condition
+	Condition Condition `json:"condition,omitempty"`
+}
+
+func (a *AlternativeCondition) MarshalJSON() ([]byte, error) {
+	type Alias AlternativeCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "alternative",
+		Alias: (*Alias)(a),
+	})
+}
+
+func (a *AlternativeCondition) UnmarshalJSON(b []byte) error {
+	var raw struct {
+		Condition json.RawMessage `json:"condition"`
+	}
+	if err := json.Unmarshal(b, &raw); err != nil {
+		return err
+	}
+	cond, err := UnmarshalCondition(raw.Condition)
+	if err != nil {
+		return err
+	}
+	a.Condition = cond
+	return nil
 }
 
 func NewAlternativeCondition(condition Condition) *AlternativeCondition {
@@ -15,7 +42,7 @@ func NewAlternativeCondition(condition Condition) *AlternativeCondition {
 	}
 }
 
-func (a *AlternativeCondition) Fulfils(info utils.UserInfo) (bool, error) {
+func (a *AlternativeCondition) Fulfils(info constants.UserInfo) (bool, error) {
 	log.Println("AlternativeCondition Fulfils not implemented")
 	return a.Condition.Fulfils(info)
 }

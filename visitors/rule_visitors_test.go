@@ -1,9 +1,9 @@
 package visitors
 
 import (
+	"parser/constants"
 	"parser/parser"
 	"parser/rules"
-	"parser/utils"
 	"testing"
 )
 
@@ -14,14 +14,14 @@ func TestVisitRepeatRule(t *testing.T) {
 	}{
 		"Single course repeat restriction": {
 			Input: "ACCT 2301 Repeat Restriction",
-			Result: rules.NewCourseRepeatRule([]utils.Course{
+			Result: rules.NewCourseRepeatRule([]constants.Course{
 				{Prefix: "ACCT", Number: "2301"},
 			}),
 		},
 		"Dual prefix course repeat restriction": {
 			Input: "CE/CS 2305 Repeat Restriction",
 			Result: rules.NewCourseRepeatRule(
-				[]utils.Course{{Prefix: "CE", Number: "2305"}, {Prefix: "CS", Number: "2305"}},
+				[]constants.Course{{Prefix: "CE", Number: "2305"}, {Prefix: "CS", Number: "2305"}},
 			),
 		},
 		"Internship repeat restriction": {
@@ -30,7 +30,7 @@ func TestVisitRepeatRule(t *testing.T) {
 		},
 		"Bare repeat restriction": {
 			Input:  "Repeat Restriction",
-			Result: rules.NewRepeatRule(1, 0, []utils.Course{}, ""),
+			Result: rules.NewRepeatRule(1, 0, []constants.Course{}, ""),
 		},
 	}
 
@@ -48,31 +48,31 @@ func TestVisitRepeatLimitHoursRule(t *testing.T) {
 	}{
 		"Repeat max hours": {
 			Input:  "Repeat Limit - ACCT 7323 may only be repeated for a maximum of 9 semester credit hours",
-			Result: rules.NewRepeatRule(0, 9, []utils.Course{{Prefix: "ACCT", Number: "7323"}}, ""),
+			Result: rules.NewRepeatRule(0, 9, []constants.Course{{Prefix: "ACCT", Number: "7323"}}, ""),
 		},
 		"Repeat hours max suffix": {
 			Input:  "Repeat Limit - EEGR 6V88 may only be repeated for 9 semester credit hours maximum",
-			Result: rules.NewRepeatRule(0, 9, []utils.Course{{Prefix: "EEGR", Number: "6V88"}}, ""),
+			Result: rules.NewRepeatRule(0, 9, []constants.Course{{Prefix: "EEGR", Number: "6V88"}}, ""),
 		},
 		"Course repeat max hours may": {
 			Input:  "AHST 6336 Repeat Limit - This course may only be repeated for a maximum of 6 semester credit hours",
-			Result: rules.NewRepeatRule(0, 6, []utils.Course{{Prefix: "AHST", Number: "6336"}}, ""),
+			Result: rules.NewRepeatRule(0, 6, []constants.Course{{Prefix: "AHST", Number: "6336"}}, ""),
 		},
 		"Course repeat max hours can": {
 			Input:  "RHET 1302 Repeat Limit - This course can only be repeated for a maximum of 3 semester credit hours",
-			Result: rules.NewRepeatRule(0, 3, []utils.Course{{Prefix: "RHET", Number: "1302"}}, ""),
+			Result: rules.NewRepeatRule(0, 3, []constants.Course{{Prefix: "RHET", Number: "1302"}}, ""),
 		},
 		"Combined repeat max hours": {
 			Input:  "Repeat Limit - CS 4V96 and CS 4V98 combined may only be repeated for a maximum of 6 semester credit hours",
-			Result: rules.NewRepeatRule(0, 6, []utils.Course{{Prefix: "CS", Number: "4V96"}, {Prefix: "CS", Number: "4V98"}}, ""),
+			Result: rules.NewRepeatRule(0, 6, []constants.Course{{Prefix: "CS", Number: "4V96"}, {Prefix: "CS", Number: "4V98"}}, ""),
 		},
 		"Course repeat limit": {
 			Input:  "ANGM 2309 Repeat Limit",
-			Result: rules.NewCourseRepeatRule([]utils.Course{{Prefix: "ANGM", Number: "2309"}}),
+			Result: rules.NewCourseRepeatRule([]constants.Course{{Prefix: "ANGM", Number: "2309"}}),
 		},
 		"Course repeat limit variable number": {
 			Input:  "HLTH 4V01 Repeat Limit",
-			Result: rules.NewCourseRepeatRule([]utils.Course{{Prefix: "HLTH", Number: "4V01"}}),
+			Result: rules.NewCourseRepeatRule([]constants.Course{{Prefix: "HLTH", Number: "4V01"}}),
 		},
 	}
 
@@ -90,15 +90,15 @@ func TestVisitRepeatLimitTimesRule(t *testing.T) {
 	}{
 		"Repeat up to N times": {
 			Input:  "Repeat Limit - UNIV 4074 may be repeated up to 3 times",
-			Result: rules.NewRepeatRule(3, 0, []utils.Course{{Prefix: "UNIV", Number: "4074"}}, ""),
+			Result: rules.NewRepeatRule(3, 0, []constants.Course{{Prefix: "UNIV", Number: "4074"}}, ""),
 		},
 		"Repeat max N times": {
 			Input:  "Repeat Limit - OPRE 7051 may only be repeated a maximum of 6 times",
-			Result: rules.NewRepeatRule(6, 0, []utils.Course{{Prefix: "OPRE", Number: "7051"}}, ""),
+			Result: rules.NewRepeatRule(6, 0, []constants.Course{{Prefix: "OPRE", Number: "7051"}}, ""),
 		},
 		"Repeat max 3 times": {
 			Input:  "Repeat Limit - UNIV 4076 may only be repeated a maximum of 3 times",
-			Result: rules.NewRepeatRule(3, 0, []utils.Course{{Prefix: "UNIV", Number: "4076"}}, ""),
+			Result: rules.NewRepeatRule(3, 0, []constants.Course{{Prefix: "UNIV", Number: "4076"}}, ""),
 		},
 	}
 
@@ -116,7 +116,7 @@ func TestVisitGpaRepeatRule(t *testing.T) {
 	}{
 		"Basic": {
 			Input:  "GPA Repeat Restriction - MIS 6309",
-			Result: rules.NewGpaRepeatRule(utils.Course{Prefix: "MIS", Number: "6309"}),
+			Result: rules.NewGpaRepeatRule(constants.Course{Prefix: "MIS", Number: "6309"}),
 		},
 	}
 
@@ -134,39 +134,39 @@ func TestVisitDegreeSatisfactionRule(t *testing.T) {
 	}{
 		"Prefix degree satisfaction": {
 			Input:  "May not be used to satisfy BS INTS degree requirements",
-			Result: rules.NewDegreeSatisfactionRuleFromPrefix([]string{"INTS"}, utils.Undergraduate),
+			Result: rules.NewDegreeSatisfactionRuleFromPrefix([]string{"INTS"}, constants.Undergraduate),
 		},
 		"Named degree satisfaction": {
 			Input:  "May not be used to fulfill degree requirements in MS Information Technology and Management",
-			Result: rules.NewDegreeSatisfactionRuleFromDegree([]string{"Information Technology and Management"}, utils.Graduate),
+			Result: rules.NewDegreeSatisfactionRuleFromDegree([]string{"Information Technology and Management"}, constants.Graduate),
 		},
 		"Multi prefix for degree satisfaction": {
 			Input:  "May not be used to satisfy degree requirements for MS CS or the MS SE degree plans",
-			Result: rules.NewDegreeSatisfactionRuleFromPrefix([]string{"CS", "SE"}, utils.Graduate),
+			Result: rules.NewDegreeSatisfactionRuleFromPrefix([]string{"CS", "SE"}, constants.Graduate),
 		},
 		"Of multi prefix degree satisfaction": {
 			Input:  "May not be used to satisfy the degree requirements of the MS CS or the MS SE degree plans",
-			Result: rules.NewDegreeSatisfactionRuleFromPrefix([]string{"CS", "SE"}, utils.Graduate),
+			Result: rules.NewDegreeSatisfactionRuleFromPrefix([]string{"CS", "SE"}, constants.Graduate),
 		},
 		"School degree satisfaction": {
 			Input:  "May not be used to satisfy degree requirements for the School of Engineering and Computer Science",
-			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Engineering and Computer Science"}, utils.AnyDegree),
+			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Engineering and Computer Science"}, constants.AnyDegree),
 		},
 		"School degree satisfaction with majors in": {
 			Input:  "May not be used to satisfy degree requirements for majors in the School of Engineering and Computer Science",
-			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Engineering and Computer Science"}, utils.AnyDegree),
+			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Engineering and Computer Science"}, constants.AnyDegree),
 		},
 		"Schools degree satisfaction named list": {
 			Input:  "May not be used to satisfy degree requirements for majors in Computer Engineering, Computer Science, and Software Engineering",
-			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Computer Engineering", "Computer Science", "Software Engineering"}, utils.AnyDegree),
+			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Computer Engineering", "Computer Science", "Software Engineering"}, constants.AnyDegree),
 		},
 		"Schools degree satisfaction with level": {
 			Input:  "May not be used to satisfy degree requirements for BS majors in Schools of Engineering and Computer Science or Natural Sciences and Mathematics",
-			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Engineering and Computer Science", "Natural Sciences and Mathematics"}, utils.Undergraduate),
+			Result: rules.NewDegreeSatisfactionRuleFromSchool([]string{"Engineering and Computer Science", "Natural Sciences and Mathematics"}, constants.Undergraduate),
 		},
 		"Student degree satisfaction": {
 			Input:  "May not be used to satisfy degree requirements by students in Mathematics",
-			Result: rules.NewDegreeSatisfactionRuleFromDegree([]string{"Mathematics"}, utils.AnyDegree),
+			Result: rules.NewDegreeSatisfactionRuleFromDegree([]string{"Mathematics"}, constants.AnyDegree),
 		},
 		"Math degree satisfaction": {
 			Input:  "May not be used to satisfy mathematics requirements by students in Mathematics",
@@ -216,8 +216,8 @@ func TestVisitCreditForRule(t *testing.T) {
 			Input: "Credit cannot be received for both FIN 3300 and FIN 3330",
 			Result: rules.NewCreditForRule(
 				rules.NewAndCourseCollection(
-					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "FIN", Number: "3300"}}),
-					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "FIN", Number: "3330"}}),
+					rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "FIN", Number: "3300"}}),
+					rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "FIN", Number: "3330"}}),
 				),
 			),
 		},
@@ -225,8 +225,8 @@ func TestVisitCreditForRule(t *testing.T) {
 			Input: "Credit cannot be received for both courses, ENTP 6380 and MKT 6380",
 			Result: rules.NewCreditForRule(
 				rules.NewAndCourseCollection(
-					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "ENTP", Number: "6380"}}),
-					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "MKT", Number: "6380"}}),
+					rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "ENTP", Number: "6380"}}),
+					rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "MKT", Number: "6380"}}),
 				),
 			),
 		},
@@ -234,10 +234,10 @@ func TestVisitCreditForRule(t *testing.T) {
 			Input: "Credit cannot be received for both CS 2337 and (CS 2336 or CE 2336)",
 			Result: rules.NewCreditForRule(
 				rules.NewAndCourseCollection(
-					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "2337"}}),
+					rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "CS", Number: "2337"}}),
 					rules.NewOrCourseCollection(
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "2336"}}),
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CE", Number: "2336"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "CS", Number: "2336"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "CE", Number: "2336"}}),
 					),
 				),
 			),
@@ -247,12 +247,12 @@ func TestVisitCreditForRule(t *testing.T) {
 			Result: rules.NewCreditForRule(
 				rules.NewAndCourseCollection(
 					rules.NewOrCourseCollection(
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "OPRE", Number: "6301"}}),
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "SYSM", Number: "6303"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "OPRE", Number: "6301"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "SYSM", Number: "6303"}}),
 					),
 					rules.NewOrCourseCollection(
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "OPRE", Number: "6359"}}),
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "BUAN", Number: "6359"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "OPRE", Number: "6359"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "BUAN", Number: "6359"}}),
 					),
 				),
 			),
@@ -264,14 +264,14 @@ func TestVisitCreditForRule(t *testing.T) {
 					rules.NewOrCourseCollection(
 						rules.NewOrCourseCollection(
 							rules.NewOrCourseCollection(
-								rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "BMEN", Number: "1100"}}),
-								rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CE", Number: "1100"}}),
+								rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "BMEN", Number: "1100"}}),
+								rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "CE", Number: "1100"}}),
 							),
-							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "1200"}}),
+							rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "CS", Number: "1200"}}),
 						),
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "EE", Number: "1100"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "EE", Number: "1100"}}),
 					),
-					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "MECH", Number: "1100"}}),
+					rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "MECH", Number: "1100"}}),
 				),
 			),
 		},
@@ -282,17 +282,17 @@ func TestVisitCreditForRule(t *testing.T) {
 					rules.NewAndCourseCollection(
 						rules.NewOrCourseCollection(
 							rules.NewOrCourseCollection(
-								rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "ACCT", Number: "6320"}}),
-								rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "MIS", Number: "6320"}}),
+								rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "ACCT", Number: "6320"}}),
+								rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "MIS", Number: "6320"}}),
 							),
-							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "OPRE", Number: "6393"}}),
+							rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "OPRE", Number: "6393"}}),
 						),
 						rules.NewOrCourseCollection(
-							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "BUAN", Number: "6320"}}),
-							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "ACCT", Number: "6321"}}),
+							rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "BUAN", Number: "6320"}}),
+							rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "ACCT", Number: "6321"}}),
 						),
 					),
-					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "MIS", Number: "6326"}}),
+					rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "MIS", Number: "6326"}}),
 				),
 			),
 		},
@@ -302,12 +302,12 @@ func TestVisitCreditForRule(t *testing.T) {
 				rules.NewAndCourseCollection(
 					rules.NewOrCourseCollection(
 						rules.NewOrCourseCollection(
-							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "3341"}}),
-							rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "SE", Number: "3341"}}),
+							rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "CS", Number: "3341"}}),
+							rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "SE", Number: "3341"}}),
 						),
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "STAT", Number: "3341"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "STAT", Number: "3341"}}),
 					),
-					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "ENGR", Number: "3341"}}),
+					rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "ENGR", Number: "3341"}}),
 				),
 			),
 		},
@@ -316,10 +316,10 @@ func TestVisitCreditForRule(t *testing.T) {
 			Result: rules.NewCreditForRule(
 				rules.NewAndCourseCollection(
 					rules.NewAndCourseCollection(
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "1336"}}),
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "1136"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "CS", Number: "1336"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "CS", Number: "1136"}}),
 					),
-					rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "CS", Number: "1436"}}),
+					rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "CS", Number: "1436"}}),
 				),
 			),
 		},
@@ -364,7 +364,7 @@ func TestVisitSameAsRule(t *testing.T) {
 	}{
 		"Basic": {
 			Input:  "(Same as MATH 3335 and STAT 3335)",
-			Result: rules.NewSameAsRule([]utils.Course{{Prefix: "MATH", Number: "3335"}, {Prefix: "STAT", Number: "3335"}}),
+			Result: rules.NewSameAsRule([]constants.Course{{Prefix: "MATH", Number: "3335"}, {Prefix: "STAT", Number: "3335"}}),
 		},
 	}
 

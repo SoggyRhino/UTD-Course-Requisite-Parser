@@ -1,11 +1,25 @@
 package conditions
 
-import "parser/utils"
+import (
+	"encoding/json"
+	"parser/constants"
+)
 
 type GPAType float64
 type GPACondition struct {
-	GPA    GPAType
-	Degree string
+	GPA    GPAType `json:"gpa,omitempty"`
+	Degree string  `json:"degree,omitempty"`
+}
+
+func (g *GPACondition) MarshalJSON() ([]byte, error) {
+	type Alias GPACondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "gpa",
+		Alias: (*Alias)(g),
+	})
 }
 
 func NewGpaCondition(gpa float64) *GPACondition {
@@ -21,6 +35,6 @@ func NewGpaConditionWithDegree(gpa float64, degree string) *GPACondition {
 	}
 }
 
-func (g *GPACondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (g *GPACondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }

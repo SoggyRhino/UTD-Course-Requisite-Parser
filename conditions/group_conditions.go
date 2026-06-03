@@ -1,11 +1,41 @@
 package conditions
 
 import (
-	"parser/utils"
+	"encoding/json"
+	"parser/constants"
 )
 
 type OrCondition struct {
-	Conditions []Condition
+	Conditions []Condition `json:"conditions,omitempty"`
+}
+
+func (o *OrCondition) MarshalJSON() ([]byte, error) {
+	type Alias OrCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "or",
+		Alias: (*Alias)(o),
+	})
+}
+
+func (o *OrCondition) UnmarshalJSON(b []byte) error {
+	var raw struct {
+		Conditions []json.RawMessage `json:"conditions"`
+	}
+	if err := json.Unmarshal(b, &raw); err != nil {
+		return err
+	}
+	o.Conditions = make([]Condition, len(raw.Conditions))
+	for i, rawCond := range raw.Conditions {
+		cond, err := UnmarshalCondition(rawCond)
+		if err != nil {
+			return err
+		}
+		o.Conditions[i] = cond
+	}
+	return nil
 }
 
 func NewOrCondition(conditions ...Condition) Condition {
@@ -33,11 +63,11 @@ func NewOrConditionFromExpr(cond1, cond2 Condition) *OrCondition {
 	return &OrCondition{Conditions: flattenedConditions}
 }
 
-func (o *OrCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (o *OrCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }
 
-func (o *OrCondition) AppendGrade(grade utils.Grade) {
+func (o *OrCondition) AppendGrade(grade constants.Grade) {
 	for _, condition := range o.Conditions {
 		if gradedCondition, ok := condition.(GradedCondition); ok {
 			gradedCondition.AppendGrade(grade)
@@ -49,7 +79,36 @@ func (o *OrCondition) AppendGrade(grade utils.Grade) {
 }
 
 type AndCondition struct {
-	Conditions []Condition
+	Conditions []Condition `json:"conditions,omitempty"`
+}
+
+func (a *AndCondition) MarshalJSON() ([]byte, error) {
+	type Alias AndCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "and",
+		Alias: (*Alias)(a),
+	})
+}
+
+func (a *AndCondition) UnmarshalJSON(b []byte) error {
+	var raw struct {
+		Conditions []json.RawMessage `json:"conditions"`
+	}
+	if err := json.Unmarshal(b, &raw); err != nil {
+		return err
+	}
+	a.Conditions = make([]Condition, len(raw.Conditions))
+	for i, rawCond := range raw.Conditions {
+		cond, err := UnmarshalCondition(rawCond)
+		if err != nil {
+			return err
+		}
+		a.Conditions[i] = cond
+	}
+	return nil
 }
 
 func NewAndCondition(conditions ...Condition) Condition {
@@ -77,12 +136,12 @@ func NewAndConditionFromExpr(cond1, cond2 Condition) *AndCondition {
 	return &AndCondition{Conditions: flattenedConditions}
 }
 
-func (a *AndCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (a *AndCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	//todo and condition
 	return false, nil
 }
 
-func (a *AndCondition) AppendGrade(grade utils.Grade) {
+func (a *AndCondition) AppendGrade(grade constants.Grade) {
 	for _, condition := range a.Conditions {
 		if gradedCondition, ok := condition.(GradedCondition); ok {
 			gradedCondition.AppendGrade(grade)

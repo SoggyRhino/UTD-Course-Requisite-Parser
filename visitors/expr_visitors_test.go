@@ -2,9 +2,9 @@ package visitors
 
 import (
 	"parser/conditions"
+	"parser/constants"
 	"parser/parser"
 	"parser/rules"
-	"parser/utils"
 	"testing"
 )
 
@@ -35,7 +35,7 @@ func TestVisitExpr(t *testing.T) {
 			Input: "RHET 1302 & junior standing",
 			Result: conditions.NewAndConditionFromExpr(
 				conditions.NewCourseCondition("RHET", "1302", ""),
-				conditions.NewGradeLevelCondition(utils.Junior),
+				conditions.NewGradeLevelCondition(constants.Junior),
 			),
 		},
 		"EquivalentExpr": {
@@ -44,11 +44,11 @@ func TestVisitExpr(t *testing.T) {
 		},
 		"ConsentExpr": {
 			Input:  "instructor consent",
-			Result: conditions.NewConsentCondition(utils.InstructorConsent),
+			Result: conditions.NewConsentCondition(constants.InstructorConsent),
 		},
 		"StandingExpr": {
 			Input:  "good academic standing",
-			Result: conditions.NewGenericStandingCondition(utils.GoodAcademicStanding),
+			Result: conditions.NewGenericStandingCondition(constants.GoodAcademicStanding),
 		},
 		"GpaExpr": {
 			Input:  "A university grade point average of at least 2.750",
@@ -56,12 +56,12 @@ func TestVisitExpr(t *testing.T) {
 		},
 		"GroupExpr": {
 			Input:  "SCVG Student Group",
-			Result: conditions.NewStudentGroupCondition(utils.SCVG),
+			Result: conditions.NewStudentGroupCondition(constants.SCVG),
 		},
 		"ConcurrentEnrollmentExpr": {
 			Input: "concurrent enrollment in MATH 1314",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "MATH", Number: "1314"}),
+				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "MATH", Number: "1314"}),
 			),
 		},
 		"GradeExpr": {
@@ -74,7 +74,7 @@ func TestVisitExpr(t *testing.T) {
 		},
 		"GradeLevelStandingExpr": {
 			Input:  "junior standing",
-			Result: conditions.NewGradeLevelCondition(utils.Junior),
+			Result: conditions.NewGradeLevelCondition(constants.Junior),
 		},
 		"GraduateStandingExpr": {
 			Input:  "Graduate Level Standing",
@@ -98,7 +98,7 @@ func TestVisitExpr(t *testing.T) {
 		},
 		"CompleteNExpr": {
 			Input: "Completion of two of the following: ANGM 2303 or ANGM 2309 or ATCM 2345",
-			Result: conditions.NewNCoursesCondition(2, []utils.Course{
+			Result: conditions.NewNCoursesCondition(2, []constants.Course{
 				{Prefix: "ANGM", Number: "2303"},
 				{Prefix: "ANGM", Number: "2309"},
 				{Prefix: "ATCM", Number: "2345"},
@@ -110,7 +110,7 @@ func TestVisitExpr(t *testing.T) {
 		},
 		"MinimumHoursExpr": {
 			Input: "Minimum of 6 semester credit hours in any combination of DANC 2332 or DANC 2334",
-			Result: conditions.NewCreditHoursFromCondition(6, []utils.Course{
+			Result: conditions.NewCreditHoursFromCondition(6, []constants.Course{
 				{Prefix: "DANC", Number: "2332"},
 				{Prefix: "DANC", Number: "2334"},
 			}),
@@ -125,7 +125,7 @@ func TestVisitExpr(t *testing.T) {
 		},
 		"ResearchExpr": {
 			Input:  "at least 3 semester credit hours of undergraduate research",
-			Result: conditions.NewResearchCondition(3, utils.Undergraduate),
+			Result: conditions.NewResearchCondition(3, constants.Undergraduate),
 		},
 		"PlacementTestExpr": {
 			Input:  "CS Placement Test 70 or higher",
@@ -142,7 +142,7 @@ func TestVisitExpr(t *testing.T) {
 		"ExactSectionExpr": {
 			Input: "BIOL 2311.001",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
+				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
 			),
 		},
 		"AnyMajorCourseExpr": {
@@ -155,11 +155,11 @@ func TestVisitExpr(t *testing.T) {
 		},
 		"RepeatRuleExpr": {
 			Input:  "Repeat Restriction",
-			Result: rules.NewRepeatRule(1, 0, []utils.Course{}, ""),
+			Result: rules.NewRepeatRule(1, 0, []constants.Course{}, ""),
 		},
 		"RepeatLimitHoursExpr": {
 			Input:  "Repeat Limit - HLTL 4304 may only be repeated for a maximum of 6 semester credit hours",
-			Result: rules.NewRepeatRule(0, 6, []utils.Course{{Prefix: "HLTL", Number: "4304"}}, ""),
+			Result: rules.NewRepeatRule(0, 6, []constants.Course{{Prefix: "HLTL", Number: "4304"}}, ""),
 		},
 		"CourseExpr": {
 			Input:  "ACCT 2301",

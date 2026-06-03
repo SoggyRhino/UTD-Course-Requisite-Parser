@@ -1,10 +1,11 @@
 package visitors
 
 import (
+	"encoding/json"
 	"parser/conditions"
+	"parser/constants"
 	"parser/parser"
 	"parser/rules"
-	"parser/utils"
 
 	"github.com/antlr4-go/antlr/v4"
 )
@@ -12,11 +13,62 @@ import (
 var _ parser.RequirementsVisitor = (*RequisiteVisitor)(nil)
 
 type Requirements struct {
-	PreReqs     conditions.Condition
-	CoReqs      conditions.Condition
-	PreOrCoReqs conditions.Condition
-	Rules       []rules.Rule
-	Notices     []utils.Notice
+	PreReqs     conditions.Condition `json:"pre_reqs,omitempty"`
+	CoReqs      conditions.Condition `json:"co_reqs,omitempty"`
+	PreOrCoReqs conditions.Condition `json:"pre_or_co_reqs,omitempty"`
+	Rules       []rules.Rule         `json:"rules,omitempty"`
+	Notices     []constants.Notice   `json:"notices,omitempty"`
+}
+
+func (r *Requirements) UnmarshalJSON(b []byte) error {
+	type Alias Requirements
+	raw := struct {
+		PreReqs     json.RawMessage   `json:"pre_reqs,omitempty"`
+		CoReqs      json.RawMessage   `json:"co_reqs,omitempty"`
+		PreOrCoReqs json.RawMessage   `json:"pre_or_co_reqs,omitempty"`
+		Rules       []json.RawMessage `json:"rules,omitempty"`
+		*Alias
+	}{
+		Alias: (*Alias)(r),
+	}
+	if err := json.Unmarshal(b, &raw); err != nil {
+		return err
+	}
+
+	if len(raw.PreReqs) > 0 {
+		cond, err := conditions.UnmarshalCondition(raw.PreReqs)
+		if err != nil {
+			return err
+		}
+		r.PreReqs = cond
+	}
+	if len(raw.CoReqs) > 0 {
+		cond, err := conditions.UnmarshalCondition(raw.CoReqs)
+		if err != nil {
+			return err
+		}
+		r.CoReqs = cond
+	}
+	if len(raw.PreOrCoReqs) > 0 {
+		cond, err := conditions.UnmarshalCondition(raw.PreOrCoReqs)
+		if err != nil {
+			return err
+		}
+		r.PreOrCoReqs = cond
+	}
+
+	if len(raw.Rules) > 0 {
+		r.Rules = make([]rules.Rule, len(raw.Rules))
+		for i, rawRule := range raw.Rules {
+			rule, err := rules.UnmarshalRule(rawRule)
+			if err != nil {
+				return err
+			}
+			r.Rules[i] = rule
+		}
+	}
+
+	return nil
 }
 
 type RequisiteVisitor struct {
@@ -61,17 +113,12 @@ func (v *RequisiteVisitor) appendRule(rule rules.Rule) {
 	v.Requirements.Rules = append(v.Requirements.Rules, rule)
 }
 
-func (v *RequisiteVisitor) appendNotice(notice utils.Notice) {
+func (v *RequisiteVisitor) appendNotice(notice constants.Notice) {
 	v.Requirements.Notices = append(v.Requirements.Notices, notice)
 }
 
 func (v *RequisiteVisitor) Visit(tree antlr.ParseTree) interface{} {
 	return tree.Accept(v)
-}
-
-func (v *RequisiteVisitor) ReportError(ctx antlr.BaseParserRuleContext, err error) {
-	//todo use ctx for better error handling
-	v.Errors = append(v.Errors, err)
 }
 
 func (v *RequisiteVisitor) getText(ctx antlr.BaseParserRuleContext) string {

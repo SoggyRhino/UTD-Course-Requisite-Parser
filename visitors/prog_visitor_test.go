@@ -2,9 +2,9 @@ package visitors
 
 import (
 	"parser/conditions"
+	"parser/constants"
 	"parser/parser"
 	"parser/rules"
-	"parser/utils"
 	"testing"
 )
 
@@ -20,7 +20,7 @@ func TestVisitProg(t *testing.T) {
 			Result: Requirements{
 				PreReqs: conditions.NewCourseCondition("ACCT", "2301", ""),
 				Rules: []rules.Rule{
-					rules.NewRepeatRule(1, 0, []utils.Course{}, ""),
+					rules.NewRepeatRule(1, 0, []constants.Course{}, ""),
 				},
 			},
 		},
@@ -39,7 +39,7 @@ func TestVisitProg(t *testing.T) {
 					),
 				),
 				Rules: []rules.Rule{
-					rules.NewDegreeSatisfactionRuleFromPrefix([]string{"INTS"}, utils.Undergraduate),
+					rules.NewDegreeSatisfactionRuleFromPrefix([]string{"INTS"}, constants.Undergraduate),
 				},
 			},
 		},

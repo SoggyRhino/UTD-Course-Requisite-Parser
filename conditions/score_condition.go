@@ -1,11 +1,25 @@
 package conditions
 
-import "parser/utils"
+import (
+	"encoding/json"
+	"parser/constants"
+)
 
 type PlacementTestScoreCondition struct {
-	Name     string
-	ScoreMin int
-	ScoreMax int
+	Name     string `json:"name,omitempty"`
+	ScoreMin int    `json:"score_min,omitempty"`
+	ScoreMax int    `json:"score_max,omitempty"`
+}
+
+func (c *PlacementTestScoreCondition) MarshalJSON() ([]byte, error) {
+	type Alias PlacementTestScoreCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "placement_test_score",
+		Alias: (*Alias)(c),
+	})
 }
 
 func NewPlacementTestScoreCondition(name string, scoreMin, scoreMax int) *PlacementTestScoreCondition {
@@ -16,12 +30,23 @@ func NewPlacementTestScoreCondition(name string, scoreMin, scoreMax int) *Placem
 	}
 }
 
-func (c *PlacementTestScoreCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (c *PlacementTestScoreCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }
 
 type APScoreCondition struct {
-	Score int
+	Score int `json:"score,omitempty"`
+}
+
+func (c *APScoreCondition) MarshalJSON() ([]byte, error) {
+	type Alias APScoreCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "ap_score",
+		Alias: (*Alias)(c),
+	})
 }
 
 func NewAPScoreCondition(score int) *APScoreCondition {
@@ -30,12 +55,23 @@ func NewAPScoreCondition(score int) *APScoreCondition {
 	}
 }
 
-func (c *APScoreCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (c *APScoreCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }
 
 type AleksScoreCondition struct {
-	Score int
+	Score int `json:"score,omitempty"`
+}
+
+func (c *AleksScoreCondition) MarshalJSON() ([]byte, error) {
+	type Alias AleksScoreCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "aleks_score",
+		Alias: (*Alias)(c),
+	})
 }
 
 func NewAleksScoreCondition(score int) *AleksScoreCondition {
@@ -44,6 +80,6 @@ func NewAleksScoreCondition(score int) *AleksScoreCondition {
 	}
 }
 
-func (c *AleksScoreCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (c *AleksScoreCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }

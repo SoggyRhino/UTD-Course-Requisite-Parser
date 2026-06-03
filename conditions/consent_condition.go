@@ -1,17 +1,31 @@
 package conditions
 
-import "parser/utils"
+import (
+	"encoding/json"
+	"parser/constants"
+)
 
 type ConsentCondition struct {
-	Consent utils.Consent
+	Consent constants.Consent `json:"consent"`
 }
 
-func NewConsentCondition(consent utils.Consent) *ConsentCondition {
+func (c *ConsentCondition) MarshalJSON() ([]byte, error) {
+	type Alias ConsentCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "consent",
+		Alias: (*Alias)(c),
+	})
+}
+
+func NewConsentCondition(consent constants.Consent) *ConsentCondition {
 	return &ConsentCondition{
 		Consent: consent,
 	}
 }
 
-func (c *ConsentCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (c *ConsentCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }

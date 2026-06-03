@@ -1,11 +1,25 @@
 package conditions
 
-import "parser/utils"
+import (
+	"encoding/json"
+	"parser/constants"
+)
 
 type MajorCondition struct {
-	Degree      string
-	DegreeLevel utils.DegreeLevel
-	GradeLevel  utils.GradeLevel
+	Degree      string                `json:"degree,omitempty"`
+	DegreeLevel constants.DegreeLevel `json:"degree_level,omitempty"`
+	GradeLevel  constants.GradeLevel  `json:"grade_level,omitempty"`
+}
+
+func (m *MajorCondition) MarshalJSON() ([]byte, error) {
+	type Alias MajorCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "major",
+		Alias: (*Alias)(m),
+	})
 }
 
 func NewMajorCondition(degree string) *MajorCondition {
@@ -14,21 +28,21 @@ func NewMajorCondition(degree string) *MajorCondition {
 	}
 }
 
-func NewMajorConditionWithGradeLevel(degree string, level utils.GradeLevel) *MajorCondition {
+func NewMajorConditionWithGradeLevel(degree string, level constants.GradeLevel) *MajorCondition {
 	return &MajorCondition{
 		Degree:     degree,
 		GradeLevel: level,
 	}
 }
 
-func NewMajorConditionWithDegreeLevel(degree string, level utils.DegreeLevel) *MajorCondition {
+func NewMajorConditionWithDegreeLevel(degree string, level constants.DegreeLevel) *MajorCondition {
 	return &MajorCondition{
 		Degree:      degree,
 		DegreeLevel: level,
 	}
 }
 
-func NewMajorConditionWithDegreeAndGradeLevel(degree string, level utils.DegreeLevel, gradeLevel utils.GradeLevel) *MajorCondition {
+func NewMajorConditionWithDegreeAndGradeLevel(degree string, level constants.DegreeLevel, gradeLevel constants.GradeLevel) *MajorCondition {
 	return &MajorCondition{
 		Degree:      degree,
 		DegreeLevel: level,
@@ -36,12 +50,23 @@ func NewMajorConditionWithDegreeAndGradeLevel(degree string, level utils.DegreeL
 	}
 }
 
-func (m *MajorCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (m *MajorCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }
 
 type DegreeCondition struct {
-	Degree string
+	Degree string `json:"degree,omitempty"`
+}
+
+func (d *DegreeCondition) MarshalJSON() ([]byte, error) {
+	type Alias DegreeCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "degree",
+		Alias: (*Alias)(d),
+	})
 }
 
 func NewDegreeCondition(degree string) *DegreeCondition {
@@ -50,6 +75,6 @@ func NewDegreeCondition(degree string) *DegreeCondition {
 	}
 }
 
-func (d *DegreeCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (d *DegreeCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }

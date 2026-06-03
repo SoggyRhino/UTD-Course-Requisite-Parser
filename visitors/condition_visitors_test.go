@@ -2,8 +2,8 @@ package visitors
 
 import (
 	"parser/conditions"
+	"parser/constants"
 	"parser/parser"
-	"parser/utils"
 	"testing"
 )
 
@@ -15,19 +15,19 @@ func TestVisitConsentCondition(t *testing.T) {
 	}{
 		"Instructor consent": {
 			Input:  "instructor consent",
-			Result: conditions.NewConsentCondition(utils.InstructorConsent),
+			Result: conditions.NewConsentCondition(constants.InstructorConsent),
 		},
 		"Instructor consent required": {
 			Input:  "instructor consent required",
-			Result: conditions.NewConsentCondition(utils.InstructorConsent),
+			Result: conditions.NewConsentCondition(constants.InstructorConsent),
 		},
 		"Department consent required": {
 			Input:  "department consent required",
-			Result: conditions.NewConsentCondition(utils.DepartmentConsent),
+			Result: conditions.NewConsentCondition(constants.DepartmentConsent),
 		},
 		"UTeach advisor consent required": {
 			Input:  "UTeach advisor consent required",
-			Result: conditions.NewConsentCondition(utils.UTeachConsent),
+			Result: conditions.NewConsentCondition(constants.UTeachConsent),
 		},
 	}
 
@@ -45,11 +45,11 @@ func TestVisitStandingCondition(t *testing.T) {
 	}{
 		"Upper-division standing": {
 			Input:  "Upper-division standing",
-			Result: conditions.NewGenericStandingCondition(utils.UpperDivisionStanding),
+			Result: conditions.NewGenericStandingCondition(constants.UpperDivisionStanding),
 		},
 		"Good academic standing": {
 			Input:  "good academic standing",
-			Result: conditions.NewGenericStandingCondition(utils.GoodAcademicStanding),
+			Result: conditions.NewGenericStandingCondition(constants.GoodAcademicStanding),
 		},
 	}
 
@@ -149,27 +149,27 @@ func TestVisitGradeLevelStandingCondition(t *testing.T) {
 		"Basic": {
 			Input: "Junior or Senior standing",
 			Result: conditions.NewOrCondition(
-				conditions.NewGradeLevelCondition(utils.Junior),
-				conditions.NewGradeLevelCondition(utils.Senior),
+				conditions.NewGradeLevelCondition(constants.Junior),
+				conditions.NewGradeLevelCondition(constants.Senior),
 			),
 		},
 		"Senior History Major standing": {
 			Input:  "Senior History Major standing",
-			Result: conditions.NewGradeLevelConditionWithDegree(utils.Senior, "History"),
+			Result: conditions.NewGradeLevelConditionWithDegree(constants.Senior, "History"),
 		},
 		"Minimum of Sophomore standing": {
 			Input:  "Minimum of Sophomore standing",
-			Result: conditions.NewGradeLevelCondition(utils.Sophomore),
+			Result: conditions.NewGradeLevelCondition(constants.Sophomore),
 		},
 		"At least Senior-level Standing": {
 			Input:  "At least Senior-level Standing",
-			Result: conditions.NewGradeLevelCondition(utils.Senior),
+			Result: conditions.NewGradeLevelCondition(constants.Senior),
 		},
 		"PSY Majors Only with Junior or Senior standing": {
 			Input: "PSY Majors Only with Junior or Senior standing",
 			Result: conditions.NewOrCondition(
-				conditions.NewGradeLevelConditionWithDegree(utils.Junior, "PSY"),
-				conditions.NewGradeLevelConditionWithDegree(utils.Senior, "PSY"),
+				conditions.NewGradeLevelConditionWithDegree(constants.Junior, "PSY"),
+				conditions.NewGradeLevelConditionWithDegree(constants.Senior, "PSY"),
 			),
 		},
 	}
@@ -254,26 +254,26 @@ func TestVisitMajorCondition(t *testing.T) {
 		},
 		"Prefix with degree type": {
 			Input:  "BBSC GRAD majors only",
-			Result: conditions.NewMajorConditionWithDegreeLevel("BBSC", utils.Graduate),
+			Result: conditions.NewMajorConditionWithDegreeLevel("BBSC", constants.Graduate),
 		},
 		"Prefixes with grade level": {
 			Input: "CE or EE Freshman Majors only",
 			Result: conditions.NewOrCondition(
-				conditions.NewMajorConditionWithGradeLevel("CE", utils.Freshman),
-				conditions.NewMajorConditionWithGradeLevel("EE", utils.Freshman),
+				conditions.NewMajorConditionWithGradeLevel("CE", constants.Freshman),
+				conditions.NewMajorConditionWithGradeLevel("EE", constants.Freshman),
 			),
 		},
 		"Prefix with degree level": {
 			Input:  "ENCS PhD majors only",
-			Result: conditions.NewMajorConditionWithDegreeLevel("ENCS", utils.PhD),
+			Result: conditions.NewMajorConditionWithDegreeLevel("ENCS", constants.PhD),
 		},
 		"Grade level prefix major": {
 			Input:  "Freshman ENCS Majors only",
-			Result: conditions.NewMajorConditionWithGradeLevel("ENCS", utils.Freshman),
+			Result: conditions.NewMajorConditionWithGradeLevel("ENCS", constants.Freshman),
 		},
 		"Degree type prefix major": {
 			Input:  "MS ITM Major only",
-			Result: conditions.NewMajorConditionWithDegreeLevel("ITM", utils.Graduate),
+			Result: conditions.NewMajorConditionWithDegreeLevel("ITM", constants.Graduate),
 		},
 		"Named major": {
 			Input:  "Data Science major",
@@ -285,7 +285,7 @@ func TestVisitMajorCondition(t *testing.T) {
 		},
 		"Named degree type major": {
 			Input:  "International Management Studies PhD majors only",
-			Result: conditions.NewMajorConditionWithDegreeLevel("International Management Studies", utils.PhD),
+			Result: conditions.NewMajorConditionWithDegreeLevel("International Management Studies", constants.PhD),
 		},
 	}
 
@@ -404,14 +404,14 @@ func TestVisitMinimumHoursCondition(t *testing.T) {
 	}{
 		"Minimum of 6 SCH in any combination": {
 			Input: "Minimum of 6 semester credit hours in any combination of DANC 2332 or DANC 2334",
-			Result: conditions.NewCreditHoursFromCondition(6, []utils.Course{
+			Result: conditions.NewCreditHoursFromCondition(6, []constants.Course{
 				{Prefix: "DANC", Number: "2332"},
 				{Prefix: "DANC", Number: "2334"},
 			}),
 		},
 		"Minimum of 3 SCH of": {
 			Input: "At least 3 semester credits of ECS 1192 or 2192 or 3292",
-			Result: conditions.NewCreditHoursFromCondition(3, []utils.Course{
+			Result: conditions.NewCreditHoursFromCondition(3, []constants.Course{
 				{Prefix: "ECS", Number: "1192"},
 				{Prefix: "ECS", Number: "2192"},
 				{Prefix: "ECS", Number: "3292"},
@@ -419,7 +419,7 @@ func TestVisitMinimumHoursCondition(t *testing.T) {
 		},
 		"Minimum of 6 SCH from": {
 			Input: "6 semester credit hours from the following: LIT 2320 or LIT 2321 or LIT 2322 or LIT 2331",
-			Result: conditions.NewCreditHoursFromCondition(6, []utils.Course{
+			Result: conditions.NewCreditHoursFromCondition(6, []constants.Course{
 				{Prefix: "LIT", Number: "2320"},
 				{Prefix: "LIT", Number: "2321"},
 				{Prefix: "LIT", Number: "2322"},
@@ -481,7 +481,7 @@ func TestVisitResearchCondition(t *testing.T) {
 	}{
 		"Undergraduate research": {
 			Input:  "at least 3 semester credit hours of undergraduate research",
-			Result: conditions.NewResearchCondition(3, utils.Undergraduate),
+			Result: conditions.NewResearchCondition(3, constants.Undergraduate),
 		},
 	}
 
@@ -499,7 +499,7 @@ func TestVisitCompleteNOfFollowingCondition(t *testing.T) {
 	}{
 		"Completion of two of the following": {
 			Input: "Completion of two of the following: ANGM 2303 or ANGM 2309 or ATCM 2345",
-			Result: conditions.NewNCoursesCondition(2, []utils.Course{
+			Result: conditions.NewNCoursesCondition(2, []constants.Course{
 				{Prefix: "ANGM", Number: "2303"},
 				{Prefix: "ANGM", Number: "2309"},
 				{Prefix: "ATCM", Number: "2345"},
@@ -507,7 +507,7 @@ func TestVisitCompleteNOfFollowingCondition(t *testing.T) {
 		},
 		"Two courses from the following": {
 			Input: "Two courses from the following - BIOL 5410 or BIOL 5420 or BIOL 5440 or BIOL 5460",
-			Result: conditions.NewNCoursesCondition(2, []utils.Course{
+			Result: conditions.NewNCoursesCondition(2, []constants.Course{
 				{Prefix: "BIOL", Number: "5410"},
 				{Prefix: "BIOL", Number: "5420"},
 				{Prefix: "BIOL", Number: "5440"},
@@ -609,24 +609,24 @@ func TestVisitStudentGroupCondition(t *testing.T) {
 		"Students in both groups": {
 			Input: "Students in both Liberal Arts Honors /Collegium V Honors Group only",
 			Result: conditions.NewAndCondition(
-				conditions.NewStudentGroupCondition(utils.LiberalArtsHonors),
-				conditions.NewStudentGroupCondition(utils.CollegeVHonors),
+				conditions.NewStudentGroupCondition(constants.LiberalArtsHonors),
+				conditions.NewStudentGroupCondition(constants.CollegeVHonors),
 			),
 		},
 		"Multiple groups": {
 			Input: "SCVG and DLAH student groups only",
 			Result: conditions.NewOrCondition(
-				conditions.NewStudentGroupCondition(utils.SCVG),
-				conditions.NewStudentGroupCondition(utils.DLAH),
+				conditions.NewStudentGroupCondition(constants.SCVG),
+				conditions.NewStudentGroupCondition(constants.DLAH),
 			),
 		},
 		"CV Honors students only": {
 			Input:  "CV Honors Students only",
-			Result: conditions.NewStudentGroupCondition(utils.CollegeVHonors),
+			Result: conditions.NewStudentGroupCondition(constants.CollegeVHonors),
 		},
 		"SCVG group": {
 			Input:  "SCVG Student Group",
-			Result: conditions.NewStudentGroupCondition(utils.SCVG),
+			Result: conditions.NewStudentGroupCondition(constants.SCVG),
 		},
 	}
 
@@ -645,7 +645,7 @@ func TestVisitConcurrentEnrollmentCondition(t *testing.T) {
 		"Concurrent enrollment in single course": {
 			Input: "concurrent enrollment in MATH 1314",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "MATH", Number: "1314"}),
+				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "MATH", Number: "1314"}),
 			),
 		},
 	}
@@ -665,19 +665,19 @@ func TestVisitExactSectionCondition(t *testing.T) {
 		"BIOL 2311.001": {
 			Input: "BIOL 2311.001",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
+				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
 			),
 		},
 		"BIOL 2311.501": {
 			Input: "BIOL 2311.501",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "BIOL", Number: "2311", Section: "501"}),
+				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "501"}),
 			),
 		},
 		"BIOL 2111.502": {
 			Input: "BIOL 2111.502",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "BIOL", Number: "2111", Section: "502"}),
+				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2111", Section: "502"}),
 			),
 		},
 	}
@@ -697,7 +697,7 @@ func TestVisitWorkshopSectionCondition(t *testing.T) {
 		"Workshop section": {
 			Input: "BIOL 2112 workshop 501",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "BIOL", Number: "2112", Section: "501"}),
+				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2112", Section: "501"}),
 			),
 		},
 	}

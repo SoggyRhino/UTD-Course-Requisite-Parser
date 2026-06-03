@@ -2,9 +2,9 @@ package visitors
 
 import (
 	"parser/conditions"
+	"parser/constants"
 	"parser/parser"
 	"parser/rules"
-	"parser/utils"
 )
 
 // VisitExcludeNoticeReq
@@ -15,7 +15,7 @@ func (v *RequisiteVisitor) VisitExcludeNoticeReq(ctx *parser.ExcludeNoticeReqCon
 }
 
 func (v *RequisiteVisitor) visitExcludeNoticeReq(ctx *parser.ExcludeNoticeReqContext) any {
-	v.appendNotice(utils.ExcludeDMHPLLCNotice)
+	v.appendNotice(constants.ExcludeDMHPLLCNotice)
 	return v.Visit(ctx.Requisite())
 }
 
@@ -53,7 +53,7 @@ func (v *RequisiteVisitor) VisitExactCoreqNoticeReq(ctx *parser.ExactCoreqNotice
 }
 
 func (v *RequisiteVisitor) visitExactCoreqNoticeReq(ctx *parser.ExactCoreqNoticeReqContext) any {
-	v.appendNotice(utils.ExactCoReqNotice)
+	v.appendNotice(constants.ExactCoReqNotice)
 	return nil
 }
 
@@ -65,7 +65,7 @@ func (v *RequisiteVisitor) VisitComputerScholarsReq(ctx *parser.ComputerScholars
 }
 
 func (v *RequisiteVisitor) visitComputerScholarsReq(ctx *parser.ComputerScholarsReqContext) any {
-	v.appendNotice(utils.ComputerScholarsProgramNotice)
+	v.appendNotice(constants.ComputerScholarsProgramNotice)
 	return nil
 }
 

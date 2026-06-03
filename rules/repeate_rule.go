@@ -1,21 +1,33 @@
 package rules
 
 import (
-	"parser/utils"
+	"encoding/json"
+	"parser/constants"
 )
 
 type RepeatRule struct {
-	Count           int
-	Hours           int
-	Courses         []utils.Course
-	MajorInternship string
+	Count           int                `json:"count,omitempty"`
+	Hours           int                `json:"hours,omitempty"`
+	Courses         []constants.Course `json:"courses,omitempty"`
+	MajorInternship string             `json:"major_internship,omitempty"`
 }
 
 func (r *RepeatRule) isRule() bool {
 	return true
 }
 
-func NewRepeatRule(count int, hours int, courses []utils.Course, internship string) *RepeatRule {
+func (r *RepeatRule) MarshalJSON() ([]byte, error) {
+	type Alias RepeatRule
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "repeat",
+		Alias: (*Alias)(r),
+	})
+}
+
+func NewRepeatRule(count int, hours int, courses []constants.Course, internship string) *RepeatRule {
 	return &RepeatRule{
 		Count:           count,
 		Hours:           hours,
@@ -24,7 +36,7 @@ func NewRepeatRule(count int, hours int, courses []utils.Course, internship stri
 	}
 }
 
-func NewCourseRepeatRule(course []utils.Course) *RepeatRule {
+func NewCourseRepeatRule(course []constants.Course) *RepeatRule {
 	return &RepeatRule{
 		Count:   1,
 		Courses: course,
@@ -43,11 +55,22 @@ func (r *RepeatRule) IsRule() bool {
 }
 
 type GpaRepeatRule struct {
-	Course       utils.Course
-	AcademicPlan string
+	Course       constants.Course `json:"course,omitempty"`
+	AcademicPlan string           `json:"academic_plan,omitempty"`
 }
 
-func NewGpaRepeatRule(course utils.Course) *GpaRepeatRule {
+func (r *GpaRepeatRule) MarshalJSON() ([]byte, error) {
+	type Alias GpaRepeatRule
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "gpa_repeat",
+		Alias: (*Alias)(r),
+	})
+}
+
+func NewGpaRepeatRule(course constants.Course) *GpaRepeatRule {
 	return &GpaRepeatRule{
 		Course: course,
 	}

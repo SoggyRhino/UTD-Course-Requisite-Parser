@@ -1,37 +1,73 @@
 package conditions
 
-import "parser/utils"
+import (
+	"encoding/json"
+	"parser/constants"
+)
 
 type ConcurrentEnrollmentCondition struct {
-	Course utils.Course
+	Course constants.Course `json:"course,omitempty"`
 }
 
-func NewConcurrentEnrollmentCondition(course utils.Course) *ConcurrentEnrollmentCondition {
+func (c *ConcurrentEnrollmentCondition) MarshalJSON() ([]byte, error) {
+	type Alias ConcurrentEnrollmentCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "concurrent_enrollment",
+		Alias: (*Alias)(c),
+	})
+}
+
+func NewConcurrentEnrollmentCondition(course constants.Course) *ConcurrentEnrollmentCondition {
 	return &ConcurrentEnrollmentCondition{
 		Course: course,
 	}
 }
 
-func (c *ConcurrentEnrollmentCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (c *ConcurrentEnrollmentCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }
 
 type ExactSectionCondition struct {
-	Course utils.Course
+	Course constants.Course `json:"course,omitempty"`
 }
 
-func NewExactSectionCondition(course utils.Course) *ExactSectionCondition {
+func (c *ExactSectionCondition) MarshalJSON() ([]byte, error) {
+	type Alias ExactSectionCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "exact_section",
+		Alias: (*Alias)(c),
+	})
+}
+
+func NewExactSectionCondition(course constants.Course) *ExactSectionCondition {
 	return &ExactSectionCondition{
 		Course: course,
 	}
 }
 
-func (c *ExactSectionCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (c *ExactSectionCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }
 
 type AnyPreviousMajorCourseCondition struct {
-	Prefix string
+	Prefix string `json:"prefix,omitempty"`
+}
+
+func (c *AnyPreviousMajorCourseCondition) MarshalJSON() ([]byte, error) {
+	type Alias AnyPreviousMajorCourseCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "any_previous_major_course",
+		Alias: (*Alias)(c),
+	})
 }
 
 func NewAnyPreviousMajorCourseCondition(prefix string) *AnyPreviousMajorCourseCondition {
@@ -40,13 +76,24 @@ func NewAnyPreviousMajorCourseCondition(prefix string) *AnyPreviousMajorCourseCo
 	}
 }
 
-func (c *AnyPreviousMajorCourseCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (c *AnyPreviousMajorCourseCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }
 
 type AcademicYearCondition struct {
-	Plan  string
-	Equal bool // must be in plan or must not be in plan
+	Plan  string `json:"plan,omitempty"`
+	Equal bool   `json:"equal,omitempty"`
+}
+
+func (c *AcademicYearCondition) MarshalJSON() ([]byte, error) {
+	type Alias AcademicYearCondition
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "academic_year",
+		Alias: (*Alias)(c),
+	})
 }
 
 func NewAcademicYearCondition(plan string, equal bool) *AcademicYearCondition {
@@ -56,6 +103,6 @@ func NewAcademicYearCondition(plan string, equal bool) *AcademicYearCondition {
 	}
 }
 
-func (c *AcademicYearCondition) Fulfils(userInfo utils.UserInfo) (bool, error) {
+func (c *AcademicYearCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
 	return false, nil
 }

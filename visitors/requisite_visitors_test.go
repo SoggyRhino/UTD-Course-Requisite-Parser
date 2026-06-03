@@ -2,9 +2,9 @@ package visitors
 
 import (
 	"parser/conditions"
+	"parser/constants"
 	"parser/parser"
 	"parser/rules"
-	"parser/utils"
 	"testing"
 )
 
@@ -26,11 +26,11 @@ func TestRequisiteVisitors(t *testing.T) {
 			Input: "BLAW 2301 Repeat Restriction and non-DMHP/non-LLC (DMLC, DFLC, DHLC) Student Group Only",
 			Result: Requirements{
 				Rules: []rules.Rule{
-					rules.NewCourseRepeatRule([]utils.Course{
+					rules.NewCourseRepeatRule([]constants.Course{
 						{Prefix: "BLAW", Number: "2301"},
 					}),
 				},
-				Notices: []utils.Notice{utils.ExcludeDMHPLLCNotice},
+				Notices: []constants.Notice{constants.ExcludeDMHPLLCNotice},
 			},
 		},
 		"Append Academic Plan Req": {
@@ -51,32 +51,32 @@ func TestRequisiteVisitors(t *testing.T) {
 		"Exact Coreq Notice Req": {
 			Input: "Check class notes to make sure you are selecting the matching corequisite section",
 			Result: Requirements{
-				Notices: []utils.Notice{utils.ExactCoReqNotice},
+				Notices: []constants.Notice{constants.ExactCoReqNotice},
 			},
 		},
 		"Computer Scholars Req": {
 			Input: "Computing Scholars Program",
 			Result: Requirements{
-				Notices: []utils.Notice{utils.ComputerScholarsProgramNotice},
+				Notices: []constants.Notice{constants.ComputerScholarsProgramNotice},
 			},
 		},
 		"GPA Repeat Req": {
 			Input: "GPA Repeat Restriction - MIS 6309",
 			Result: Requirements{
-				Rules: []rules.Rule{rules.NewGpaRepeatRule(utils.Course{Prefix: "MIS", Number: "6309"})},
+				Rules: []rules.Rule{rules.NewGpaRepeatRule(constants.Course{Prefix: "MIS", Number: "6309"})},
 			},
 		},
 		"Repeat Limit Hours Req": {
 			Input: "Repeat Limit - ACCT 7323 may only be repeated for a maximum of 9 semester credit hours",
 			Result: Requirements{
-				Rules: []rules.Rule{rules.NewRepeatRule(0, 9, []utils.Course{{Prefix: "ACCT", Number: "7323"}}, "")},
+				Rules: []rules.Rule{rules.NewRepeatRule(0, 9, []constants.Course{{Prefix: "ACCT", Number: "7323"}}, "")},
 			},
 		},
 		"Repeat Limit Times Req": {
 			Input: "Repeat Limit - OPRE 7051 may only be repeated a maximum of 6 times",
 			Result: Requirements{
 				Rules: []rules.Rule{
-					rules.NewRepeatRule(6, 0, []utils.Course{{Prefix: "OPRE", Number: "7051"}}, ""),
+					rules.NewRepeatRule(6, 0, []constants.Course{{Prefix: "OPRE", Number: "7051"}}, ""),
 				},
 			},
 		},
@@ -84,7 +84,7 @@ func TestRequisiteVisitors(t *testing.T) {
 			Input: "ACCT 2301 Repeat Restriction",
 			Result: Requirements{
 				Rules: []rules.Rule{
-					rules.NewCourseRepeatRule([]utils.Course{{Prefix: "ACCT", Number: "2301"}}),
+					rules.NewCourseRepeatRule([]constants.Course{{Prefix: "ACCT", Number: "2301"}}),
 				},
 			},
 		},
@@ -92,7 +92,7 @@ func TestRequisiteVisitors(t *testing.T) {
 			Input: "May not be used to satisfy BS INTS degree requirements",
 			Result: Requirements{
 				Rules: []rules.Rule{
-					rules.NewDegreeSatisfactionRuleFromPrefix([]string{"INTS"}, utils.Undergraduate),
+					rules.NewDegreeSatisfactionRuleFromPrefix([]string{"INTS"}, constants.Undergraduate),
 				},
 			},
 		},
@@ -101,8 +101,8 @@ func TestRequisiteVisitors(t *testing.T) {
 			Result: Requirements{
 				Rules: []rules.Rule{rules.NewCreditForRule(
 					rules.NewAndCourseCollection(
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "BPS", Number: "6310"}}),
-						rules.NewSimpleCourseCollection([]utils.Course{{Prefix: "ENTP", Number: "6310"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "BPS", Number: "6310"}}),
+						rules.NewSimpleCourseCollection([]constants.Course{{Prefix: "ENTP", Number: "6310"}}),
 					))},
 			},
 		},
@@ -139,14 +139,14 @@ func TestRequisiteVisitors(t *testing.T) {
 			Input: "Corequisite: BIOL 2311.001",
 			Result: Requirements{
 				CoReqs: conditions.NewAndCondition(
-					conditions.NewConcurrentEnrollmentCondition(utils.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
+					conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
 				),
 			},
 		},
 		"Prereq and Coreq Req": {
 			Input: "Prerequisite: Collegium V Honors Student Group and Corequisite: CHEM 1315",
 			Result: Requirements{
-				PreReqs: conditions.NewStudentGroupCondition(utils.CollegeVHonors),
+				PreReqs: conditions.NewStudentGroupCondition(constants.CollegeVHonors),
 				CoReqs:  conditions.NewCourseCondition("CHEM", "1315", ""),
 			},
 		},
@@ -159,7 +159,7 @@ func TestRequisiteVisitors(t *testing.T) {
 		"Same As Req": {
 			Input: "(Same as MATH 3335 and STAT 3335)",
 			Result: Requirements{
-				Rules: []rules.Rule{rules.NewSameAsRule([]utils.Course{{Prefix: "MATH", Number: "3335"}, {Prefix: "STAT", Number: "3335"}})},
+				Rules: []rules.Rule{rules.NewSameAsRule([]constants.Course{{Prefix: "MATH", Number: "3335"}, {Prefix: "STAT", Number: "3335"}})},
 			},
 		},
 		"Expr Req": {

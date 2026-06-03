@@ -1,16 +1,30 @@
 package rules
 
-import "parser/utils"
+import (
+	"encoding/json"
+	"parser/constants"
+)
 
 type SameAsRule struct {
-	Courses []utils.Course
+	Courses []constants.Course `json:"courses,omitempty"`
 }
 
 func (r *SameAsRule) isRule() bool {
-	panic("implement me")
+	return true
 }
 
-func NewSameAsRule(courses []utils.Course) *SameAsRule {
+func (r *SameAsRule) MarshalJSON() ([]byte, error) {
+	type Alias SameAsRule
+	return json.Marshal(&struct {
+		Type string `json:"type"`
+		*Alias
+	}{
+		Type:  "same_as",
+		Alias: (*Alias)(r),
+	})
+}
+
+func NewSameAsRule(courses []constants.Course) *SameAsRule {
 	return &SameAsRule{Courses: courses}
 }
 

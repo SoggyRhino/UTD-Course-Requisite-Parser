@@ -1,9 +1,9 @@
-package utils
+package constants
 
 type Course struct {
-	Prefix  string
-	Number  string
-	Section string
+	Prefix  string `json:"prefix,omitempty"`
+	Number  string `json:"number,omitempty"`
+	Section string `json:"section,omitempty"`
 }
 
 type Grade string

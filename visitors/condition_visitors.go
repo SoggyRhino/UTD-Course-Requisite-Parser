@@ -2,8 +2,8 @@ package visitors
 
 import (
 	"parser/conditions"
+	"parser/constants"
 	"parser/parser"
-	"parser/utils"
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
@@ -19,7 +19,7 @@ func (v *RequisiteVisitor) VisitInstructorConsentCondition(ctx *parser.Instructo
 }
 
 func (v *RequisiteVisitor) visitInstructorConsentCondition(ctx *parser.InstructorConsentConditionContext) *conditions.ConsentCondition {
-	return conditions.NewConsentCondition(utils.InstructorConsent)
+	return conditions.NewConsentCondition(constants.InstructorConsent)
 }
 
 // VisitDepartmentConsentCondition
@@ -30,7 +30,7 @@ func (v *RequisiteVisitor) VisitDepartmentConsentCondition(ctx *parser.Departmen
 }
 
 func (v *RequisiteVisitor) visitDepartmentConsentCondition(ctx *parser.DepartmentConsentConditionContext) *conditions.ConsentCondition {
-	return conditions.NewConsentCondition(utils.DepartmentConsent)
+	return conditions.NewConsentCondition(constants.DepartmentConsent)
 }
 
 // VisitUteachConsentCondition
@@ -41,7 +41,7 @@ func (v *RequisiteVisitor) VisitUteachConsentCondition(ctx *parser.UteachConsent
 }
 
 func (v *RequisiteVisitor) visitUteachConsentCondition(ctx *parser.UteachConsentConditionContext) *conditions.ConsentCondition {
-	return conditions.NewConsentCondition(utils.UTeachConsent)
+	return conditions.NewConsentCondition(constants.UTeachConsent)
 }
 
 // ======================= standing conditions =======================
@@ -54,7 +54,7 @@ func (v *RequisiteVisitor) VisitUpperDivisionStandingCondition(ctx *parser.Upper
 }
 
 func (v *RequisiteVisitor) visitUpperDivisionStandingCondition(ctx *parser.UpperDivisionStandingConditionContext) *conditions.GenericStandingCondition {
-	return conditions.NewGenericStandingCondition(utils.UpperDivisionStanding)
+	return conditions.NewGenericStandingCondition(constants.UpperDivisionStanding)
 }
 
 // VisitGoodAcademicStandingCondition
@@ -65,14 +65,14 @@ func (v *RequisiteVisitor) VisitGoodAcademicStandingCondition(ctx *parser.GoodAc
 }
 
 func (v *RequisiteVisitor) visitGoodAcademicStandingCondition(ctx *parser.GoodAcademicStandingConditionContext) *conditions.GenericStandingCondition {
-	return conditions.NewGenericStandingCondition(utils.GoodAcademicStanding)
+	return conditions.NewGenericStandingCondition(constants.GoodAcademicStanding)
 }
 
 // ======================= grade condition =======================
 
 func (v *RequisiteVisitor) applyGrade(node antlr.ParseTree, gradeText string) conditions.Condition {
 	gradedCond, _ := v.Visit(node).(conditions.GradedCondition)
-	gradedCond.AppendGrade(utils.Grade(gradeText))
+	gradedCond.AppendGrade(constants.Grade(gradeText))
 	return gradedCond
 }
 
@@ -286,7 +286,7 @@ func (v *RequisiteVisitor) VisitPrefixMajorCondition(ctx *parser.PrefixMajorCond
 
 func (v *RequisiteVisitor) visitPrefixMajorCondition(ctx *parser.PrefixMajorConditionContext) conditions.Condition {
 
-	var degreeLevel utils.DegreeLevel
+	var degreeLevel constants.DegreeLevel
 	if ctx.DIVISION_TYPE() != nil {
 		degreeLevel = mapDivisionType(ctx.DIVISION_TYPE().GetText())
 	}
@@ -295,7 +295,7 @@ func (v *RequisiteVisitor) visitPrefixMajorCondition(ctx *parser.PrefixMajorCond
 		degreeLevel = mapDegreeLevel(ctx.DEGREE_LEVEL().GetText())
 	}
 
-	var gradeLevel utils.GradeLevel
+	var gradeLevel constants.GradeLevel
 	if ctx.GRADE_LEVEL() != nil {
 		gradeLevel = mapGradeLevel(ctx.GRADE_LEVEL().GetText())
 	}
@@ -653,8 +653,8 @@ func (v *RequisiteVisitor) VisitBothGroupCondition(ctx *parser.BothGroupConditio
 }
 
 func (v *RequisiteVisitor) visitBothGroupCondition(ctx *parser.BothGroupConditionContext) conditions.Condition {
-	group1 := v.Visit(ctx.Group(0)).(utils.StudentGroup)
-	group2 := v.Visit(ctx.Group(1)).(utils.StudentGroup)
+	group1 := v.Visit(ctx.Group(0)).(constants.StudentGroup)
+	group2 := v.Visit(ctx.Group(1)).(constants.StudentGroup)
 
 	return conditions.NewAndCondition(
 		conditions.NewStudentGroupCondition(group1),
@@ -672,7 +672,7 @@ func (v *RequisiteVisitor) VisitGroupListCondition(ctx *parser.GroupListConditio
 func (v *RequisiteVisitor) visitGroupListCondition(ctx *parser.GroupListConditionContext) conditions.Condition {
 	groupsConditions := make([]conditions.Condition, len(ctx.AllGroup()))
 	for i, group := range ctx.AllGroup() {
-		groupsConditions[i] = conditions.NewStudentGroupCondition(v.Visit(group).(utils.StudentGroup))
+		groupsConditions[i] = conditions.NewStudentGroupCondition(v.Visit(group).(constants.StudentGroup))
 	}
 
 	return conditions.NewOrCondition(groupsConditions...)
@@ -686,7 +686,7 @@ func (v *RequisiteVisitor) VisitSingleGroupCondition(ctx *parser.SingleGroupCond
 }
 
 func (v *RequisiteVisitor) visitSingleGroupCondition(ctx *parser.SingleGroupConditionContext) conditions.Condition {
-	group := v.Visit(ctx.Group()).(utils.StudentGroup)
+	group := v.Visit(ctx.Group()).(constants.StudentGroup)
 	return conditions.NewStudentGroupCondition(group)
 }
 
@@ -720,7 +720,7 @@ func (v *RequisiteVisitor) visitExactSectionCondition(ctx *parser.ExactSectionCo
 	conds := make([]conditions.Condition, len(courses))
 	for i, course := range courses {
 		conds[i] = conditions.NewConcurrentEnrollmentCondition(
-			utils.Course{
+			constants.Course{
 				Prefix:  course.Prefix,
 				Number:  course.Number,
 				Section: ctx.SECTION_NUMBER().GetText(),
@@ -742,7 +742,7 @@ func (v *RequisiteVisitor) visitWorkshopSectionCondition(ctx *parser.WorkshopSec
 	conds := make([]conditions.Condition, len(courses))
 	for i, course := range courses {
 		conds[i] = conditions.NewConcurrentEnrollmentCondition(
-			utils.Course{
+			constants.Course{
 				Prefix:  course.Prefix,
 				Number:  course.Number,
 				Section: ctx.SECTION_NUMBER().GetText(),
