@@ -2,6 +2,9 @@ package conditions
 
 import (
 	"encoding/json"
+	"fmt"
+	"strings"
+
 	"parser/constants"
 )
 
@@ -50,8 +53,32 @@ func NewMajorConditionWithDegreeAndGradeLevel(degree string, level constants.Deg
 	}
 }
 
-func (m *MajorCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
-	return false, nil
+func (m *MajorCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	if m.Degree != "" && !strings.Contains(strings.ToLower(userInfo.Major), strings.ToLower(m.Degree)) {
+		return &constants.Evaluation{
+			Status:  constants.StatusDefiniteFail,
+			Summary: fmt.Sprintf("Major is %q; requires %q", userInfo.Major, m.Degree),
+		}
+	}
+
+	if m.DegreeLevel != "" && m.DegreeLevel != constants.AnyDegree && userInfo.DegreeLevel != m.DegreeLevel {
+		return &constants.Evaluation{
+			Status:  constants.StatusDefiniteFail,
+			Summary: fmt.Sprintf("Degree level is %q; requires %q", userInfo.DegreeLevel, m.DegreeLevel),
+		}
+	}
+
+	if m.GradeLevel != "" && m.GradeLevel != constants.AnyGrade && userInfo.GradeLevel != m.GradeLevel {
+		return &constants.Evaluation{
+			Status:  constants.StatusDefiniteFail,
+			Summary: fmt.Sprintf("Grade level is %q; requires %q", userInfo.GradeLevel, m.GradeLevel),
+		}
+	}
+
+	return &constants.Evaluation{
+		Status:  constants.StatusPass,
+		Summary: "Major and level requirements satisfied",
+	}
 }
 
 type DegreeCondition struct {
@@ -75,6 +102,16 @@ func NewDegreeCondition(degree string) *DegreeCondition {
 	}
 }
 
-func (d *DegreeCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
-	return false, nil
+func (d *DegreeCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	if d.Degree != "" && !strings.Contains(strings.ToLower(userInfo.Major), strings.ToLower(d.Degree)) {
+		return &constants.Evaluation{
+			Status:  constants.StatusDefiniteFail,
+			Summary: fmt.Sprintf("Major is %q; requires degree in %q", userInfo.Major, d.Degree),
+		}
+	}
+
+	return &constants.Evaluation{
+		Status:  constants.StatusPass,
+		Summary: fmt.Sprintf("Degree requirement %q satisfied", d.Degree),
+	}
 }

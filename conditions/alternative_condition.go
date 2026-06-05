@@ -2,7 +2,6 @@ package conditions
 
 import (
 	"encoding/json"
-	"log"
 	"parser/constants"
 )
 
@@ -37,12 +36,23 @@ func (a *AlternativeCondition) UnmarshalJSON(b []byte) error {
 }
 
 func NewAlternativeCondition(condition Condition) *AlternativeCondition {
-	return &AlternativeCondition{
-		Condition: condition,
-	}
+	return &AlternativeCondition{Condition: condition}
 }
 
-func (a *AlternativeCondition) Fulfils(info constants.UserInfo) (bool, error) {
-	log.Println("AlternativeCondition Fulfils not implemented")
-	return a.Condition.Fulfils(info)
+func (a *AlternativeCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
+	inner := a.Condition.Fulfils(info)
+	if inner == nil {
+		//todo remove ability to return nil
+		inner = &constants.Evaluation{Status: constants.StatusSystemError, Summary: "inner condition returned nil"}
+	}
+
+	if inner.Status == constants.StatusPass {
+		return inner
+	}
+
+	return &constants.Evaluation{
+		Status:   constants.StatusUnknown,
+		Summary:  "Standard path not satisfied — an equivalent may also be accepted (contact adviser)",
+		Children: []constants.Evaluation{*inner},
+	}
 }

@@ -139,7 +139,7 @@ func TestRequisiteVisitors(t *testing.T) {
 			Input: "Corequisite: BIOL 2311.001",
 			Result: Requirements{
 				CoReqs: conditions.NewAndCondition(
-					conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
+					conditions.NewExactSectionCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
 				),
 			},
 		},

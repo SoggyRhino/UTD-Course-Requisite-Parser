@@ -1,27 +1,49 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
+	"os"
 	"parser/parser"
 	"parser/visitors"
+	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
 )
 
 func main() {
-	input := "Prerequisite: ACN 6340 or HCS 6340."
-	stream := antlr.NewInputStream(input)
-	lexer := parser.NewRequirementsLexer(stream)
-	tokens := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
-	p := parser.NewRequirementsParser(tokens)
 
-	tree := p.Prog()
-	visitor := &visitors.RequisiteVisitor{
-		BaseRequirementsVisitor: parser.BaseRequirementsVisitor{
-			BaseParseTreeVisitor: &antlr.BaseParseTreeVisitor{},
-		},
+	input := "scripts/inputs/input.txt"
+
+	file, err := os.ReadFile(input)
+	if err != nil {
+		log.Fatalf("Failed to read file: %v", err)
 	}
-	tree.Accept(visitor)
 
-	fmt.Println(visitor.Requirements)
+	for _, line := range strings.Split(string(file), "\n") {
+
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					fmt.Printf("Panic occurred for line: %s\n%v\n\n", line, r)
+				}
+			}()
+			stream := antlr.NewInputStream(line)
+			lexer := parser.NewRequirementsLexer(stream)
+			tokens := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+			p := parser.NewRequirementsParser(tokens)
+
+			tree := p.Prog()
+			visitor := visitors.NewRequisiteVisitor(tokens)
+			visitor.Visit(tree)
+
+			_, err := json.Marshal(visitor.Requirements)
+			if err != nil {
+				fmt.Errorf("failed to marshal: %v", err)
+			}
+		}()
+
+	}
+
 }

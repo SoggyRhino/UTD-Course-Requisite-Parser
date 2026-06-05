@@ -142,7 +142,7 @@ func TestVisitExpr(t *testing.T) {
 		"ExactSectionExpr": {
 			Input: "BIOL 2311.001",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
+				conditions.NewExactSectionCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
 			),
 		},
 		"AnyMajorCourseExpr": {

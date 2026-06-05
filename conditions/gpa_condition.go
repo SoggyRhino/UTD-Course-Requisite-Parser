@@ -2,6 +2,7 @@ package conditions
 
 import (
 	"encoding/json"
+	"fmt"
 	"parser/constants"
 )
 
@@ -35,6 +36,15 @@ func NewGpaConditionWithDegree(gpa float64, degree string) *GPACondition {
 	}
 }
 
-func (g *GPACondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
-	return false, nil
+func (g *GPACondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	if userInfo.GPA >= float64(g.GPA) {
+		return &constants.Evaluation{
+			Status:  constants.StatusPass,
+			Summary: fmt.Sprintf("GPA is %.2f (requires %.2f)", userInfo.GPA, g.GPA),
+		}
+	}
+	return &constants.Evaluation{
+		Status:  constants.StatusDefiniteFail,
+		Summary: fmt.Sprintf("GPA is %.2f but requires %.2f", userInfo.GPA, g.GPA),
+	}
 }

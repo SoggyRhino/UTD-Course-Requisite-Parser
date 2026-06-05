@@ -71,9 +71,15 @@ func (v *RequisiteVisitor) visitGoodAcademicStandingCondition(ctx *parser.GoodAc
 // ======================= grade condition =======================
 
 func (v *RequisiteVisitor) applyGrade(node antlr.ParseTree, gradeText string) conditions.Condition {
-	gradedCond, _ := v.Visit(node).(conditions.GradedCondition)
-	gradedCond.AppendGrade(constants.Grade(gradeText))
-	return gradedCond
+	result := v.Visit(node)
+	if gradedCond, ok := result.(conditions.GradedCondition); ok {
+		gradedCond.AppendGrade(constants.Grade(gradeText))
+		return gradedCond
+	}
+	if cond, ok := result.(conditions.Condition); ok {
+		return cond
+	}
+	return nil
 }
 
 // VisitSimpleGradeCondition
@@ -719,7 +725,7 @@ func (v *RequisiteVisitor) visitExactSectionCondition(ctx *parser.ExactSectionCo
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
 	conds := make([]conditions.Condition, len(courses))
 	for i, course := range courses {
-		conds[i] = conditions.NewConcurrentEnrollmentCondition(
+		conds[i] = conditions.NewExactSectionCondition(
 			constants.Course{
 				Prefix:  course.Prefix,
 				Number:  course.Number,
@@ -741,7 +747,7 @@ func (v *RequisiteVisitor) visitWorkshopSectionCondition(ctx *parser.WorkshopSec
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
 	conds := make([]conditions.Condition, len(courses))
 	for i, course := range courses {
-		conds[i] = conditions.NewConcurrentEnrollmentCondition(
+		conds[i] = conditions.NewExactSectionCondition(
 			constants.Course{
 				Prefix:  course.Prefix,
 				Number:  course.Number,

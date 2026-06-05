@@ -665,19 +665,19 @@ func TestVisitExactSectionCondition(t *testing.T) {
 		"BIOL 2311.001": {
 			Input: "BIOL 2311.001",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
+				conditions.NewExactSectionCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "001"}),
 			),
 		},
 		"BIOL 2311.501": {
 			Input: "BIOL 2311.501",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "501"}),
+				conditions.NewExactSectionCondition(constants.Course{Prefix: "BIOL", Number: "2311", Section: "501"}),
 			),
 		},
 		"BIOL 2111.502": {
 			Input: "BIOL 2111.502",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2111", Section: "502"}),
+				conditions.NewExactSectionCondition(constants.Course{Prefix: "BIOL", Number: "2111", Section: "502"}),
 			),
 		},
 	}
@@ -697,7 +697,7 @@ func TestVisitWorkshopSectionCondition(t *testing.T) {
 		"Workshop section": {
 			Input: "BIOL 2112 workshop 501",
 			Result: conditions.NewAndCondition(
-				conditions.NewConcurrentEnrollmentCondition(constants.Course{Prefix: "BIOL", Number: "2112", Section: "501"}),
+				conditions.NewExactSectionCondition(constants.Course{Prefix: "BIOL", Number: "2112", Section: "501"}),
 			),
 		},
 	}

@@ -2,6 +2,7 @@ package conditions
 
 import (
 	"encoding/json"
+	"fmt"
 	"parser/constants"
 )
 
@@ -30,8 +31,11 @@ func NewPlacementTestScoreCondition(name string, scoreMin, scoreMax int) *Placem
 	}
 }
 
-func (c *PlacementTestScoreCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
-	return false, nil
+func (c *PlacementTestScoreCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	return &constants.Evaluation{
+		Status:  constants.StatusUnknown,
+		Summary: fmt.Sprintf("Cannot verify %s placement test score (requires %d-%d) automatically", c.Name, c.ScoreMin, c.ScoreMax),
+	}
 }
 
 type APScoreCondition struct {
@@ -55,8 +59,11 @@ func NewAPScoreCondition(score int) *APScoreCondition {
 	}
 }
 
-func (c *APScoreCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
-	return false, nil
+func (c *APScoreCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	return &constants.Evaluation{
+		Status:  constants.StatusUnknown,
+		Summary: fmt.Sprintf("Cannot verify AP score of %d automatically", c.Score),
+	}
 }
 
 type AleksScoreCondition struct {
@@ -80,6 +87,9 @@ func NewAleksScoreCondition(score int) *AleksScoreCondition {
 	}
 }
 
-func (c *AleksScoreCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
-	return false, nil
+func (c *AleksScoreCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	return &constants.Evaluation{
+		Status:  constants.StatusUnknown,
+		Summary: fmt.Sprintf("Cannot verify ALEKS score of %d automatically", c.Score),
+	}
 }

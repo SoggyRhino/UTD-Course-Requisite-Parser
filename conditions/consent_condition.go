@@ -26,6 +26,9 @@ func NewConsentCondition(consent constants.Consent) *ConsentCondition {
 	}
 }
 
-func (c *ConsentCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
-	return false, nil
+func (c *ConsentCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	return &constants.Evaluation{
+		Status:  constants.StatusPossibleFail,
+		Summary: "Requires manual consent/approval",
+	}
 }

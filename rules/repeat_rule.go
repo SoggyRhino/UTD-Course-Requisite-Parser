@@ -50,10 +50,6 @@ func NewInternshipRepeatRule(internship string) *RepeatRule {
 	}
 }
 
-func (r *RepeatRule) IsRule() bool {
-	return true
-}
-
 type GpaRepeatRule struct {
 	Course       constants.Course `json:"course,omitempty"`
 	AcademicPlan string           `json:"academic_plan,omitempty"`

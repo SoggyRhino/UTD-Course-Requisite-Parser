@@ -134,19 +134,15 @@ func extractCoursesFromCourseList(condition conditions.Condition) []constants.Co
 
 	switch cond := condition.(type) {
 	case *conditions.CourseCondition:
-		courses = []constants.Course{cond.Course}
+		courses = append(courses, cond.Course)
 	case *conditions.OrCondition:
 		for _, c := range cond.Conditions {
-			course := c.(*conditions.CourseCondition).Course
-			courses = append(courses, course)
+			courses = append(courses, extractCoursesFromCourseList(c)...)
 		}
 	case *conditions.AndCondition:
 		for _, c := range cond.Conditions {
-			course := c.(*conditions.CourseCondition).Course
-			courses = append(courses, course)
+			courses = append(courses, extractCoursesFromCourseList(c)...)
 		}
-	default:
-		panic("invalid course list")
 	}
 
 	return courses

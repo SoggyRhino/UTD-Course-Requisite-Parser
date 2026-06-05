@@ -2,6 +2,8 @@ package conditions
 
 import (
 	"encoding/json"
+	"fmt"
+
 	"parser/constants"
 )
 
@@ -46,35 +48,59 @@ func NewOrCondition(conditions ...Condition) Condition {
 }
 
 func NewOrConditionFromExpr(cond1, cond2 Condition) *OrCondition {
-	var flattenedConditions []Condition
-
-	if or1, isOr1 := cond1.(*OrCondition); isOr1 {
-		flattenedConditions = append(flattenedConditions, or1.Conditions...)
+	var flat []Condition
+	if or1, ok := cond1.(*OrCondition); ok {
+		flat = append(flat, or1.Conditions...)
 	} else {
-		flattenedConditions = append(flattenedConditions, cond1)
+		flat = append(flat, cond1)
 	}
-
-	if or2, isOr2 := cond2.(*OrCondition); isOr2 {
-		flattenedConditions = append(flattenedConditions, or2.Conditions...)
+	if or2, ok := cond2.(*OrCondition); ok {
+		flat = append(flat, or2.Conditions...)
 	} else {
-		flattenedConditions = append(flattenedConditions, cond2)
+		flat = append(flat, cond2)
 	}
-
-	return &OrCondition{Conditions: flattenedConditions}
-}
-
-func (o *OrCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
-	return false, nil
+	return &OrCondition{Conditions: flat}
 }
 
 func (o *OrCondition) AppendGrade(grade constants.Grade) {
-	for _, condition := range o.Conditions {
-		if gradedCondition, ok := condition.(GradedCondition); ok {
-			gradedCondition.AppendGrade(grade)
-		} else {
-			//todo look into this, temporary solution for testing.
-			panic("condition does not implement GradedCondition, probably a weird case")
+	for _, c := range o.Conditions {
+		if gc, ok := c.(GradedCondition); ok {
+			gc.AppendGrade(grade)
 		}
+	}
+}
+
+func (o *OrCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
+
+	children := make([]constants.Evaluation, 0, len(o.Conditions))
+	var bestNonPass constants.EvalStatus
+	initialized := false
+
+	for _, c := range o.Conditions {
+		eval := c.Fulfils(info)
+		if eval == nil {
+			return &constants.Evaluation{Status: constants.StatusSystemError, Summary: "condition returned nil"}
+		}
+		children = append(children, *eval)
+
+		if eval.Status == constants.StatusPass {
+			return &constants.Evaluation{
+				Status:   constants.StatusPass,
+				Summary:  fmt.Sprintf("At least one of %d conditions satisfied", len(o.Conditions)),
+				Children: children,
+			}
+		}
+
+		if !initialized || eval.Status.Priority() > bestNonPass.Priority() {
+			bestNonPass = eval.Status
+			initialized = true
+		}
+	}
+
+	return &constants.Evaluation{
+		Status:   bestNonPass,
+		Summary:  fmt.Sprintf("None of %d conditions satisfied", len(o.Conditions)),
+		Children: children,
 	}
 }
 
@@ -119,35 +145,54 @@ func NewAndCondition(conditions ...Condition) Condition {
 }
 
 func NewAndConditionFromExpr(cond1, cond2 Condition) *AndCondition {
-	var flattenedConditions []Condition
-
-	if and1, isAnd1 := cond1.(*AndCondition); isAnd1 {
-		flattenedConditions = append(flattenedConditions, and1.Conditions...)
+	var flat []Condition
+	if and1, ok := cond1.(*AndCondition); ok {
+		flat = append(flat, and1.Conditions...)
 	} else {
-		flattenedConditions = append(flattenedConditions, cond1)
+		flat = append(flat, cond1)
 	}
-
-	if and2, isAnd2 := cond2.(*AndCondition); isAnd2 {
-		flattenedConditions = append(flattenedConditions, and2.Conditions...)
+	if and2, ok := cond2.(*AndCondition); ok {
+		flat = append(flat, and2.Conditions...)
 	} else {
-		flattenedConditions = append(flattenedConditions, cond2)
+		flat = append(flat, cond2)
 	}
-
-	return &AndCondition{Conditions: flattenedConditions}
-}
-
-func (a *AndCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
-	//todo and condition
-	return false, nil
+	return &AndCondition{Conditions: flat}
 }
 
 func (a *AndCondition) AppendGrade(grade constants.Grade) {
-	for _, condition := range a.Conditions {
-		if gradedCondition, ok := condition.(GradedCondition); ok {
-			gradedCondition.AppendGrade(grade)
-		} else {
-			//todo look into this, temporary solution for testing.
-			panic("condition does not implement GradedCondition, probably a weird case")
+	for _, c := range a.Conditions {
+		if gc, ok := c.(GradedCondition); ok {
+			gc.AppendGrade(grade)
 		}
+	}
+}
+
+func (a *AndCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
+	children := make([]constants.Evaluation, 0, len(a.Conditions))
+
+	worstStatus := constants.StatusPass
+	for _, c := range a.Conditions {
+		eval := c.Fulfils(info)
+		if eval == nil {
+			eval = &constants.Evaluation{Status: constants.StatusSystemError, Summary: "condition returned nil"}
+		}
+		children = append(children, *eval)
+
+		if eval.Status.Priority() < worstStatus.Priority() {
+			worstStatus = eval.Status
+		}
+	}
+
+	if worstStatus == constants.StatusPass {
+		return &constants.Evaluation{
+			Status:   constants.StatusPass,
+			Summary:  fmt.Sprintf("All %d conditions satisfied", len(a.Conditions)),
+			Children: children,
+		}
+	}
+	return &constants.Evaluation{
+		Status:   worstStatus,
+		Summary:  fmt.Sprintf("Not all conditions satisfied (%d total)", len(a.Conditions)),
+		Children: children,
 	}
 }

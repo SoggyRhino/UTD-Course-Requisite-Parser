@@ -2,6 +2,7 @@ package conditions
 
 import (
 	"encoding/json"
+	"fmt"
 	"parser/constants"
 )
 
@@ -26,6 +27,17 @@ func NewStudentGroupCondition(groups constants.StudentGroup) *StudentGroupCondit
 	}
 }
 
-func (c *StudentGroupCondition) Fulfils(userInfo constants.UserInfo) (bool, error) {
-	return false, nil
+func (c *StudentGroupCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	for _, group := range userInfo.Groups {
+		if group == c.Groups {
+			return &constants.Evaluation{
+				Status:  constants.StatusPass,
+				Summary: fmt.Sprintf("Student is a member of group %q", c.Groups),
+			}
+		}
+	}
+	return &constants.Evaluation{
+		Status:  constants.StatusDefiniteFail,
+		Summary: fmt.Sprintf("Student is not a member of group %q", c.Groups),
+	}
 }

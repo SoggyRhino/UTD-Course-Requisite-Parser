@@ -207,7 +207,7 @@ ap_score_condition
     ;
 
 aleks_score_condition
-    : A_SORCE_OF INT '%' 'on ALEKS math placement exam'   # aleksScoreCondition
+    : A_SCORE_OF INT '%' 'on ALEKS math placement exam'   # aleksScoreCondition
     ;
 
 
@@ -353,7 +353,7 @@ A_GRADE_OF_AT_LEAST : 'A grade of at least a'
                     | 'A grade of'
                     ;
 
-A_SORCE_OF          : 'A score of'
+A_SCORE_OF          : 'A score of'
                     | 'a score of'
                     | 'A minimal placement score of'
                     | 'a minimal placement score of'
