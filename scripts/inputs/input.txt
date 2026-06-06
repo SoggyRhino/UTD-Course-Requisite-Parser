@@ -718,10 +718,8 @@ Prerequisite: MS ITM Major only.
 Prerequisite or Corequisite: MIS 6319 or OPRE 6390.
 Prerequisites: BUAN 6320 or MIS 6320 or MIS 6326
 Prerequisite: Graduate Level Standing.
-MIS 7320 Repeat Limit - May be repeated for credit as topics vary (15 semester credit hours maximum).
 Repeat Limit - MIS 7420 may only be repeated for a maximum of 16 semester credit hours.
 GPA Repeat Restriction - MKT 3300.
-Prerequisite: Completion of 45 semester credit hours of course work.
 Prerequisites: MKT 3300 and (STAT 3360 or OPRE 3360 or equivalent).
 Prerequisite: MKT 3330.
 Prerequisites: Junior or Senior standing and MKT 3330 and MKT 4330. Prerequisite or Corequisite: BCOM 4300.
@@ -834,7 +832,6 @@ Prerequisite: MATH 2413 or MATH 2417. Corequisites: (MATH 2414 or MATH 2419) and
 Prerequisites: PHYS 2325 and (MATH 2414 or MATH 2419). Corequisite: PHYS 2126.
 Prerequisites: (MATH 2415 or MATH 2419 or equivalent) and MATH 2418.
 Prerequisite: PHYS 2326 or PHYS 2422.
-Corequisite: MATH 2420. Prerequisites: MATH 2418 with a grade of at least C- and [(MATH 2415 with a grade of at least C-) or (MATH 2451 or MATH 3351 with a grade of at least C-)] and (PHYS 2326 or PHYS 2422).
 Prerequisite: PHYS 3311 or PHYS 3411. Repeat Restriction.
 Prerequisites: (PHYS 3311 or PHYS 3411) and MATH 2418.
 Prerequisites: (MATH 2413 or MATH 2417 or equivalent) and (MATH 2414 or MATH 2419 or equivalent) and (MATH 2418 or equivalent).
@@ -873,7 +870,6 @@ Prerequisites: ECS 2390 and GOVT 2305. Repeat Restriction.
 Prerequisite: CE 2305 or CS 2305. Repeat Restriction.
 Prerequisites: SE 3306 and (CE 3354 or CS 3354 or SE 3354).
 Prerequisite: CE 3354 or CS 3354 or SE 3354. Repeat Restriction.
-Prerequisites: At least two of the following: SE 4351 or SE 4352 or SE 4367 or SE 4381.
 Prerequisite or Corequisite: CS 5343.
 Prerequisite: SE 5354.
 Prerequisite: SGNL 1301.
@@ -927,7 +923,6 @@ Repeat Limit - UNIV 3112 may only be repeated for a maximum of 6 semester credit
 Repeat Limit - UNIV 3310 may only be repeated for a maximum of 9 semester credit hours.
 Repeat Limit - UNIV 4076 may only be repeated a maximum of 3 times.
 VIET 2310 Repeat Restriction
-Prerequisites: VPAS 3340 and Senior standing in a Visual and Performing Arts Major Only.
 Repeat Limit - VPAS 6339 may only be repeated for a maximum of 9 semester credit hours.
 Repeat Limit - VPAS 6343 may only be repeated for a maximum of 6 semester credit hours.
 Repeat Limit - VPAS 6391 may only be repeated for a maximum of 9 semester credit hours.

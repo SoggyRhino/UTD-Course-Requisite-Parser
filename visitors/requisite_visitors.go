@@ -194,9 +194,11 @@ func (v *RequisiteVisitor) VisitPrereqReq(ctx *parser.PrereqReqContext) any {
 }
 
 func (v *RequisiteVisitor) visitPrereqReq(ctx *parser.PrereqReqContext) conditions.Condition {
-	cond := v.Visit(ctx.Expr()).(conditions.Condition)
-	v.appendPreReq(cond)
-	return cond
+	if cond, ok := v.Visit(ctx.Expr()).(conditions.Condition); ok {
+		v.appendPreReq(cond)
+		return cond
+	}
+	return nil
 }
 
 // VisitCoreqReq
@@ -207,9 +209,11 @@ func (v *RequisiteVisitor) VisitCoreqReq(ctx *parser.CoreqReqContext) any {
 }
 
 func (v *RequisiteVisitor) visitCoreqReq(ctx *parser.CoreqReqContext) conditions.Condition {
-	cond := v.Visit(ctx.Expr()).(conditions.Condition)
-	v.appendCoReq(cond)
-	return cond
+	if cond, ok := v.Visit(ctx.Expr()).(conditions.Condition); ok {
+		v.appendCoReq(cond)
+		return cond
+	}
+	return nil
 }
 
 // VisitPrereqAndCoreqReq
@@ -220,11 +224,13 @@ func (v *RequisiteVisitor) VisitPrereqAndCoreqReq(ctx *parser.PrereqAndCoreqReqC
 }
 
 func (v *RequisiteVisitor) visitPrereqAndCoreqReq(ctx *parser.PrereqAndCoreqReqContext) any {
-	prereq := v.Visit(ctx.Expr(0)).(conditions.Condition)
-	coreq := v.Visit(ctx.Expr(1)).(conditions.Condition)
-	v.appendPreReq(prereq)
-	v.appendCoReq(coreq)
-	return prereq // return something?
+	if cond, ok := v.Visit(ctx.Expr(0)).(conditions.Condition); ok {
+		v.appendPreReq(cond)
+	}
+	if cond, ok := v.Visit(ctx.Expr(1)).(conditions.Condition); ok {
+		v.appendCoReq(cond)
+	}
+	return nil
 }
 
 // VisitPreOrCoReq

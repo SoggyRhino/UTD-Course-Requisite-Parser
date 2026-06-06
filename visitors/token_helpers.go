@@ -20,9 +20,9 @@ func mapGradeLevel(text string) constants.GradeLevel {
 		return constants.Freshman
 	case "Sophomore", "sophomore":
 		return constants.Sophomore
-	case "Junior", "junior", "Jr":
+	case "Junior", "junior", "JR":
 		return constants.Junior
-	case "Senior", "senior", "Sr":
+	case "Senior", "senior", "SR":
 		return constants.Senior
 	case "":
 		return constants.AnyGrade

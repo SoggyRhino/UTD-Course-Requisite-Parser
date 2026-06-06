@@ -6,6 +6,9 @@ import (
 	"parser/parser"
 	"parser/rules"
 	"testing"
+
+	"github.com/antlr4-go/antlr/v4"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestVisitExpr(t *testing.T) {
@@ -149,18 +152,6 @@ func TestVisitExpr(t *testing.T) {
 			Input:  "any previous PHIL course",
 			Result: conditions.NewAnyPreviousMajorCourseCondition("PHIL"),
 		},
-		"LivingLearningExpr": {
-			Input:  "Computer Science Living Learning Community",
-			Result: rules.NewLivingLearningRuleFromDegrees([]string{"Computer Science"}),
-		},
-		"RepeatRuleExpr": {
-			Input:  "Repeat Restriction",
-			Result: rules.NewRepeatRule(1, 0, []constants.Course{}, ""),
-		},
-		"RepeatLimitHoursExpr": {
-			Input:  "Repeat Limit - HLTL 4304 may only be repeated for a maximum of 6 semester credit hours",
-			Result: rules.NewRepeatRule(0, 6, []constants.Course{{Prefix: "HLTL", Number: "4304"}}, ""),
-		},
 		"CourseExpr": {
 			Input:  "ACCT 2301",
 			Result: conditions.NewCourseCondition("ACCT", "2301", ""),
@@ -170,6 +161,43 @@ func TestVisitExpr(t *testing.T) {
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			testTree[any](t, tc.Input, rule((*parser.RequirementsParser).Expr), tc.Result)
+		})
+	}
+}
+
+func TestVisitExprRules(t *testing.T) {
+	testCases := map[string]struct {
+		Input  string
+		Result []rules.Rule
+	}{
+		"RepeatRuleExpr": {
+			Input:  "Repeat Restriction",
+			Result: []rules.Rule{rules.NewRepeatRule(1, 0, []constants.Course{}, "")},
+		},
+		"RepeatLimitHoursExpr": {
+			Input:  "Repeat Limit - HLTL 4304 may only be repeated for a maximum of 6 semester credit hours",
+			Result: []rules.Rule{rules.NewRepeatRule(0, 6, []constants.Course{{Prefix: "HLTL", Number: "4304"}}, "")},
+		},
+		"LivingLearningExpr": {
+			Input:  "Computer Science Living Learning Community",
+			Result: []rules.Rule{rules.NewLivingLearningRuleFromDegrees([]string{"Computer Science"})},
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			stream := antlr.NewInputStream(tc.Input)
+			lexer := parser.NewRequirementsLexer(stream)
+			tokens := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+			p := parser.NewRequirementsParser(tokens)
+
+			tree := p.Prog()
+			visitor := NewRequisiteVisitor(tokens)
+			visitor.Visit(tree)
+
+			if diff := cmp.Diff(tc.Result, visitor.Requirements.Rules); diff != "" {
+				t.Errorf("Unexpected output (-want +got):\n%s", diff)
+			}
 		})
 	}
 }

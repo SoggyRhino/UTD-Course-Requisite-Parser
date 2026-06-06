@@ -25,10 +25,20 @@ func (v *RequisiteVisitor) VisitOrExpr(ctx *parser.OrExprContext) any {
 }
 
 func (v *RequisiteVisitor) visitOrExpr(ctx *parser.OrExprContext) conditions.Condition {
-	cond1 := v.Visit(ctx.Expr(0)).(conditions.Condition)
-	cond2 := v.Visit(ctx.Expr(1)).(conditions.Condition)
+	cond1, ok1 := v.Visit(ctx.Expr(0)).(conditions.Condition)
+	cond2, ok2 := v.Visit(ctx.Expr(1)).(conditions.Condition)
 
-	return conditions.NewOrConditionFromExpr(cond1, cond2)
+	if ok1 && ok2 {
+		return conditions.NewOrConditionFromExpr(cond1, cond2)
+	}
+	if ok1 {
+		return cond1
+	}
+	if ok2 {
+		return cond2
+	}
+	//todo look into doing better job
+	return &conditions.OrCondition{}
 }
 
 // VisitAndExpr
@@ -39,10 +49,20 @@ func (v *RequisiteVisitor) VisitAndExpr(ctx *parser.AndExprContext) any {
 }
 
 func (v *RequisiteVisitor) visitAndExpr(ctx *parser.AndExprContext) conditions.Condition {
-	cond1 := v.Visit(ctx.Expr(0)).(conditions.Condition)
-	cond2 := v.Visit(ctx.Expr(1)).(conditions.Condition)
+	cond1, ok1 := v.Visit(ctx.Expr(0)).(conditions.Condition)
+	cond2, ok2 := v.Visit(ctx.Expr(1)).(conditions.Condition)
 
-	return conditions.NewAndConditionFromExpr(cond1, cond2)
+	if ok1 && ok2 {
+		return conditions.NewAndConditionFromExpr(cond1, cond2)
+	}
+	if ok1 {
+		return cond1
+	}
+	if ok2 {
+		return cond2
+	}
+	//todo look into doing better job
+	return &conditions.AndCondition{}
 }
 
 // VisitAmpersandExpr
@@ -53,10 +73,20 @@ func (v *RequisiteVisitor) VisitAmpersandExpr(ctx *parser.AmpersandExprContext) 
 }
 
 func (v *RequisiteVisitor) visitAmpersandExpr(ctx *parser.AmpersandExprContext) conditions.Condition {
-	cond1 := v.Visit(ctx.Expr(0)).(conditions.Condition)
-	cond2 := v.Visit(ctx.Expr(1)).(conditions.Condition)
+	cond1, ok1 := v.Visit(ctx.Expr(0)).(conditions.Condition)
+	cond2, ok2 := v.Visit(ctx.Expr(1)).(conditions.Condition)
 
-	return conditions.NewAndConditionFromExpr(cond1, cond2)
+	if ok1 && ok2 {
+		return conditions.NewAndConditionFromExpr(cond1, cond2)
+	}
+	if ok1 {
+		return cond1
+	}
+	if ok2 {
+		return cond2
+	}
+	//todo look into doing better job
+	return &conditions.AndCondition{}
 }
 
 // VisitEquivalentExpr
@@ -343,7 +373,9 @@ func (v *RequisiteVisitor) VisitLivingLearningExpr(ctx *parser.LivingLearningExp
 }
 
 func (v *RequisiteVisitor) visitLivingLearningExpr(ctx *parser.LivingLearningExprContext) *rules.LivingLearningRule {
-	return v.Visit(ctx.Living_learning_rule()).(*rules.LivingLearningRule)
+	rule := v.Visit(ctx.Living_learning_rule()).(*rules.LivingLearningRule)
+	v.appendRule(rule) //hoist rule out of condition
+	return nil
 }
 
 // VisitRepeatRuleExpr
@@ -354,7 +386,9 @@ func (v *RequisiteVisitor) VisitRepeatRuleExpr(ctx *parser.RepeatRuleExprContext
 }
 
 func (v *RequisiteVisitor) visitRepeatRuleExpr(ctx *parser.RepeatRuleExprContext) *rules.RepeatRule {
-	return v.Visit(ctx.Repeat_rule()).(*rules.RepeatRule)
+	rule := v.Visit(ctx.Repeat_rule()).(*rules.RepeatRule)
+	v.appendRule(rule) // hoist rule out of condition
+	return nil
 }
 
 // VisitRepeatLimitHoursExpr
@@ -365,7 +399,9 @@ func (v *RequisiteVisitor) VisitRepeatLimitHoursExpr(ctx *parser.RepeatLimitHour
 }
 
 func (v *RequisiteVisitor) visitRepeatLimitHoursExpr(ctx *parser.RepeatLimitHoursExprContext) *rules.RepeatRule {
-	return v.Visit(ctx.Repeat_limit_hours_rule()).(*rules.RepeatRule)
+	rule := v.Visit(ctx.Repeat_limit_hours_rule()).(*rules.RepeatRule)
+	v.appendRule(rule) // hoist rule out of condition
+	return nil
 }
 
 // VisitCourseExpr
