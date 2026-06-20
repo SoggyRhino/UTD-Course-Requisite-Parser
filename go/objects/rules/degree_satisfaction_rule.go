@@ -49,6 +49,10 @@ func NewDegreeSatisfactionRuleFromElectives(rule *DegreeSatisfactionRule) *Degre
 	return rule
 }
 
-func (r *DegreeSatisfactionRule) isRule() bool {
-	return true
+func (r *DegreeSatisfactionRule) Fulfils(userInfo constants.UserInfo) constants.Evaluation {
+	return constants.Evaluation{
+		Name:    "Degree Satisfaction Rule",
+		Status:  constants.StatusDefiniteFail,
+		Summary: "Not implemented",
+	}
 }

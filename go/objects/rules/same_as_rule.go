@@ -9,8 +9,12 @@ type SameAsRule struct {
 	Courses []constants.Course `json:"courses,omitempty"`
 }
 
-func (r *SameAsRule) isRule() bool {
-	return true
+func (r *SameAsRule) Fulfils(userInfo constants.UserInfo) constants.Evaluation {
+	return constants.Evaluation{
+		Name:    "Same As Rule",
+		Status:  constants.StatusDefiniteFail,
+		Summary: "Not implemented",
+	}
 }
 
 func (r *SameAsRule) MarshalJSON() ([]byte, error) {
@@ -26,8 +30,4 @@ func (r *SameAsRule) MarshalJSON() ([]byte, error) {
 
 func NewSameAsRule(courses []constants.Course) *SameAsRule {
 	return &SameAsRule{Courses: courses}
-}
-
-func (r *SameAsRule) IsRule() bool {
-	return true
 }

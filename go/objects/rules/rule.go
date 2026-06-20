@@ -3,10 +3,11 @@ package rules
 import (
 	"encoding/json"
 	"fmt"
+	"parser/objects/constants"
 )
 
 type Rule interface {
-	isRule() bool //todo change
+	Fulfils(userInfo constants.UserInfo) constants.Evaluation
 }
 
 type ruleEnvelope struct {

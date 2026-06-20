@@ -2,6 +2,7 @@ package rules
 
 import (
 	"encoding/json"
+	"parser/objects/constants"
 )
 
 type SchoolRule struct {
@@ -19,16 +20,16 @@ func (r *SchoolRule) MarshalJSON() ([]byte, error) {
 	})
 }
 
-func (r *SchoolRule) isRule() bool {
-	return true
+func (r *SchoolRule) Fulfils(userInfo constants.UserInfo) constants.Evaluation {
+	return constants.Evaluation{
+		Name:    "School Rule",
+		Status:  constants.StatusDefiniteFail,
+		Summary: "Not implemented",
+	}
 }
 
 func NewSchoolRule(schools []string) *SchoolRule {
 	return &SchoolRule{
 		Schools: schools,
 	}
-}
-
-func (r *SchoolRule) IsRule() bool {
-	return true
 }
