@@ -10,5 +10,6 @@ type UserInfo struct {
 	Groups            []StudentGroup   `json:"groups,omitempty"`
 	DegreeLevel       DegreeLevel      `json:"degree_level,omitempty"`
 	AcademicPlan      string           `json:"academic_plan,omitempty"`
+	School            string           `json:"school,omitempty"`
 	TotalSCH          int              `json:"total_sch,omitempty"`
 }

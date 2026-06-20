@@ -10,8 +10,8 @@ type CreditForRule struct {
 	Courses CourseCollection `json:"courses,omitempty"`
 }
 
-func (c *CreditForRule) Fulfils(userInfo constants.UserInfo) constants.Evaluation {
-	return constants.Evaluation{
+func (c *CreditForRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	return &constants.Evaluation{
 		Name:    "Credit For Rule",
 		Status:  constants.StatusDefiniteFail,
 		Summary: "Not implemented",

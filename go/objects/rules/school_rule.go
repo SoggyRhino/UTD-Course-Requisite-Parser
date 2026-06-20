@@ -2,7 +2,9 @@ package rules
 
 import (
 	"encoding/json"
+	"fmt"
 	"parser/objects/constants"
+	"strings"
 )
 
 type SchoolRule struct {
@@ -20,11 +22,21 @@ func (r *SchoolRule) MarshalJSON() ([]byte, error) {
 	})
 }
 
-func (r *SchoolRule) Fulfils(userInfo constants.UserInfo) constants.Evaluation {
-	return constants.Evaluation{
+func (r *SchoolRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	for _, school := range r.Schools {
+		if userInfo.School == school {
+			return &constants.Evaluation{
+				Name:    "School Rule",
+				Status:  constants.StatusPass,
+				Summary: fmt.Sprintf("Student is in required school: %s", school),
+			}
+		}
+	}
+
+	return &constants.Evaluation{
 		Name:    "School Rule",
 		Status:  constants.StatusDefiniteFail,
-		Summary: "Not implemented",
+		Summary: fmt.Sprintf("Student is not in any of the required schools: %s", strings.Join(r.Schools, ", ")),
 	}
 }
 

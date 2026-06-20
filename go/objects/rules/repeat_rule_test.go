@@ -58,14 +58,14 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 	testCases := map[string]struct {
 		rule     *RepeatRule
 		userInfo constants.UserInfo
-		expected constants.Evaluation
+		expected *constants.Evaluation
 	}{
 		"Taken fewer than count limit": {
 			rule: NewCourseRepeatRule([]constants.Course{{Prefix: "CS", Number: "1337"}}),
 			userInfo: constants.UserInfo{
 				Taken: map[constants.Course]constants.Grade{},
 			},
-			expected: constants.Evaluation{
+			expected: &constants.Evaluation{
 				Name:    "Repeat Rule",
 				Status:  constants.StatusPass,
 				Summary: "Repeat limits not exceeded",
@@ -78,7 +78,7 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 					{Prefix: "CS", Number: "1337"}: "A",
 				},
 			},
-			expected: constants.Evaluation{
+			expected: &constants.Evaluation{
 				Name:    "Repeat Rule",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Repeated courses 1 times (limit 1)",
@@ -91,7 +91,7 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 					{Prefix: "CS", Number: "1337"}: "A",
 				},
 			},
-			expected: constants.Evaluation{
+			expected: &constants.Evaluation{
 				Name:    "Repeat Rule",
 				Status:  constants.StatusPass,
 				Summary: "Repeat limits not exceeded",
@@ -104,7 +104,7 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 					{Prefix: "CS", Number: "1337"}: "A",
 				},
 			},
-			expected: constants.Evaluation{
+			expected: &constants.Evaluation{
 				Name:    "Repeat Rule",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Repeated courses for 3 hours (limit 3)",
@@ -118,7 +118,7 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 				},
 				CurrentEnrollment: []constants.Course{{Prefix: "CS", Number: "1336"}},
 			},
-			expected: constants.Evaluation{
+			expected: &constants.Evaluation{
 				Name:    "Repeat Rule",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Repeated courses 2 times (limit 1)",
@@ -127,7 +127,7 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 		"Internship case": {
 			rule:     NewInternshipRepeatRule("CS"),
 			userInfo: constants.UserInfo{},
-			expected: constants.Evaluation{
+			expected: &constants.Evaluation{
 				Name:    "Repeat Rule (Major Internship)",
 				Status:  constants.StatusPossibleFail,
 				Summary: "Major internship repeat rule not implemented",

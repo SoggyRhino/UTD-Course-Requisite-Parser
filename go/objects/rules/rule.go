@@ -7,7 +7,7 @@ import (
 )
 
 type Rule interface {
-	Fulfils(userInfo constants.UserInfo) constants.Evaluation
+	Fulfils(userInfo constants.UserInfo) *constants.Evaluation
 }
 
 type ruleEnvelope struct {
