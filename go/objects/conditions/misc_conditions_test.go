@@ -43,7 +43,7 @@ func TestConcurrentEnrollmentConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -99,7 +99,7 @@ func TestExactSectionConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -133,7 +133,7 @@ func TestAnyPreviousMajorCourseConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -181,7 +181,7 @@ func TestAcademicYearConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}

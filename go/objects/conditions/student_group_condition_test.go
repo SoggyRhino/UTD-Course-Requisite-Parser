@@ -31,7 +31,7 @@ func TestStudentGroupConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}

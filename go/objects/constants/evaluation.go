@@ -1,6 +1,7 @@
 package constants
 
 type Evaluation struct {
+	Name     string       `json:"name,omitempty"`
 	Status   EvalStatus   `json:"status"`
 	Summary  string       `json:"summary,omitempty"`
 	Children []Evaluation `json:"children,omitempty"`

@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 func TestUnmarshalCondition(t *testing.T) {
@@ -58,7 +59,7 @@ func assertEval(t *testing.T, expected constants.Evaluation, got *constants.Eval
 	if got == nil {
 		t.Fatal("Expected evaluation, got nil")
 	}
-	if diff := cmp.Diff(expected, *got); diff != "" {
+	if diff := cmp.Diff(expected, *got, cmpopts.IgnoreFields(constants.Evaluation{}, "Name")); diff != "" {
 		t.Errorf("Unexpected evaluation (-want +got):\n%s", diff)
 	}
 }

@@ -8,7 +8,7 @@ import (
 func TestConsentCondition_Fulfils(t *testing.T) {
 	cond := NewConsentCondition("Instructor")
 	info := constants.UserInfo{}
-	eval := cond.Fulfils(info)
+	eval := cond.Fulfils(info, false)
 
 	if eval == nil {
 		t.Fatal("Expected evaluation, got nil")

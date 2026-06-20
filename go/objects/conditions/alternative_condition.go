@@ -39,11 +39,11 @@ func NewAlternativeCondition(condition Condition) *AlternativeCondition {
 	return &AlternativeCondition{Condition: condition}
 }
 
-func (a *AlternativeCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
-	inner := a.Condition.Fulfils(info)
+func (a *AlternativeCondition) Fulfils(info constants.UserInfo, allowCoReq bool) *constants.Evaluation {
+	inner := a.Condition.Fulfils(info, allowCoReq)
 	if inner == nil {
 		//todo remove ability to return nil
-		inner = &constants.Evaluation{Status: constants.StatusSystemError, Summary: "inner condition returned nil"}
+		inner = &constants.Evaluation{Name: "Alternative", Status: constants.StatusSystemError, Summary: "inner condition returned nil"}
 	}
 
 	if inner.Status == constants.StatusPass {
@@ -51,6 +51,7 @@ func (a *AlternativeCondition) Fulfils(info constants.UserInfo) *constants.Evalu
 	}
 
 	return &constants.Evaluation{
+		Name:     "Alternative",
 		Status:   constants.StatusUnknown,
 		Summary:  "Standard path not satisfied — an equivalent may also be accepted (contact adviser)",
 		Children: []constants.Evaluation{*inner},

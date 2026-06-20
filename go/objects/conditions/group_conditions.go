@@ -69,21 +69,22 @@ func (o *OrCondition) AppendGrade(grade constants.Grade) {
 	}
 }
 
-func (o *OrCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
+func (o *OrCondition) Fulfils(info constants.UserInfo, allowCoReq bool) *constants.Evaluation {
 
 	children := make([]constants.Evaluation, 0, len(o.Conditions))
 	var bestNonPass constants.EvalStatus
 	initialized := false
 
 	for _, c := range o.Conditions {
-		evaluation := c.Fulfils(info)
+		evaluation := c.Fulfils(info, allowCoReq)
 		if evaluation == nil {
-			return &constants.Evaluation{Status: constants.StatusSystemError, Summary: "condition returned nil"}
+			return &constants.Evaluation{Name: "Or", Status: constants.StatusSystemError, Summary: "condition returned nil"}
 		}
 		children = append(children, *evaluation)
 
 		if evaluation.Status == constants.StatusPass {
 			return &constants.Evaluation{
+				Name:     "Or",
 				Status:   constants.StatusPass,
 				Summary:  fmt.Sprintf("At least one of %d conditions satisfied", len(o.Conditions)),
 				Children: children,
@@ -97,6 +98,7 @@ func (o *OrCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
 	}
 
 	return &constants.Evaluation{
+		Name:     "Or",
 		Status:   bestNonPass,
 		Summary:  fmt.Sprintf("None of %d conditions satisfied", len(o.Conditions)),
 		Children: children,
@@ -166,14 +168,14 @@ func (a *AndCondition) AppendGrade(grade constants.Grade) {
 	}
 }
 
-func (a *AndCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
+func (a *AndCondition) Fulfils(info constants.UserInfo, allowCoReq bool) *constants.Evaluation {
 	children := make([]constants.Evaluation, 0, len(a.Conditions))
 
 	worstStatus := constants.StatusPass
 	for _, c := range a.Conditions {
-		evaluation := c.Fulfils(info)
+		evaluation := c.Fulfils(info, allowCoReq)
 		if evaluation == nil {
-			evaluation = &constants.Evaluation{Status: constants.StatusSystemError, Summary: "condition returned nil"}
+			evaluation = &constants.Evaluation{Name: "And", Status: constants.StatusSystemError, Summary: "condition returned nil"}
 		}
 		children = append(children, *evaluation)
 
@@ -184,12 +186,14 @@ func (a *AndCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
 
 	if worstStatus == constants.StatusPass {
 		return &constants.Evaluation{
+			Name:     "And",
 			Status:   constants.StatusPass,
 			Summary:  fmt.Sprintf("All %d conditions satisfied", len(a.Conditions)),
 			Children: children,
 		}
 	}
 	return &constants.Evaluation{
+		Name:     "And",
 		Status:   worstStatus,
 		Summary:  fmt.Sprintf("Not all conditions satisfied (%d total)", len(a.Conditions)),
 		Children: children,

@@ -31,7 +31,7 @@ func TestGradeLevelConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -71,7 +71,7 @@ func TestGraduateStandingInConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -96,14 +96,14 @@ func TestGenericStandingConditionFulfils(t *testing.T) {
 			userInfo:  constants.UserInfo{},
 			expected: constants.Evaluation{
 				Status:  constants.StatusDefiniteFail,
-				Summary: `"requires "Good Academic Standing"`,
+				Summary: `Academic standing is []; requires "Good Academic Standing"`,
 			},
 		},
 	}
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}

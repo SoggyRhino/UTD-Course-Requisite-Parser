@@ -36,14 +36,16 @@ func NewGpaConditionWithDegree(gpa float64, degree string) *GPACondition {
 	}
 }
 
-func (g *GPACondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (g *GPACondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
 	if userInfo.GPA >= float64(g.GPA) {
 		return &constants.Evaluation{
+			Name:    "GPA",
 			Status:  constants.StatusPass,
 			Summary: fmt.Sprintf("GPA is %.2f (requires %.2f)", userInfo.GPA, g.GPA),
 		}
 	}
 	return &constants.Evaluation{
+		Name:    "GPA",
 		Status:  constants.StatusDefiniteFail,
 		Summary: fmt.Sprintf("GPA is %.2f but requires %.2f", userInfo.GPA, g.GPA),
 	}

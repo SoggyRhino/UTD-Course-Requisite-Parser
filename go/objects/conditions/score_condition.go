@@ -31,8 +31,9 @@ func NewPlacementTestScoreCondition(name string, scoreMin, scoreMax int) *Placem
 	}
 }
 
-func (c *PlacementTestScoreCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (c *PlacementTestScoreCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
 	return &constants.Evaluation{
+		Name:    fmt.Sprintf("Placement Test Score %s", c.Name),
 		Status:  constants.StatusUnknown,
 		Summary: fmt.Sprintf("Cannot verify %s placement test score (requires %d-%d) automatically", c.Name, c.ScoreMin, c.ScoreMax),
 	}
@@ -59,8 +60,9 @@ func NewAPScoreCondition(score int) *APScoreCondition {
 	}
 }
 
-func (c *APScoreCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (c *APScoreCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
 	return &constants.Evaluation{
+		Name:    "AP Score",
 		Status:  constants.StatusUnknown,
 		Summary: fmt.Sprintf("Cannot verify AP score of %d automatically", c.Score),
 	}
@@ -87,8 +89,9 @@ func NewAleksScoreCondition(score int) *AleksScoreCondition {
 	}
 }
 
-func (c *AleksScoreCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (c *AleksScoreCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
 	return &constants.Evaluation{
+		Name:    "Aleks Score",
 		Status:  constants.StatusUnknown,
 		Summary: fmt.Sprintf("Cannot verify ALEKS score of %d automatically", c.Score),
 	}

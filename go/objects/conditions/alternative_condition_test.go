@@ -8,7 +8,7 @@ import (
 
 type nilCondition struct{}
 
-func (n nilCondition) Fulfils(constants.UserInfo) *constants.Evaluation {
+func (n nilCondition) Fulfils(constants.UserInfo, bool) *constants.Evaluation {
 	return nil
 }
 
@@ -78,7 +78,7 @@ func TestAlternativeConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := NewAlternativeCondition(tc.condition).Fulfils(tc.userInfo)
+			got := NewAlternativeCondition(tc.condition).Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}

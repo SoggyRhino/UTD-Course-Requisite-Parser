@@ -12,7 +12,7 @@ type staticCondition struct {
 	evaluation *constants.Evaluation
 }
 
-func (s staticCondition) Fulfils(constants.UserInfo) *constants.Evaluation {
+func (s staticCondition) Fulfils(constants.UserInfo, bool) *constants.Evaluation {
 	return s.evaluation
 }
 
@@ -76,7 +76,7 @@ func TestOrConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(constants.UserInfo{})
+			got := tc.condition.Fulfils(constants.UserInfo{}, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -229,7 +229,7 @@ func TestAndConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(constants.UserInfo{})
+			got := tc.condition.Fulfils(constants.UserInfo{}, false)
 			assertEval(t, tc.expected, got)
 		})
 	}

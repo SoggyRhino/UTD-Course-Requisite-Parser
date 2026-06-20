@@ -14,7 +14,7 @@ func TestScoreConditionsFulfils(t *testing.T) {
 			Status:  constants.StatusUnknown,
 			Summary: "Cannot verify Math placement test score (requires 80-100) automatically",
 		}
-		assertEval(t, expected, cond.Fulfils(info))
+		assertEval(t, expected, cond.Fulfils(info, false))
 	})
 
 	t.Run("APScore", func(t *testing.T) {
@@ -23,7 +23,7 @@ func TestScoreConditionsFulfils(t *testing.T) {
 			Status:  constants.StatusUnknown,
 			Summary: "Cannot verify AP score of 4 automatically",
 		}
-		assertEval(t, expected, cond.Fulfils(info))
+		assertEval(t, expected, cond.Fulfils(info, false))
 	})
 
 	t.Run("AleksScore", func(t *testing.T) {
@@ -32,7 +32,7 @@ func TestScoreConditionsFulfils(t *testing.T) {
 			Status:  constants.StatusUnknown,
 			Summary: "Cannot verify ALEKS score of 85 automatically",
 		}
-		assertEval(t, expected, cond.Fulfils(info))
+		assertEval(t, expected, cond.Fulfils(info, false))
 	})
 }
 

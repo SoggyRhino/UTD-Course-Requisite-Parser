@@ -59,27 +59,36 @@ func (c *CourseCondition) AppendGrade(grade constants.Grade) {
 	c.MinGrade = grade
 }
 
-func (c *CourseCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
+func (c *CourseCondition) Fulfils(info constants.UserInfo, allowCoReq bool) *constants.Evaluation {
 	courseLabel := fmt.Sprintf("%s %s", c.Course.Prefix, c.Course.Number)
 
 	for taken, grade := range info.Taken {
 		if taken.Prefix == c.Course.Prefix && taken.Number == c.Course.Number {
 			if c.MinGrade == "" || gradeAtLeast(grade, c.MinGrade) {
 				return &constants.Evaluation{
+					Name:    courseLabel,
 					Status:  constants.StatusPass,
 					Summary: fmt.Sprintf("Completed %s with grade %s", courseLabel, grade),
 				}
 			}
 			return &constants.Evaluation{
+				Name:    courseLabel,
 				Status:  constants.StatusDefiniteFail,
 				Summary: fmt.Sprintf("Completed %s but grade %s does not meet minimum %s", courseLabel, grade, c.MinGrade),
 			}
 		}
 	}
-	// todo add flag for co req accaptable
 	for _, enrolled := range info.CurrentEnrollment {
 		if enrolled.Prefix == c.Course.Prefix && enrolled.Number == c.Course.Number {
+			if allowCoReq {
+				return &constants.Evaluation{
+					Name:    courseLabel,
+					Status:  constants.StatusPass,
+					Summary: fmt.Sprintf("Currently enrolled in %s (co-req allowed)", courseLabel),
+				}
+			}
 			return &constants.Evaluation{
+				Name:    courseLabel,
 				Status:  constants.StatusPossibleFail,
 				Summary: fmt.Sprintf("Currently enrolled in %s — awaiting final grade", courseLabel),
 			}
@@ -87,6 +96,7 @@ func (c *CourseCondition) Fulfils(info constants.UserInfo) *constants.Evaluation
 	}
 
 	return &constants.Evaluation{
+		Name:    courseLabel,
 		Status:  constants.StatusDefiniteFail,
 		Summary: fmt.Sprintf("Have not taken %s", courseLabel),
 	}
@@ -124,7 +134,7 @@ func NewCoreConditionWithSemesterHours(coreNumber, coreTitle string, semesterHou
 	}
 }
 
-func (c *CoreCondition) Fulfils(_ constants.UserInfo) *constants.Evaluation {
+func (c *CoreCondition) Fulfils(_ constants.UserInfo, _ bool) *constants.Evaluation {
 	label := c.CoreTitle
 	if label == "" {
 		label = c.CoreNumber
@@ -136,6 +146,7 @@ func (c *CoreCondition) Fulfils(_ constants.UserInfo) *constants.Evaluation {
 		summary = fmt.Sprintf("Cannot verify %d SCH of core requirement %q automatically", c.SemesterHours, label)
 	}
 	return &constants.Evaluation{
+		Name:    fmt.Sprintf("Core %s", label),
 		Status:  constants.StatusUnknown,
 		Summary: summary,
 	}
@@ -160,14 +171,16 @@ func NewCreditHoursCondition(hours int) *CreditHoursCondition {
 	return &CreditHoursCondition{Hours: hours}
 }
 
-func (c *CreditHoursCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
+func (c *CreditHoursCondition) Fulfils(info constants.UserInfo, _ bool) *constants.Evaluation {
 	if info.TotalSCH >= c.Hours {
 		return &constants.Evaluation{
+			Name:    "Credit Hours",
 			Status:  constants.StatusPass,
 			Summary: fmt.Sprintf("Has %d SCH (requires %d)", info.TotalSCH, c.Hours),
 		}
 	}
 	return &constants.Evaluation{
+		Name:    "Credit Hours",
 		Status:  constants.StatusDefiniteFail,
 		Summary: fmt.Sprintf("Has %d SCH but requires %d", info.TotalSCH, c.Hours),
 	}
@@ -193,7 +206,7 @@ func NewCreditHoursFromCondition(hours int, courses []constants.Course) *CreditH
 	return &CreditHoursFromCondition{Hours: hours, Courses: courses}
 }
 
-func (c *CreditHoursFromCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
+func (c *CreditHoursFromCondition) Fulfils(info constants.UserInfo, _ bool) *constants.Evaluation {
 	var completed, inProgress []string
 	var earnedHours, projectedHours int
 
@@ -222,17 +235,20 @@ func (c *CreditHoursFromCondition) Fulfils(info constants.UserInfo) *constants.E
 
 	if earnedHours >= c.Hours {
 		return &constants.Evaluation{
+			Name:    "Credit Hours From",
 			Status:  constants.StatusPass,
 			Summary: fmt.Sprintf("Earned %d SCH from specified courses (requires %d)", earnedHours, c.Hours),
 		}
 	}
 	if projectedHours >= c.Hours {
 		return &constants.Evaluation{
+			Name:    "Credit Hours From",
 			Status:  constants.StatusPossibleFail,
 			Summary: fmt.Sprintf("Earned %d SCH; %d more in progress — may reach required %d SCH", earnedHours, projectedHours-earnedHours, c.Hours),
 		}
 	}
 	return &constants.Evaluation{
+		Name:    "Credit Hours From",
 		Status:  constants.StatusDefiniteFail,
 		Summary: fmt.Sprintf("Only %d SCH earned from specified courses (requires %d)", earnedHours, c.Hours),
 	}
@@ -263,7 +279,7 @@ func NewUpperDivisionCountCondition(count int, prefix string) *UpperDivisionCour
 	return &UpperDivisionCoursesCondition{Count: count, Prefix: prefix}
 }
 
-func (c *UpperDivisionCoursesCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
+func (c *UpperDivisionCoursesCondition) Fulfils(info constants.UserInfo, _ bool) *constants.Evaluation {
 	prefixLabel := c.Prefix
 	if prefixLabel == "" {
 		prefixLabel = "any prefix"
@@ -283,11 +299,13 @@ func (c *UpperDivisionCoursesCondition) Fulfils(info constants.UserInfo) *consta
 	if c.Hours > 0 {
 		if earned >= c.Hours {
 			return &constants.Evaluation{
+				Name:    "Upper Division Courses",
 				Status:  constants.StatusPass,
 				Summary: fmt.Sprintf("Has %d upper-division SCH in %s (requires %d)", earned, prefixLabel, c.Hours),
 			}
 		}
 		return &constants.Evaluation{
+			Name:    "Upper Division Courses",
 			Status:  constants.StatusDefiniteFail,
 			Summary: fmt.Sprintf("Has %d upper-division SCH in %s (requires %d)", earned, prefixLabel, c.Hours),
 		}
@@ -296,17 +314,20 @@ func (c *UpperDivisionCoursesCondition) Fulfils(info constants.UserInfo) *consta
 	if c.Count > 0 {
 		if udCount >= c.Count {
 			return &constants.Evaluation{
+				Name:    "Upper Division Courses",
 				Status:  constants.StatusPass,
 				Summary: fmt.Sprintf("Has completed %d upper-division courses in %s (requires %d)", udCount, prefixLabel, c.Count),
 			}
 		}
 		return &constants.Evaluation{
+			Name:    "Upper Division Courses",
 			Status:  constants.StatusDefiniteFail,
 			Summary: fmt.Sprintf("Has completed %d upper-division courses in %s (requires %d)", udCount, prefixLabel, c.Count),
 		}
 	}
 
 	return &constants.Evaluation{
+		Name:    "Upper Division Courses",
 		Status:  constants.StatusInvalidRule,
 		Summary: "UpperDivisionCoursesCondition has neither Hours nor Count set",
 	}
@@ -332,16 +353,18 @@ func NewResearchCondition(hours int, degreeLevel constants.DegreeLevel) *Researc
 	return &ResearchCondition{Hours: hours, DegreeLevel: degreeLevel}
 }
 
-func (c *ResearchCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
+func (c *ResearchCondition) Fulfils(info constants.UserInfo, _ bool) *constants.Evaluation {
 	if c.DegreeLevel != constants.AnyDegree && c.DegreeLevel != "" {
 		if info.DegreeLevel != c.DegreeLevel {
 			return &constants.Evaluation{
+				Name:    "Research",
 				Status:  constants.StatusDefiniteFail,
 				Summary: fmt.Sprintf("Requires %s standing; student is %s", c.DegreeLevel, info.DegreeLevel),
 			}
 		}
 	}
 	return &constants.Evaluation{
+		Name:    "Research",
 		Status:  constants.StatusUnknown,
 		Summary: fmt.Sprintf("Cannot automatically verify %d research hours for %s students", c.Hours, c.DegreeLevel),
 	}
@@ -367,7 +390,7 @@ func NewNCoursesCondition(n int, courses []constants.Course) *NCoursesCondition 
 	return &NCoursesCondition{N: n, Courses: courses}
 }
 
-func (c *NCoursesCondition) Fulfils(info constants.UserInfo) *constants.Evaluation {
+func (c *NCoursesCondition) Fulfils(info constants.UserInfo, _ bool) *constants.Evaluation {
 	var children []constants.Evaluation
 	passCount := 0
 	possibleCount := 0
@@ -377,15 +400,15 @@ func (c *NCoursesCondition) Fulfils(info constants.UserInfo) *constants.Evaluati
 		takenEval := func() *constants.Evaluation {
 			for taken := range info.Taken {
 				if taken.Prefix == required.Prefix && taken.Number == required.Number {
-					return &constants.Evaluation{Status: constants.StatusPass, Summary: fmt.Sprintf("Completed %s", label)}
+					return &constants.Evaluation{Name: label, Status: constants.StatusPass, Summary: fmt.Sprintf("Completed %s", label)}
 				}
 			}
 			for _, enrolled := range info.CurrentEnrollment {
 				if enrolled.Prefix == required.Prefix && enrolled.Number == required.Number {
-					return &constants.Evaluation{Status: constants.StatusPossibleFail, Summary: fmt.Sprintf("Currently enrolled in %s", label)}
+					return &constants.Evaluation{Name: label, Status: constants.StatusPossibleFail, Summary: fmt.Sprintf("Currently enrolled in %s", label)}
 				}
 			}
-			return &constants.Evaluation{Status: constants.StatusDefiniteFail, Summary: fmt.Sprintf("Have not taken %s", label)}
+			return &constants.Evaluation{Name: label, Status: constants.StatusDefiniteFail, Summary: fmt.Sprintf("Have not taken %s", label)}
 		}()
 
 		children = append(children, *takenEval)
@@ -399,6 +422,7 @@ func (c *NCoursesCondition) Fulfils(info constants.UserInfo) *constants.Evaluati
 
 	if passCount >= c.N {
 		return &constants.Evaluation{
+			Name:     "N Courses",
 			Status:   constants.StatusPass,
 			Summary:  fmt.Sprintf("Completed %d of required %d courses", passCount, c.N),
 			Children: children,
@@ -406,12 +430,14 @@ func (c *NCoursesCondition) Fulfils(info constants.UserInfo) *constants.Evaluati
 	}
 	if passCount+possibleCount >= c.N {
 		return &constants.Evaluation{
+			Name:     "N Courses",
 			Status:   constants.StatusPossibleFail,
 			Summary:  fmt.Sprintf("Completed %d courses; %d in progress — may satisfy requirement of %d", passCount, possibleCount, c.N),
 			Children: children,
 		}
 	}
 	return &constants.Evaluation{
+		Name:     "N Courses",
 		Status:   constants.StatusDefiniteFail,
 		Summary:  fmt.Sprintf("Completed only %d of required %d courses from the specified list", passCount, c.N),
 		Children: children,

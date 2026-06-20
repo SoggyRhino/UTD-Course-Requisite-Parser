@@ -52,9 +52,10 @@ func NewMajorConditionWithDegreeAndGradeLevel(degree string, level constants.Deg
 	}
 }
 
-func (m *MajorCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (m *MajorCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
 	if m.Degree != "" && !strings.Contains(strings.ToLower(userInfo.Major), strings.ToLower(m.Degree)) {
 		return &constants.Evaluation{
+			Name:    fmt.Sprintf("Major %s", m.Degree),
 			Status:  constants.StatusDefiniteFail,
 			Summary: fmt.Sprintf("Major is %q; requires %q", userInfo.Major, m.Degree),
 		}
@@ -62,6 +63,7 @@ func (m *MajorCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluat
 
 	if m.DegreeLevel != "" && m.DegreeLevel != constants.AnyDegree && userInfo.DegreeLevel != m.DegreeLevel {
 		return &constants.Evaluation{
+			Name:    fmt.Sprintf("Major %s", m.Degree),
 			Status:  constants.StatusDefiniteFail,
 			Summary: fmt.Sprintf("Degree level is %q; requires %q", userInfo.DegreeLevel, m.DegreeLevel),
 		}
@@ -69,12 +71,14 @@ func (m *MajorCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluat
 
 	if m.GradeLevel != "" && m.GradeLevel != constants.AnyGrade && userInfo.GradeLevel != m.GradeLevel {
 		return &constants.Evaluation{
+			Name:    fmt.Sprintf("Major %s", m.Degree),
 			Status:  constants.StatusDefiniteFail,
 			Summary: fmt.Sprintf("Grade level is %q; requires %q", userInfo.GradeLevel, m.GradeLevel),
 		}
 	}
 
 	return &constants.Evaluation{
+		Name:    fmt.Sprintf("Major %s", m.Degree),
 		Status:  constants.StatusPass,
 		Summary: "Major and level requirements satisfied",
 	}
@@ -101,15 +105,17 @@ func NewDegreeCondition(degree string) *DegreeCondition {
 	}
 }
 
-func (d *DegreeCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (d *DegreeCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
 	if d.Degree != "" && !strings.Contains(strings.ToLower(userInfo.Major), strings.ToLower(d.Degree)) {
 		return &constants.Evaluation{
+			Name:    fmt.Sprintf("Degree %s", d.Degree),
 			Status:  constants.StatusDefiniteFail,
 			Summary: fmt.Sprintf("Major is %q; requires degree in %q", userInfo.Major, d.Degree),
 		}
 	}
 
 	return &constants.Evaluation{
+		Name:    fmt.Sprintf("Degree %s", d.Degree),
 		Status:  constants.StatusPass,
 		Summary: fmt.Sprintf("Degree requirement %q satisfied", d.Degree),
 	}

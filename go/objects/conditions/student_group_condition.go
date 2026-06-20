@@ -27,16 +27,18 @@ func NewStudentGroupCondition(groups constants.StudentGroup) *StudentGroupCondit
 	}
 }
 
-func (c *StudentGroupCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (c *StudentGroupCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
 	for _, group := range userInfo.Groups {
 		if group == c.Groups {
 			return &constants.Evaluation{
+				Name:    "Student Group",
 				Status:  constants.StatusPass,
 				Summary: fmt.Sprintf("Student is a member of group %q", c.Groups),
 			}
 		}
 	}
 	return &constants.Evaluation{
+		Name:    "Student Group",
 		Status:  constants.StatusDefiniteFail,
 		Summary: fmt.Sprintf("Student is not a member of group %q", c.Groups),
 	}

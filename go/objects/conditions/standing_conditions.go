@@ -37,15 +37,17 @@ func NewGradeLevelConditionWithDegree(level constants.GradeLevel, degree string)
 	}
 }
 
-func (g *GradeLevelCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (g *GradeLevelCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
 	if g.GradeLevel != "" && g.GradeLevel != constants.AnyGrade && userInfo.GradeLevel != g.GradeLevel {
 		return &constants.Evaluation{
+			Name:    "Grade Level",
 			Status:  constants.StatusDefiniteFail,
 			Summary: fmt.Sprintf("Grade level is %s; requires %s", userInfo.GradeLevel, g.GradeLevel),
 		}
 	}
 	// Note: School/Degree fields in GradeLevelCondition are currently unused in verification
 	return &constants.Evaluation{
+		Name:    "Grade Level",
 		Status:  constants.StatusPass,
 		Summary: fmt.Sprintf("Grade level requirement %s satisfied", g.GradeLevel),
 	}
@@ -75,14 +77,16 @@ func NewGraduateStandingInConditionWithDegree(degree string) *GraduateStandingIn
 		Degree: degree}
 }
 
-func (g *GraduateStandingInCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (g *GraduateStandingInCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
 	if userInfo.DegreeLevel != constants.Graduate && userInfo.DegreeLevel != constants.PhD {
 		return &constants.Evaluation{
+			Name:    "Graduate Standing",
 			Status:  constants.StatusDefiniteFail,
 			Summary: fmt.Sprintf("Degree level is %s; requires Graduate standing", userInfo.DegreeLevel),
 		}
 	}
 	return &constants.Evaluation{
+		Name:    "Graduate Standing",
 		Status:  constants.StatusPass,
 		Summary: "Graduate standing requirement satisfied",
 	}
@@ -109,15 +113,17 @@ func NewGenericStandingCondition(standing constants.Standing) *GenericStandingCo
 	}
 }
 
-func (g *GenericStandingCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (g *GenericStandingCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
 	if slices.Contains(userInfo.Standing, g.Standing) {
 		return &constants.Evaluation{
-			Status:  constants.StatusDefiniteFail,
-			Summary: fmt.Sprintf("Academic standing is %q; requires %q", userInfo.Standing, g.Standing),
+			Name:    "Generic Standing",
+			Status:  constants.StatusPass,
+			Summary: fmt.Sprintf("Academic standing %q satisfied", g.Standing),
 		}
 	}
 	return &constants.Evaluation{
-		Status:  constants.StatusPass,
-		Summary: fmt.Sprintf("Academic standing %q satisfied", g.Standing),
+		Name:    "Generic Standing",
+		Status:  constants.StatusDefiniteFail,
+		Summary: fmt.Sprintf("Academic standing is %q; requires %q", userInfo.Standing, g.Standing),
 	}
 }

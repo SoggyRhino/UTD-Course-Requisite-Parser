@@ -2,6 +2,7 @@ package conditions
 
 import (
 	"encoding/json"
+	"fmt"
 	"parser/objects/constants"
 )
 
@@ -26,8 +27,9 @@ func NewConsentCondition(consent constants.Consent) *ConsentCondition {
 	}
 }
 
-func (c *ConsentCondition) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (c *ConsentCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
 	return &constants.Evaluation{
+		Name:    fmt.Sprintf("Consent %s", c.Consent),
 		Status:  constants.StatusPossibleFail,
 		Summary: "Requires manual consent/approval",
 	}

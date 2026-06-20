@@ -134,7 +134,7 @@ func TestCourseConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -191,7 +191,7 @@ func TestCoreConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(constants.UserInfo{})
+			got := tc.condition.Fulfils(constants.UserInfo{}, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -231,7 +231,7 @@ func TestCreditHoursConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -298,7 +298,7 @@ func TestCreditHoursFromConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -378,7 +378,7 @@ func TestUpperDivisionCoursesConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -434,7 +434,7 @@ func TestResearchConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}
@@ -515,7 +515,7 @@ func TestNCoursesConditionFulfils(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			got := tc.condition.Fulfils(tc.userInfo)
+			got := tc.condition.Fulfils(tc.userInfo, false)
 			assertEval(t, tc.expected, got)
 		})
 	}

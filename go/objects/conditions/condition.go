@@ -7,7 +7,7 @@ import (
 )
 
 type Condition interface {
-	Fulfils(info constants.UserInfo) *constants.Evaluation
+	Fulfils(info constants.UserInfo, allowCoReq bool) *constants.Evaluation
 }
 
 type GradedCondition interface {
