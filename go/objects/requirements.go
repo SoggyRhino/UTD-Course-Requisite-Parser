@@ -101,8 +101,10 @@ func (r *Requirements) Evaluate(info constants.UserInfo) RequirementsResult {
 
 	if len(r.Rules) > 0 {
 		result.Rules = make([]constants.Evaluation, len(r.Rules))
-		for i := range r.Rules {
-			result.Rules[i] = evaluateRule()
+		for i, rule := range r.Rules {
+			eval := rule.Fulfils(info)
+			result.Rules[i] = eval
+			result.Overall = constants.WorstStatus(result.Overall, eval.Status)
 		}
 	}
 
@@ -118,12 +120,4 @@ func (r *Requirements) Evaluate(info constants.UserInfo) RequirementsResult {
 	}
 
 	return result
-}
-
-func evaluateRule() constants.Evaluation {
-	return constants.Evaluation{
-		Name:    "todo name",
-		Status:  constants.StatusPass,
-		Summary: fmt.Sprintf("pass (hard-coded)"),
-	}
 }

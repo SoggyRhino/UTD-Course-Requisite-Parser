@@ -10,8 +10,12 @@ type CreditForRule struct {
 	Courses CourseCollection `json:"courses,omitempty"`
 }
 
-func (c *CreditForRule) isRule() bool {
-	return true
+func (c *CreditForRule) Fulfils(userInfo constants.UserInfo) constants.Evaluation {
+	return constants.Evaluation{
+		Name:    "Credit For Rule",
+		Status:  constants.StatusDefiniteFail,
+		Summary: "Not implemented",
+	}
 }
 
 func (c *CreditForRule) MarshalJSON() ([]byte, error) {

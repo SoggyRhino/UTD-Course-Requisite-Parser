@@ -2,6 +2,7 @@ package rules
 
 import (
 	"encoding/json"
+	"parser/objects/constants"
 )
 
 type LivingLearningRule struct {
@@ -28,6 +29,10 @@ func NewLivingLearningRuleFromDegrees(degrees []string) *LivingLearningRule {
 	return &LivingLearningRule{Degrees: degrees}
 }
 
-func (r *LivingLearningRule) isRule() bool {
-	return true
+func (r *LivingLearningRule) Fulfils(userInfo constants.UserInfo) constants.Evaluation {
+	return constants.Evaluation{
+		Name:    "Living Learning Rule",
+		Status:  constants.StatusDefiniteFail,
+		Summary: "Not implemented",
+	}
 }
