@@ -35,3 +35,10 @@ func (s EvalStatus) Priority() int {
 	}
 	return -1
 }
+
+func WorstStatus(a, b EvalStatus) EvalStatus {
+	if b.Priority() < a.Priority() {
+		return b
+	}
+	return a
+}

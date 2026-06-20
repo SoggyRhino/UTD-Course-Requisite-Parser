@@ -27,6 +27,7 @@ func TestOrConditionFulfils(t *testing.T) {
 				staticCondition{evaluation: &constants.Evaluation{Status: constants.StatusDefiniteFail, Summary: "second fails"}},
 			}},
 			expected: constants.Evaluation{
+				Name:    "Or",
 				Status:  constants.StatusPass,
 				Summary: "At least one of 2 conditions satisfied",
 				Children: []constants.Evaluation{
@@ -41,6 +42,7 @@ func TestOrConditionFulfils(t *testing.T) {
 				staticCondition{evaluation: &constants.Evaluation{Status: constants.StatusDefiniteFail, Summary: "third not evaluated"}},
 			}},
 			expected: constants.Evaluation{
+				Name:    "Or",
 				Status:  constants.StatusPass,
 				Summary: "At least one of 3 conditions satisfied",
 				Children: []constants.Evaluation{
@@ -55,6 +57,7 @@ func TestOrConditionFulfils(t *testing.T) {
 				staticCondition{evaluation: &constants.Evaluation{Status: constants.StatusPossibleFail, Summary: "second may fail"}},
 			}},
 			expected: constants.Evaluation{
+				Name:    "Or",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "None of 2 conditions satisfied",
 				Children: []constants.Evaluation{
@@ -68,6 +71,7 @@ func TestOrConditionFulfils(t *testing.T) {
 				staticCondition{},
 			}},
 			expected: constants.Evaluation{
+				Name:    "Or",
 				Status:  constants.StatusSystemError,
 				Summary: "condition returned nil",
 			},
@@ -191,6 +195,7 @@ func TestAndConditionFulfils(t *testing.T) {
 				staticCondition{evaluation: &constants.Evaluation{Status: constants.StatusPass, Summary: "second passes"}},
 			}},
 			expected: constants.Evaluation{
+				Name:    "And",
 				Status:  constants.StatusPass,
 				Summary: "All 2 conditions satisfied",
 				Children: []constants.Evaluation{
@@ -205,6 +210,7 @@ func TestAndConditionFulfils(t *testing.T) {
 				staticCondition{evaluation: &constants.Evaluation{Status: constants.StatusUnknown, Summary: "second unknown"}},
 			}},
 			expected: constants.Evaluation{
+				Name:    "And",
 				Status:  constants.StatusUnknown,
 				Summary: "Not all conditions satisfied (2 total)",
 				Children: []constants.Evaluation{
@@ -218,10 +224,11 @@ func TestAndConditionFulfils(t *testing.T) {
 				staticCondition{},
 			}},
 			expected: constants.Evaluation{
+				Name:    "And",
 				Status:  constants.StatusSystemError,
 				Summary: "Not all conditions satisfied (1 total)",
 				Children: []constants.Evaluation{
-					{Status: constants.StatusSystemError, Summary: "condition returned nil"},
+					{Name: "And", Status: constants.StatusSystemError, Summary: "condition returned nil"},
 				},
 			},
 		},

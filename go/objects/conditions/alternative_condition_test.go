@@ -26,6 +26,7 @@ func TestAlternativeConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "BIOL 2311",
 				Status:  constants.StatusPass,
 				Summary: "Completed BIOL 2311 with grade B",
 			},
@@ -34,10 +35,12 @@ func TestAlternativeConditionFulfils(t *testing.T) {
 			condition: NewCourseCondition("BIOL", "2311", ""),
 			userInfo:  constants.UserInfo{},
 			expected: constants.Evaluation{
+				Name:    "Alternative",
 				Status:  constants.StatusUnknown,
 				Summary: "Standard path not satisfied — an equivalent may also be accepted (contact adviser)",
 				Children: []constants.Evaluation{
 					{
+						Name:    "BIOL 2311",
 						Status:  constants.StatusDefiniteFail,
 						Summary: "Have not taken BIOL 2311",
 					},
@@ -50,10 +53,12 @@ func TestAlternativeConditionFulfils(t *testing.T) {
 				CurrentEnrollment: []constants.Course{{Prefix: "BIOL", Number: "2311"}},
 			},
 			expected: constants.Evaluation{
+				Name:    "Alternative",
 				Status:  constants.StatusUnknown,
 				Summary: "Standard path not satisfied — an equivalent may also be accepted (contact adviser)",
 				Children: []constants.Evaluation{
 					{
+						Name:    "BIOL 2311",
 						Status:  constants.StatusPossibleFail,
 						Summary: "Currently enrolled in BIOL 2311 — awaiting final grade",
 					},
@@ -64,10 +69,12 @@ func TestAlternativeConditionFulfils(t *testing.T) {
 			condition: nilCondition{},
 			userInfo:  constants.UserInfo{},
 			expected: constants.Evaluation{
+				Name:    "Alternative",
 				Status:  constants.StatusUnknown,
 				Summary: "Standard path not satisfied — an equivalent may also be accepted (contact adviser)",
 				Children: []constants.Evaluation{
 					{
+						Name:    "Alternative",
 						Status:  constants.StatusSystemError,
 						Summary: "inner condition returned nil",
 					},

@@ -15,6 +15,7 @@ func TestGradeLevelConditionFulfils(t *testing.T) {
 			condition: *NewGradeLevelCondition(constants.Senior),
 			userInfo:  constants.UserInfo{GradeLevel: constants.Senior},
 			expected: constants.Evaluation{
+				Name:    "Grade Level",
 				Status:  constants.StatusPass,
 				Summary: "Grade level requirement Senior satisfied",
 			},
@@ -23,6 +24,7 @@ func TestGradeLevelConditionFulfils(t *testing.T) {
 			condition: *NewGradeLevelCondition(constants.Senior),
 			userInfo:  constants.UserInfo{GradeLevel: constants.Freshman},
 			expected: constants.Evaluation{
+				Name:    "Grade Level",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Grade level is Freshman; requires Senior",
 			},
@@ -47,6 +49,7 @@ func TestGraduateStandingInConditionFulfils(t *testing.T) {
 			condition: *NewGraduateStandingInCondition(),
 			userInfo:  constants.UserInfo{DegreeLevel: constants.Graduate},
 			expected: constants.Evaluation{
+				Name:    "Graduate Standing",
 				Status:  constants.StatusPass,
 				Summary: "Graduate standing requirement satisfied",
 			},
@@ -55,6 +58,7 @@ func TestGraduateStandingInConditionFulfils(t *testing.T) {
 			condition: *NewGraduateStandingInCondition(),
 			userInfo:  constants.UserInfo{DegreeLevel: constants.PhD},
 			expected: constants.Evaluation{
+				Name:    "Graduate Standing",
 				Status:  constants.StatusPass,
 				Summary: "Graduate standing requirement satisfied",
 			},
@@ -63,6 +67,7 @@ func TestGraduateStandingInConditionFulfils(t *testing.T) {
 			condition: *NewGraduateStandingInCondition(),
 			userInfo:  constants.UserInfo{DegreeLevel: constants.Undergraduate},
 			expected: constants.Evaluation{
+				Name:    "Graduate Standing",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Degree level is Undergraduate; requires Graduate standing",
 			},
@@ -87,6 +92,7 @@ func TestGenericStandingConditionFulfils(t *testing.T) {
 			condition: *NewGenericStandingCondition(constants.GoodAcademicStanding),
 			userInfo:  constants.UserInfo{Standing: []constants.Standing{constants.GoodAcademicStanding}},
 			expected: constants.Evaluation{
+				Name:    "Generic Standing",
 				Status:  constants.StatusPass,
 				Summary: `Academic standing "Good Academic Standing" satisfied`,
 			},
@@ -95,6 +101,7 @@ func TestGenericStandingConditionFulfils(t *testing.T) {
 			condition: *NewGenericStandingCondition(constants.GoodAcademicStanding),
 			userInfo:  constants.UserInfo{},
 			expected: constants.Evaluation{
+				Name:    "Generic Standing",
 				Status:  constants.StatusDefiniteFail,
 				Summary: `Academic standing is []; requires "Good Academic Standing"`,
 			},

@@ -2,10 +2,20 @@ package objects
 
 import (
 	"encoding/json"
+	"fmt"
 	"parser/objects/conditions"
 	"parser/objects/constants"
 	"parser/objects/rules"
 )
+
+type RequirementsResult struct {
+	Overall     constants.EvalStatus   `json:"overall"`
+	PreReqs     *constants.Evaluation  `json:"pre_reqs,omitempty"`
+	CoReqs      *constants.Evaluation  `json:"co_reqs,omitempty"`
+	PreOrCoReqs *constants.Evaluation  `json:"pre_or_co_reqs,omitempty"`
+	Rules       []constants.Evaluation `json:"rules,omitempty"`
+	Notices     []constants.Evaluation `json:"notices,omitempty"`
+}
 
 type Requirements struct {
 	PreReqs     conditions.Condition `json:"pre_reqs,omitempty"`
@@ -64,4 +74,56 @@ func (r *Requirements) UnmarshalJSON(b []byte) error {
 	}
 
 	return nil
+}
+
+func (r *Requirements) Evaluate(info constants.UserInfo) RequirementsResult {
+	result := RequirementsResult{
+		Overall: constants.StatusPass,
+	}
+
+	if r.PreReqs != nil {
+		eval := r.PreReqs.Fulfils(info, false)
+		result.PreReqs = eval
+		result.Overall = constants.WorstStatus(result.Overall, eval.Status)
+	}
+
+	if r.CoReqs != nil {
+		eval := r.CoReqs.Fulfils(info, true)
+		result.CoReqs = eval
+		result.Overall = constants.WorstStatus(result.Overall, eval.Status)
+	}
+
+	if r.PreOrCoReqs != nil {
+		eval := r.PreOrCoReqs.Fulfils(info, true)
+		result.PreOrCoReqs = eval
+		result.Overall = constants.WorstStatus(result.Overall, eval.Status)
+	}
+
+	if len(r.Rules) > 0 {
+		result.Rules = make([]constants.Evaluation, len(r.Rules))
+		for i := range r.Rules {
+			result.Rules[i] = evaluateRule()
+		}
+	}
+
+	if len(r.Notices) > 0 {
+		result.Notices = make([]constants.Evaluation, len(r.Notices))
+		for i, notice := range r.Notices {
+			result.Notices[i] = constants.Evaluation{
+				Name:    string(notice),
+				Status:  constants.StatusPass,
+				Summary: fmt.Sprintf("Notice: %s", notice),
+			}
+		}
+	}
+
+	return result
+}
+
+func evaluateRule() constants.Evaluation {
+	return constants.Evaluation{
+		Name:    "todo name",
+		Status:  constants.StatusPass,
+		Summary: fmt.Sprintf("pass (hard-coded)"),
+	}
 }

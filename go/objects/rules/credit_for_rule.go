@@ -10,7 +10,7 @@ type CreditForRule struct {
 	Courses CourseCollection `json:"courses,omitempty"`
 }
 
-func (c CreditForRule) isRule() bool {
+func (c *CreditForRule) isRule() bool {
 	return true
 }
 

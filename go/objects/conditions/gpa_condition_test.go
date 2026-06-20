@@ -15,6 +15,7 @@ func TestGPAConditionFulfils(t *testing.T) {
 			condition: *NewGpaCondition(3.0),
 			userInfo:  constants.UserInfo{GPA: 3.5},
 			expected: constants.Evaluation{
+				Name:    "GPA",
 				Status:  constants.StatusPass,
 				Summary: "GPA is 3.50 (requires 3.00)",
 			},
@@ -23,6 +24,7 @@ func TestGPAConditionFulfils(t *testing.T) {
 			condition: *NewGpaCondition(3.0),
 			userInfo:  constants.UserInfo{GPA: 3.0},
 			expected: constants.Evaluation{
+				Name:    "GPA",
 				Status:  constants.StatusPass,
 				Summary: "GPA is 3.00 (requires 3.00)",
 			},
@@ -31,6 +33,7 @@ func TestGPAConditionFulfils(t *testing.T) {
 			condition: *NewGpaCondition(3.0),
 			userInfo:  constants.UserInfo{GPA: 2.5},
 			expected: constants.Evaluation{
+				Name:    "GPA",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "GPA is 2.50 but requires 3.00",
 			},

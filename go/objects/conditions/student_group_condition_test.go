@@ -15,6 +15,7 @@ func TestStudentGroupConditionFulfils(t *testing.T) {
 			condition: *NewStudentGroupCondition(constants.ComputerScholarsProgram),
 			userInfo:  constants.UserInfo{Groups: []constants.StudentGroup{constants.ComputerScholarsProgram}},
 			expected: constants.Evaluation{
+				Name:    "Student Group",
 				Status:  constants.StatusPass,
 				Summary: `Student is a member of group "Computer Scholars Program"`,
 			},
@@ -23,6 +24,7 @@ func TestStudentGroupConditionFulfils(t *testing.T) {
 			condition: *NewStudentGroupCondition(constants.ComputerScholarsProgram),
 			userInfo:  constants.UserInfo{Groups: []constants.StudentGroup{constants.CollegeVHonors}},
 			expected: constants.Evaluation{
+				Name:    "Student Group",
 				Status:  constants.StatusDefiniteFail,
 				Summary: `Student is not a member of group "Computer Scholars Program"`,
 			},

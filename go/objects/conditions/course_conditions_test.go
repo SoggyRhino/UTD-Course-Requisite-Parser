@@ -81,6 +81,7 @@ func TestCourseConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "BIOL 2311",
 				Status:  constants.StatusPass,
 				Summary: "Completed BIOL 2311 with grade B",
 			},
@@ -93,6 +94,7 @@ func TestCourseConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "BIOL 2311",
 				Status:  constants.StatusPass,
 				Summary: "Completed BIOL 2311 with grade B",
 			},
@@ -105,6 +107,7 @@ func TestCourseConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "BIOL 2311",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Completed BIOL 2311 but grade D does not meet minimum C",
 			},
@@ -118,6 +121,7 @@ func TestCourseConditionFulfils(t *testing.T) {
 				CurrentEnrollment: []constants.Course{{Prefix: "BIOL", Number: "2311"}},
 			},
 			expected: constants.Evaluation{
+				Name:    "BIOL 2311",
 				Status:  constants.StatusPossibleFail,
 				Summary: "Currently enrolled in BIOL 2311 — awaiting final grade",
 			},
@@ -126,6 +130,7 @@ func TestCourseConditionFulfils(t *testing.T) {
 			condition: *NewCourseCondition("BIOL", "2311", ""),
 			userInfo:  constants.UserInfo{},
 			expected: constants.Evaluation{
+				Name:    "BIOL 2311",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Have not taken BIOL 2311",
 			},
@@ -169,6 +174,7 @@ func TestCoreConditionFulfils(t *testing.T) {
 		"Core title": {
 			condition: *NewCoreCondition("050", "Creative Arts"),
 			expected: constants.Evaluation{
+				Name:    "Core Creative Arts",
 				Status:  constants.StatusUnknown,
 				Summary: "Cannot verify core requirement \"Creative Arts\" automatically",
 			},
@@ -176,6 +182,7 @@ func TestCoreConditionFulfils(t *testing.T) {
 		"Core number fallback": {
 			condition: *NewCoreCondition("040", ""),
 			expected: constants.Evaluation{
+				Name:    "Core 040",
 				Status:  constants.StatusUnknown,
 				Summary: "Cannot verify core requirement \"040\" automatically",
 			},
@@ -183,6 +190,7 @@ func TestCoreConditionFulfils(t *testing.T) {
 		"Core semester hours": {
 			condition: *NewCoreConditionWithSemesterHours("040", "Language", 3),
 			expected: constants.Evaluation{
+				Name:    "Core Language",
 				Status:  constants.StatusUnknown,
 				Summary: "Cannot verify 3 SCH of core requirement \"Language\" automatically",
 			},
@@ -213,6 +221,7 @@ func TestCreditHoursConditionFulfils(t *testing.T) {
 				TotalSCH: 60,
 			},
 			expected: constants.Evaluation{
+				Name:    "Credit Hours",
 				Status:  constants.StatusPass,
 				Summary: "Has 60 SCH (requires 45)",
 			},
@@ -223,6 +232,7 @@ func TestCreditHoursConditionFulfils(t *testing.T) {
 				TotalSCH: 30,
 			},
 			expected: constants.Evaluation{
+				Name:    "Credit Hours",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Has 30 SCH but requires 45",
 			},
@@ -259,6 +269,7 @@ func TestCreditHoursFromConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "Credit Hours From",
 				Status:  constants.StatusPass,
 				Summary: "Earned 6 SCH from specified courses (requires 6)",
 			},
@@ -275,6 +286,7 @@ func TestCreditHoursFromConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "Credit Hours From",
 				Status:  constants.StatusPossibleFail,
 				Summary: "Earned 0 SCH; 6 more in progress — may reach required 6 SCH",
 			},
@@ -290,6 +302,7 @@ func TestCreditHoursFromConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "Credit Hours From",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Only 3 SCH earned from specified courses (requires 6)",
 			},
@@ -324,6 +337,7 @@ func TestUpperDivisionCoursesConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "Upper Division Courses",
 				Status:  constants.StatusPass,
 				Summary: "Has 6 upper-division SCH in CS (requires 6)",
 			},
@@ -337,6 +351,7 @@ func TestUpperDivisionCoursesConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "Upper Division Courses",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Has 3 upper-division SCH in CS (requires 6)",
 			},
@@ -350,6 +365,7 @@ func TestUpperDivisionCoursesConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "Upper Division Courses",
 				Status:  constants.StatusPass,
 				Summary: "Has completed 2 upper-division courses in any prefix (requires 2)",
 			},
@@ -362,6 +378,7 @@ func TestUpperDivisionCoursesConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "Upper Division Courses",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Has completed 1 upper-division courses in CS (requires 2)",
 			},
@@ -370,6 +387,7 @@ func TestUpperDivisionCoursesConditionFulfils(t *testing.T) {
 			condition: UpperDivisionCoursesCondition{},
 			userInfo:  constants.UserInfo{},
 			expected: constants.Evaluation{
+				Name:    "Upper Division Courses",
 				Status:  constants.StatusInvalidRule,
 				Summary: "UpperDivisionCoursesCondition has neither Hours nor Count set",
 			},
@@ -400,6 +418,7 @@ func TestResearchConditionFulfils(t *testing.T) {
 				DegreeLevel: constants.Undergraduate,
 			},
 			expected: constants.Evaluation{
+				Name:    "Research",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Requires Graduate standing; student is Undergraduate",
 			},
@@ -410,6 +429,7 @@ func TestResearchConditionFulfils(t *testing.T) {
 				DegreeLevel: constants.Graduate,
 			},
 			expected: constants.Evaluation{
+				Name:    "Research",
 				Status:  constants.StatusUnknown,
 				Summary: "Cannot automatically verify 3 research hours for Graduate students",
 			},
@@ -418,6 +438,7 @@ func TestResearchConditionFulfils(t *testing.T) {
 			condition: *NewResearchCondition(3, constants.AnyDegree),
 			userInfo:  constants.UserInfo{},
 			expected: constants.Evaluation{
+				Name:    "Research",
 				Status:  constants.StatusUnknown,
 				Summary: "Cannot automatically verify 3 research hours for Any Degree students",
 			},
@@ -426,6 +447,7 @@ func TestResearchConditionFulfils(t *testing.T) {
 			condition: ResearchCondition{Hours: 3},
 			userInfo:  constants.UserInfo{},
 			expected: constants.Evaluation{
+				Name:    "Research",
 				Status:  constants.StatusUnknown,
 				Summary: "Cannot automatically verify 3 research hours for  students",
 			},
@@ -463,12 +485,13 @@ func TestNCoursesConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "N Courses",
 				Status:  constants.StatusPass,
 				Summary: "Completed 2 of required 2 courses",
 				Children: []constants.Evaluation{
-					{Status: constants.StatusPass, Summary: "Completed BIOL 2311"},
-					{Status: constants.StatusPass, Summary: "Completed CHEM 1311"},
-					{Status: constants.StatusDefiniteFail, Summary: "Have not taken PHYS 2325"},
+					{Name: "BIOL 2311", Status: constants.StatusPass, Summary: "Completed BIOL 2311"},
+					{Name: "CHEM 1311", Status: constants.StatusPass, Summary: "Completed CHEM 1311"},
+					{Name: "PHYS 2325", Status: constants.StatusDefiniteFail, Summary: "Have not taken PHYS 2325"},
 				},
 			},
 		},
@@ -484,11 +507,12 @@ func TestNCoursesConditionFulfils(t *testing.T) {
 				CurrentEnrollment: []constants.Course{{Prefix: "CHEM", Number: "1311"}},
 			},
 			expected: constants.Evaluation{
+				Name:    "N Courses",
 				Status:  constants.StatusPossibleFail,
 				Summary: "Completed 1 courses; 1 in progress — may satisfy requirement of 2",
 				Children: []constants.Evaluation{
-					{Status: constants.StatusPass, Summary: "Completed BIOL 2311"},
-					{Status: constants.StatusPossibleFail, Summary: "Currently enrolled in CHEM 1311"},
+					{Name: "BIOL 2311", Status: constants.StatusPass, Summary: "Completed BIOL 2311"},
+					{Name: "CHEM 1311", Status: constants.StatusPossibleFail, Summary: "Currently enrolled in CHEM 1311"},
 				},
 			},
 		},
@@ -503,11 +527,12 @@ func TestNCoursesConditionFulfils(t *testing.T) {
 				},
 			},
 			expected: constants.Evaluation{
+				Name:    "N Courses",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Completed only 1 of required 2 courses from the specified list",
 				Children: []constants.Evaluation{
-					{Status: constants.StatusPass, Summary: "Completed BIOL 2311"},
-					{Status: constants.StatusDefiniteFail, Summary: "Have not taken CHEM 1311"},
+					{Name: "BIOL 2311", Status: constants.StatusPass, Summary: "Completed BIOL 2311"},
+					{Name: "CHEM 1311", Status: constants.StatusDefiniteFail, Summary: "Have not taken CHEM 1311"},
 				},
 			},
 		},

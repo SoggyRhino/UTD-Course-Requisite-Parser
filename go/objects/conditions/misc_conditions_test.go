@@ -17,6 +17,7 @@ func TestConcurrentEnrollmentConditionFulfils(t *testing.T) {
 				Taken: map[constants.Course]constants.Grade{{Prefix: "CS", Number: "1337"}: "A"},
 			},
 			expected: constants.Evaluation{
+				Name:    "Concurrent Enrollment",
 				Status:  constants.StatusPass,
 				Summary: "Already completed CS 1337",
 			},
@@ -27,6 +28,7 @@ func TestConcurrentEnrollmentConditionFulfils(t *testing.T) {
 				CurrentEnrollment: []constants.Course{{Prefix: "CS", Number: "1337"}},
 			},
 			expected: constants.Evaluation{
+				Name:    "Concurrent Enrollment",
 				Status:  constants.StatusPass,
 				Summary: "Currently enrolled in CS 1337",
 			},
@@ -35,6 +37,7 @@ func TestConcurrentEnrollmentConditionFulfils(t *testing.T) {
 			condition: *NewConcurrentEnrollmentCondition(constants.Course{Prefix: "CS", Number: "1337"}),
 			userInfo:  constants.UserInfo{},
 			expected: constants.Evaluation{
+				Name:    "Concurrent Enrollment",
 				Status:  constants.StatusPossibleFail,
 				Summary: "Requires concurrent enrollment in CS 1337",
 			},
@@ -61,6 +64,7 @@ func TestExactSectionConditionFulfils(t *testing.T) {
 				Taken: map[constants.Course]constants.Grade{{Prefix: "CS", Number: "1337", Section: "001"}: "A"},
 			},
 			expected: constants.Evaluation{
+				Name:    "Exact Section",
 				Status:  constants.StatusPass,
 				Summary: "Completed CS 1337 section 001",
 			},
@@ -71,6 +75,7 @@ func TestExactSectionConditionFulfils(t *testing.T) {
 				Taken: map[constants.Course]constants.Grade{{Prefix: "CS", Number: "1337", Section: "501"}: "A"},
 			},
 			expected: constants.Evaluation{
+				Name:    "Exact Section",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Must be in CS 1337 section 001",
 			},
@@ -81,6 +86,7 @@ func TestExactSectionConditionFulfils(t *testing.T) {
 				CurrentEnrollment: []constants.Course{{Prefix: "CS", Number: "1337", Section: "001"}},
 			},
 			expected: constants.Evaluation{
+				Name:    "Exact Section",
 				Status:  constants.StatusPass,
 				Summary: "Currently enrolled in CS 1337 section 001",
 			},
@@ -91,6 +97,7 @@ func TestExactSectionConditionFulfils(t *testing.T) {
 				Taken: map[constants.Course]constants.Grade{{Prefix: "CS", Number: "1337", Section: "501"}: "A"},
 			},
 			expected: constants.Evaluation{
+				Name:    "Exact Section",
 				Status:  constants.StatusPass,
 				Summary: "Completed CS 1337 section ",
 			},
@@ -117,6 +124,7 @@ func TestAnyPreviousMajorCourseConditionFulfils(t *testing.T) {
 				Taken: map[constants.Course]constants.Grade{{Prefix: "CS", Number: "1337"}: "A"},
 			},
 			expected: constants.Evaluation{
+				Name:    "Any Previous Major Course",
 				Status:  constants.StatusPass,
 				Summary: "Completed at least one course with prefix CS (CS 1337)",
 			},
@@ -125,6 +133,7 @@ func TestAnyPreviousMajorCourseConditionFulfils(t *testing.T) {
 			condition: *NewAnyPreviousMajorCourseCondition("CS"),
 			userInfo:  constants.UserInfo{},
 			expected: constants.Evaluation{
+				Name:    "Any Previous Major Course",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "No previous courses with prefix CS found",
 			},
@@ -149,6 +158,7 @@ func TestAcademicYearConditionFulfils(t *testing.T) {
 			condition: *NewAcademicYearCondition("2023", true),
 			userInfo:  constants.UserInfo{AcademicPlan: "2023"},
 			expected: constants.Evaluation{
+				Name:    "Academic Year",
 				Status:  constants.StatusPass,
 				Summary: "Academic plan 2023 matches required 2023",
 			},
@@ -157,6 +167,7 @@ func TestAcademicYearConditionFulfils(t *testing.T) {
 			condition: *NewAcademicYearCondition("2023", true),
 			userInfo:  constants.UserInfo{AcademicPlan: "2022"},
 			expected: constants.Evaluation{
+				Name:    "Academic Year",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Academic plan 2022 does not match required 2023",
 			},
@@ -165,6 +176,7 @@ func TestAcademicYearConditionFulfils(t *testing.T) {
 			condition: *NewAcademicYearCondition("2023", false),
 			userInfo:  constants.UserInfo{AcademicPlan: "2023"},
 			expected: constants.Evaluation{
+				Name:    "Academic Year",
 				Status:  constants.StatusDefiniteFail,
 				Summary: "Academic plan 2023 matches prohibited 2023",
 			},
@@ -173,6 +185,7 @@ func TestAcademicYearConditionFulfils(t *testing.T) {
 			condition: *NewAcademicYearCondition("2023", false),
 			userInfo:  constants.UserInfo{AcademicPlan: "2022"},
 			expected: constants.Evaluation{
+				Name:    "Academic Year",
 				Status:  constants.StatusPass,
 				Summary: "Academic plan 2022 is not 2023",
 			},

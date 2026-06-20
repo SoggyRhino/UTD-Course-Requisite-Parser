@@ -15,6 +15,7 @@ func TestMajorConditionFulfils(t *testing.T) {
 			condition: *NewMajorCondition("Computer Science"),
 			userInfo:  constants.UserInfo{Major: "Computer Science"},
 			expected: constants.Evaluation{
+				Name:    "Major Computer Science",
 				Status:  constants.StatusPass,
 				Summary: "Major and level requirements satisfied",
 			},
@@ -23,6 +24,7 @@ func TestMajorConditionFulfils(t *testing.T) {
 			condition: *NewMajorCondition("Computer Science"),
 			userInfo:  constants.UserInfo{Major: "Biology"},
 			expected: constants.Evaluation{
+				Name:    "Major Computer Science",
 				Status:  constants.StatusDefiniteFail,
 				Summary: `Major is "Biology"; requires "Computer Science"`,
 			},
@@ -31,6 +33,7 @@ func TestMajorConditionFulfils(t *testing.T) {
 			condition: *NewMajorConditionWithDegreeLevel("CS", constants.Undergraduate),
 			userInfo:  constants.UserInfo{Major: "CS", DegreeLevel: constants.Undergraduate},
 			expected: constants.Evaluation{
+				Name:    "Major CS",
 				Status:  constants.StatusPass,
 				Summary: "Major and level requirements satisfied",
 			},
@@ -39,6 +42,7 @@ func TestMajorConditionFulfils(t *testing.T) {
 			condition: *NewMajorConditionWithDegreeLevel("CS", constants.Graduate),
 			userInfo:  constants.UserInfo{Major: "CS", DegreeLevel: constants.Undergraduate},
 			expected: constants.Evaluation{
+				Name:    "Major CS",
 				Status:  constants.StatusDefiniteFail,
 				Summary: `Degree level is "Undergraduate"; requires "Graduate"`,
 			},
@@ -47,6 +51,7 @@ func TestMajorConditionFulfils(t *testing.T) {
 			condition: *NewMajorConditionWithGradeLevel("CS", constants.Senior),
 			userInfo:  constants.UserInfo{Major: "CS", GradeLevel: constants.Senior},
 			expected: constants.Evaluation{
+				Name:    "Major CS",
 				Status:  constants.StatusPass,
 				Summary: "Major and level requirements satisfied",
 			},
@@ -55,6 +60,7 @@ func TestMajorConditionFulfils(t *testing.T) {
 			condition: *NewMajorConditionWithGradeLevel("CS", constants.Senior),
 			userInfo:  constants.UserInfo{Major: "CS", GradeLevel: constants.Freshman},
 			expected: constants.Evaluation{
+				Name:    "Major CS",
 				Status:  constants.StatusDefiniteFail,
 				Summary: `Grade level is "Freshman"; requires "Senior"`,
 			},
@@ -63,6 +69,7 @@ func TestMajorConditionFulfils(t *testing.T) {
 			condition: *NewMajorConditionWithDegreeAndGradeLevel("Computer Science", constants.Undergraduate, constants.Junior),
 			userInfo:  constants.UserInfo{Major: "BS Computer Science", DegreeLevel: constants.Undergraduate, GradeLevel: constants.Junior},
 			expected: constants.Evaluation{
+				Name:    "Major Computer Science",
 				Status:  constants.StatusPass,
 				Summary: "Major and level requirements satisfied",
 			},
@@ -87,6 +94,7 @@ func TestDegreeConditionFulfils(t *testing.T) {
 			condition: *NewDegreeCondition("Computer Science"),
 			userInfo:  constants.UserInfo{Major: "BS Computer Science"},
 			expected: constants.Evaluation{
+				Name:    "Degree Computer Science",
 				Status:  constants.StatusPass,
 				Summary: `Degree requirement "Computer Science" satisfied`,
 			},
@@ -95,6 +103,7 @@ func TestDegreeConditionFulfils(t *testing.T) {
 			condition: *NewDegreeCondition("Computer Science"),
 			userInfo:  constants.UserInfo{Major: "Biology"},
 			expected: constants.Evaluation{
+				Name:    "Degree Computer Science",
 				Status:  constants.StatusDefiniteFail,
 				Summary: `Major is "Biology"; requires degree in "Computer Science"`,
 			},
