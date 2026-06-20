@@ -2,30 +2,14 @@
 
 ANTLR4 based approach for parsing course requirements. 
 
-# Build
-
-Antlr4 is uses grammar to generate go code for a parser, lexer and visitors. This project
-ignores the first 2 and only uses visitors. Visitors are functions that are called when a node in the ast is visited.
-They essentially act as a visitor for the ast work as reducers where we can take a node, say `course: PREFIX NUMBER`, and 
-transform it into a useful object. 
-
-Since antlr4 generates code, you must run the following command
-```bash
-cd .. scripts 
-./build.bat
-```
 
 # Scripts
-There are also some scripts in the scripts folder to help development. 
-> These are AI slop, but since it's not actually part of the project, I couldn't be bothered to make something better.
+The `scripts/` folder contains several utilities for development:
 
-completed.bat
- - Prints out how many visitors are created and how many are missing
- - `--missing` flag prints out a Markdown list for README.md
-
-extract_inputs.bat 
- - Prints out all the inputs that are captured for a specific rule 
- - Useful for creating the unit tests
-
-test_grammar.bat 
- - Runs the grammar and makes sure that changes don't make the grammar worse
+- **`build.bat`**: Generates Go code from the ANTLR4 grammar.
+- **`completed.bat`**: Reports visitor implementation coverage.
+  - `--missing` flag prints a Markdown list of missing visitors.
+- **`extract_inputs.bat`**: Extracts captured inputs for specific rules, useful for unit testing.
+- **`test_grammar.bat`**: Validates changes against the grammar.
+- **`compile_ts.bat`**: Transpiles the Go `objects` package to TypeScript using [goscript](https://github.com/aperturerobotics/goscript).
+  - Requires `goscript` to be installed: `go install github.com/aperturerobotics/goscript/cmd/goscript@latest`

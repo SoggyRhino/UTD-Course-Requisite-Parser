@@ -1,6 +1,8 @@
 
 .idea
 /scripts/out/
+/scripts/err
 
 # do not included generated sources in repo
-/parser/*
+/go/parser/*
+/out/

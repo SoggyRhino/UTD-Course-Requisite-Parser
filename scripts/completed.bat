@@ -1,8 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set GENERATED=..\parser\requirements_visitor.go
-set VISITORS_DIR=..\visitors
+set GENERATED=..\go\parser\requirements_visitor.go
+set VISITORS_DIR=..\go\visitors
 set SHOW_MISSING=0
 
 for %%A in (%*) do (
