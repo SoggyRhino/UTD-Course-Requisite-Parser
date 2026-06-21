@@ -100,12 +100,15 @@ func (r *Requirements) Evaluate(info constants.UserInfo) RequirementsResult {
 	}
 
 	if len(r.Rules) > 0 {
-		result.Rules = make([]constants.Evaluation, len(r.Rules))
-		for i, rule := range r.Rules {
+		var evaluatedRules []constants.Evaluation
+		for _, rule := range r.Rules {
 			eval := rule.Fulfils(info)
-			result.Rules[i] = eval
-			result.Overall = constants.WorstStatus(result.Overall, eval.Status)
+			if eval != nil {
+				evaluatedRules = append(evaluatedRules, *eval)
+				result.Overall = constants.WorstStatus(result.Overall, eval.Status)
+			}
 		}
+		result.Rules = evaluatedRules
 	}
 
 	if len(r.Notices) > 0 {

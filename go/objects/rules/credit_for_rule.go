@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"parser/objects/constants"
+	"strings"
 )
 
 type CreditForRule struct {
@@ -11,10 +12,17 @@ type CreditForRule struct {
 }
 
 func (c *CreditForRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	if c.Courses.HasCredit(userInfo) {
+		return &constants.Evaluation{
+			Name:    "Credit For Rule",
+			Status:  constants.StatusDefiniteFail,
+			Summary: fmt.Sprintf("Student violates credit for rule: %s", c.Courses.String()),
+		}
+	}
 	return &constants.Evaluation{
 		Name:    "Credit For Rule",
-		Status:  constants.StatusDefiniteFail,
-		Summary: "Not implemented",
+		Status:  constants.StatusPass,
+		Summary: "Student satisfies credit for rule",
 	}
 }
 
@@ -49,7 +57,8 @@ func NewCreditForRule(courses CourseCollection) *CreditForRule {
 }
 
 type CourseCollection interface {
-	isCourseCollection() bool //todo change this actual work when evaluating
+	HasCredit(userInfo constants.UserInfo) bool
+	String() string
 }
 
 type courseCollectionEnvelope struct {
@@ -129,8 +138,21 @@ func NewAndCourseCollection(col1, col2 CourseCollection) *AndCourseCollection {
 	}
 }
 
-func (a *AndCourseCollection) isCourseCollection() bool {
+func (a *AndCourseCollection) HasCredit(userInfo constants.UserInfo) bool {
+	for _, col := range a.Courses {
+		if !col.HasCredit(userInfo) {
+			return false
+		}
+	}
 	return true
+}
+
+func (a *AndCourseCollection) String() string {
+	strs := make([]string, len(a.Courses))
+	for i, col := range a.Courses {
+		strs[i] = col.String()
+	}
+	return "(" + strings.Join(strs, " AND ") + ")"
 }
 
 type OrCourseCollection struct {
@@ -186,8 +208,21 @@ func NewOrCourseCollection(col1, col2 CourseCollection) *OrCourseCollection {
 	}
 }
 
-func (o *OrCourseCollection) isCourseCollection() bool {
-	return true
+func (o *OrCourseCollection) HasCredit(userInfo constants.UserInfo) bool {
+	for _, col := range o.Courses {
+		if col.HasCredit(userInfo) {
+			return true
+		}
+	}
+	return false
+}
+
+func (o *OrCourseCollection) String() string {
+	strs := make([]string, len(o.Courses))
+	for i, col := range o.Courses {
+		strs[i] = col.String()
+	}
+	return "(" + strings.Join(strs, " OR ") + ")"
 }
 
 type SimpleCourseCollection struct {
@@ -209,6 +244,24 @@ func NewSimpleCourseCollection(course []constants.Course) *SimpleCourseCollectio
 	return &SimpleCourseCollection{Course: course}
 }
 
-func (s *SimpleCourseCollection) isCourseCollection() bool {
-	return true
+func (s *SimpleCourseCollection) HasCredit(userInfo constants.UserInfo) bool {
+	for _, c := range s.Course {
+		if _, taken := userInfo.Taken[c]; taken {
+			return true
+		}
+		for _, enrolled := range userInfo.CurrentEnrollment {
+			if enrolled == c {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (s *SimpleCourseCollection) String() string {
+	strs := make([]string, len(s.Course))
+	for i, c := range s.Course {
+		strs[i] = c.String()
+	}
+	return strings.Join(strs, ", ")
 }

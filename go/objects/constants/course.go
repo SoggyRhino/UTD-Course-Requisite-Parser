@@ -53,3 +53,7 @@ func (c Course) CourseNumberInt() int {
 func (c Course) IsUpperDivision() bool {
 	return c.CourseNumberInt() >= 3000
 }
+
+func (c Course) String() string {
+	return c.Prefix + " " + c.Number
+}
