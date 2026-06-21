@@ -119,9 +119,31 @@ func NewGpaRepeatRule(course constants.Course) *GpaRepeatRule {
 }
 
 func (r *GpaRepeatRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	matchesPlan := r.AcademicPlan == "" || r.AcademicPlan == userInfo.AcademicPlan
+
+	if matchesPlan {
+		if _, taken := userInfo.Taken[r.Course]; taken {
+			return &constants.Evaluation{
+				Name:    "GPA Repeat Rule",
+				Status:  constants.StatusDefiniteFail,
+				Summary: fmt.Sprintf("Cannot repeat course %s to improve GPA", r.Course.String()),
+			}
+		}
+
+		for _, enrolled := range userInfo.CurrentEnrollment {
+			if enrolled == r.Course {
+				return &constants.Evaluation{
+					Name:    "GPA Repeat Rule",
+					Status:  constants.StatusDefiniteFail,
+					Summary: fmt.Sprintf("Cannot repeat course %s to improve GPA", r.Course.String()),
+				}
+			}
+		}
+	}
+
 	return &constants.Evaluation{
 		Name:    "GPA Repeat Rule",
-		Status:  constants.StatusPossibleFail,
-		Summary: "GPA repeat rule not implemented",
+		Status:  constants.StatusPass,
+		Summary: "GPA repeat rule satisfied",
 	}
 }

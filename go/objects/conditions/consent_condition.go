@@ -27,7 +27,7 @@ func NewConsentCondition(consent constants.Consent) *ConsentCondition {
 	}
 }
 
-func (c *ConsentCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
+func (c *ConsentCondition) Fulfils(_ constants.UserInfo, _ bool) *constants.Evaluation {
 	return &constants.Evaluation{
 		Name:    fmt.Sprintf("Consent %s", c.Consent),
 		Status:  constants.StatusPossibleFail,

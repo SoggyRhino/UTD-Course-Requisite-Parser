@@ -1,7 +1,7 @@
 package visitors
 
 import (
-	conditions2 "parser/objects/conditions"
+	conditions "parser/objects/conditions"
 	"parser/objects/constants"
 	"parser/parser"
 )
@@ -13,8 +13,8 @@ func (v *RequisiteVisitor) VisitParenCourse(ctx *parser.ParenCourseContext) any 
 	return v.visitParenCourse(ctx)
 }
 
-func (v *RequisiteVisitor) visitParenCourse(ctx *parser.ParenCourseContext) conditions2.Condition {
-	return v.Visit(ctx.Course()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitParenCourse(ctx *parser.ParenCourseContext) conditions.Condition {
+	return v.Visit(ctx.Course()).(conditions.Condition)
 }
 
 // VisitSimpleCourse matches a course in the format PREFX COURSE_NUMBER
@@ -25,17 +25,17 @@ func (v *RequisiteVisitor) VisitSimpleCourse(ctx *parser.SimpleCourseContext) an
 	return v.visitSimpleCourse(ctx)
 }
 
-func (v *RequisiteVisitor) visitSimpleCourse(ctx *parser.SimpleCourseContext) conditions2.Condition {
+func (v *RequisiteVisitor) visitSimpleCourse(ctx *parser.SimpleCourseContext) conditions.Condition {
 	number := ctx.COURSE_NUMBER().GetText()
 	prefixes := ctx.AllPREFIX()
 	if len(prefixes) == 1 {
-		return conditions2.NewCourseCondition(prefixes[0].GetText(), number, "")
+		return conditions.NewCourseCondition(prefixes[0].GetText(), number, "")
 	}
-	conds := make([]conditions2.Condition, len(prefixes))
+	conds := make([]conditions.Condition, len(prefixes))
 	for i, p := range prefixes {
-		conds[i] = conditions2.NewCourseCondition(p.GetText(), number, "")
+		conds[i] = conditions.NewCourseCondition(p.GetText(), number, "")
 	}
-	return conditions2.NewOrCondition(conds...)
+	return conditions.NewOrCondition(conds...)
 }
 
 // VisitCrossListedCourse expands courses separated by a slash into an or condition
@@ -45,10 +45,10 @@ func (v *RequisiteVisitor) VisitCrossListedCourse(ctx *parser.CrossListedCourseC
 	return v.visitCrossListedCourse(ctx)
 }
 
-func (v *RequisiteVisitor) visitCrossListedCourse(ctx *parser.CrossListedCourseContext) conditions2.Condition {
-	left := v.Visit(ctx.Course(0)).(conditions2.Condition)
-	right := v.Visit(ctx.Course(1)).(conditions2.Condition)
-	return conditions2.NewOrCondition(left, right)
+func (v *RequisiteVisitor) visitCrossListedCourse(ctx *parser.CrossListedCourseContext) conditions.Condition {
+	left := v.Visit(ctx.Course(0)).(conditions.Condition)
+	right := v.Visit(ctx.Course(1)).(conditions.Condition)
+	return conditions.NewOrCondition(left, right)
 }
 
 // VisitFullCourseList expands a list of courses
@@ -58,12 +58,12 @@ func (v *RequisiteVisitor) VisitFullCourseList(ctx *parser.FullCourseListContext
 	return v.visitFullCourseList(ctx)
 }
 
-func (v *RequisiteVisitor) visitFullCourseList(ctx *parser.FullCourseListContext) conditions2.Condition {
-	list := make([]conditions2.Condition, len(ctx.AllCourse()))
+func (v *RequisiteVisitor) visitFullCourseList(ctx *parser.FullCourseListContext) conditions.Condition {
+	list := make([]conditions.Condition, len(ctx.AllCourse()))
 	for i := range list {
-		list[i] = v.Visit(ctx.Course(i)).(conditions2.Condition)
+		list[i] = v.Visit(ctx.Course(i)).(conditions.Condition)
 	}
-	return conditions2.NewOrCondition(list...)
+	return conditions.NewOrCondition(list...)
 }
 
 // VisitShorthandCourseList expands a list of courses where prefix is implicit
@@ -73,15 +73,15 @@ func (v *RequisiteVisitor) VisitShorthandCourseList(ctx *parser.ShorthandCourseL
 	return v.visitShorthandCourseList(ctx)
 }
 
-func (v *RequisiteVisitor) visitShorthandCourseList(ctx *parser.ShorthandCourseListContext) conditions2.Condition {
+func (v *RequisiteVisitor) visitShorthandCourseList(ctx *parser.ShorthandCourseListContext) conditions.Condition {
 	prefix := ctx.PREFIX().GetText()
 	numbers := ctx.AllCOURSE_NUMBER()
 
-	list := make([]conditions2.Condition, len(numbers))
+	list := make([]conditions.Condition, len(numbers))
 	for i, number := range numbers {
-		list[i] = conditions2.NewCourseCondition(prefix, number.GetText(), "")
+		list[i] = conditions.NewCourseCondition(prefix, number.GetText(), "")
 	}
-	return conditions2.NewOrCondition(list...)
+	return conditions.NewOrCondition(list...)
 }
 
 // VisitEitherGradeCourseList
@@ -91,12 +91,12 @@ func (v *RequisiteVisitor) VisitEitherGradeCourseList(ctx *parser.EitherGradeCou
 	return v.visitEitherGradeCourseList(ctx)
 }
 
-func (v *RequisiteVisitor) visitEitherGradeCourseList(ctx *parser.EitherGradeCourseListContext) conditions2.Condition {
-	list := make([]conditions2.Condition, len(ctx.AllCourse()))
+func (v *RequisiteVisitor) visitEitherGradeCourseList(ctx *parser.EitherGradeCourseListContext) conditions.Condition {
+	list := make([]conditions.Condition, len(ctx.AllCourse()))
 	for i := range list {
-		list[i] = v.Visit(ctx.Course(i)).(conditions2.Condition)
+		list[i] = v.Visit(ctx.Course(i)).(conditions.Condition)
 	}
-	return conditions2.NewOrCondition(list...)
+	return conditions.NewOrCondition(list...)
 }
 
 // VisitAllGradeCourseList
@@ -106,12 +106,12 @@ func (v *RequisiteVisitor) VisitAllGradeCourseList(ctx *parser.AllGradeCourseLis
 	return v.visitAllGradeCourseList(ctx)
 }
 
-func (v *RequisiteVisitor) visitAllGradeCourseList(ctx *parser.AllGradeCourseListContext) conditions2.Condition {
-	list := make([]conditions2.Condition, len(ctx.AllCourse()))
+func (v *RequisiteVisitor) visitAllGradeCourseList(ctx *parser.AllGradeCourseListContext) conditions.Condition {
+	list := make([]conditions.Condition, len(ctx.AllCourse()))
 	for i := range list {
-		list[i] = v.Visit(ctx.Course(i)).(conditions2.Condition)
+		list[i] = v.Visit(ctx.Course(i)).(conditions.Condition)
 	}
-	return conditions2.NewAndCondition(list...)
+	return conditions.NewAndCondition(list...)
 }
 
 // VisitParenGradeCourseList
@@ -121,25 +121,25 @@ func (v *RequisiteVisitor) VisitParenGradeCourseList(ctx *parser.ParenGradeCours
 	return v.visitParenGradeCourseList(ctx)
 }
 
-func (v *RequisiteVisitor) visitParenGradeCourseList(ctx *parser.ParenGradeCourseListContext) conditions2.Condition {
-	list := make([]conditions2.Condition, len(ctx.AllCourse()))
+func (v *RequisiteVisitor) visitParenGradeCourseList(ctx *parser.ParenGradeCourseListContext) conditions.Condition {
+	list := make([]conditions.Condition, len(ctx.AllCourse()))
 	for i := range list {
-		list[i] = v.Visit(ctx.Course(i)).(conditions2.Condition)
+		list[i] = v.Visit(ctx.Course(i)).(conditions.Condition)
 	}
-	return conditions2.NewOrCondition(list...)
+	return conditions.NewOrCondition(list...)
 }
 
-func extractCoursesFromCourseList(condition conditions2.Condition) []constants.Course {
+func extractCoursesFromCourseList(condition conditions.Condition) []constants.Course {
 	courses := make([]constants.Course, 0)
 
 	switch cond := condition.(type) {
-	case *conditions2.CourseCondition:
+	case *conditions.CourseCondition:
 		courses = append(courses, cond.Course)
-	case *conditions2.OrCondition:
+	case *conditions.OrCondition:
 		for _, c := range cond.Conditions {
 			courses = append(courses, extractCoursesFromCourseList(c)...)
 		}
-	case *conditions2.AndCondition:
+	case *conditions.AndCondition:
 		for _, c := range cond.Conditions {
 			courses = append(courses, extractCoursesFromCourseList(c)...)
 		}

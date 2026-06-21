@@ -1,7 +1,7 @@
 package visitors
 
 import (
-	conditions2 "parser/objects/conditions"
+	conditions "parser/objects/conditions"
 	"parser/objects/constants"
 	"parser/parser"
 	"strings"
@@ -18,8 +18,8 @@ func (v *RequisiteVisitor) VisitInstructorConsentCondition(ctx *parser.Instructo
 	return v.visitInstructorConsentCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitInstructorConsentCondition(ctx *parser.InstructorConsentConditionContext) *conditions2.ConsentCondition {
-	return conditions2.NewConsentCondition(constants.InstructorConsent)
+func (v *RequisiteVisitor) visitInstructorConsentCondition(_ *parser.InstructorConsentConditionContext) *conditions.ConsentCondition {
+	return conditions.NewConsentCondition(constants.InstructorConsent)
 }
 
 // VisitDepartmentConsentCondition
@@ -29,8 +29,8 @@ func (v *RequisiteVisitor) VisitDepartmentConsentCondition(ctx *parser.Departmen
 	return v.visitDepartmentConsentCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitDepartmentConsentCondition(ctx *parser.DepartmentConsentConditionContext) *conditions2.ConsentCondition {
-	return conditions2.NewConsentCondition(constants.DepartmentConsent)
+func (v *RequisiteVisitor) visitDepartmentConsentCondition(_ *parser.DepartmentConsentConditionContext) *conditions.ConsentCondition {
+	return conditions.NewConsentCondition(constants.DepartmentConsent)
 }
 
 // VisitUteachConsentCondition
@@ -40,8 +40,8 @@ func (v *RequisiteVisitor) VisitUteachConsentCondition(ctx *parser.UteachConsent
 	return v.visitUteachConsentCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitUteachConsentCondition(ctx *parser.UteachConsentConditionContext) *conditions2.ConsentCondition {
-	return conditions2.NewConsentCondition(constants.UTeachConsent)
+func (v *RequisiteVisitor) visitUteachConsentCondition(_ *parser.UteachConsentConditionContext) *conditions.ConsentCondition {
+	return conditions.NewConsentCondition(constants.UTeachConsent)
 }
 
 // ======================= standing conditions =======================
@@ -53,8 +53,8 @@ func (v *RequisiteVisitor) VisitUpperDivisionStandingCondition(ctx *parser.Upper
 	return v.visitUpperDivisionStandingCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitUpperDivisionStandingCondition(ctx *parser.UpperDivisionStandingConditionContext) *conditions2.GenericStandingCondition {
-	return conditions2.NewGenericStandingCondition(constants.UpperDivisionStanding)
+func (v *RequisiteVisitor) visitUpperDivisionStandingCondition(_ *parser.UpperDivisionStandingConditionContext) *conditions.GenericStandingCondition {
+	return conditions.NewGenericStandingCondition(constants.UpperDivisionStanding)
 }
 
 // VisitGoodAcademicStandingCondition
@@ -64,19 +64,19 @@ func (v *RequisiteVisitor) VisitGoodAcademicStandingCondition(ctx *parser.GoodAc
 	return v.visitGoodAcademicStandingCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGoodAcademicStandingCondition(ctx *parser.GoodAcademicStandingConditionContext) *conditions2.GenericStandingCondition {
-	return conditions2.NewGenericStandingCondition(constants.GoodAcademicStanding)
+func (v *RequisiteVisitor) visitGoodAcademicStandingCondition(_ *parser.GoodAcademicStandingConditionContext) *conditions.GenericStandingCondition {
+	return conditions.NewGenericStandingCondition(constants.GoodAcademicStanding)
 }
 
 // ======================= grade condition =======================
 
-func (v *RequisiteVisitor) applyGrade(node antlr.ParseTree, gradeText string) conditions2.Condition {
+func (v *RequisiteVisitor) applyGrade(node antlr.ParseTree, gradeText string) conditions.Condition {
 	result := v.Visit(node)
-	if gradedCond, ok := result.(conditions2.GradedCondition); ok {
+	if gradedCond, ok := result.(conditions.GradedCondition); ok {
 		gradedCond.AppendGrade(constants.Grade(gradeText))
 		return gradedCond
 	}
-	if cond, ok := result.(conditions2.Condition); ok {
+	if cond, ok := result.(conditions.Condition); ok {
 		return cond
 	}
 	return nil
@@ -89,7 +89,7 @@ func (v *RequisiteVisitor) VisitSimpleGradeCondition(ctx *parser.SimpleGradeCond
 	return v.visitSimpleGradeCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitSimpleGradeCondition(ctx *parser.SimpleGradeConditionContext) conditions2.Condition {
+func (v *RequisiteVisitor) visitSimpleGradeCondition(ctx *parser.SimpleGradeConditionContext) conditions.Condition {
 	return v.applyGrade(ctx.Course(), ctx.GRADE().GetText())
 }
 
@@ -100,7 +100,7 @@ func (v *RequisiteVisitor) VisitGpaGradeCondition(ctx *parser.GpaGradeConditionC
 	return v.visitGpaGradeCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGpaGradeCondition(ctx *parser.GpaGradeConditionContext) conditions2.Condition {
+func (v *RequisiteVisitor) visitGpaGradeCondition(ctx *parser.GpaGradeConditionContext) conditions.Condition {
 	return v.applyGrade(ctx.Course(), ctx.GRADE().GetText())
 }
 
@@ -111,7 +111,7 @@ func (v *RequisiteVisitor) VisitGradeListCondition(ctx *parser.GradeListConditio
 	return v.visitGradeListCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGradeListCondition(ctx *parser.GradeListConditionContext) conditions2.Condition {
+func (v *RequisiteVisitor) visitGradeListCondition(ctx *parser.GradeListConditionContext) conditions.Condition {
 	return v.applyGrade(ctx.Grade_course_list(), ctx.GRADE().GetText())
 }
 
@@ -122,7 +122,7 @@ func (v *RequisiteVisitor) VisitGradeAtLeastCondition(ctx *parser.GradeAtLeastCo
 	return v.visitGradeAtLeastCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGradeAtLeastCondition(ctx *parser.GradeAtLeastConditionContext) conditions2.Condition {
+func (v *RequisiteVisitor) visitGradeAtLeastCondition(ctx *parser.GradeAtLeastConditionContext) conditions.Condition {
 	return v.applyGrade(ctx.Grade_course_list(), ctx.GRADE().GetText())
 }
 
@@ -134,9 +134,9 @@ func (v *RequisiteVisitor) visitGradeAtLeastCondition(ctx *parser.GradeAtLeastCo
 func (v *RequisiteVisitor) VisitCourseAlternativeCondition(ctx *parser.CourseAlternativeConditionContext) any {
 	return v.visitCourseAlternativeCondition(ctx)
 }
-func (v *RequisiteVisitor) visitCourseAlternativeCondition(ctx *parser.CourseAlternativeConditionContext) *conditions2.AlternativeCondition {
-	course := v.Visit(ctx.Course()).(conditions2.Condition)
-	return conditions2.NewAlternativeCondition(course)
+func (v *RequisiteVisitor) visitCourseAlternativeCondition(ctx *parser.CourseAlternativeConditionContext) *conditions.AlternativeCondition {
+	course := v.Visit(ctx.Course()).(conditions.Condition)
+	return conditions.NewAlternativeCondition(course)
 }
 
 // VisitGradeCourseListAlternativeCondition
@@ -146,9 +146,9 @@ func (v *RequisiteVisitor) VisitGradeCourseListAlternativeCondition(ctx *parser.
 	return v.visitGradeCourseListAlternativeCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGradeCourseListAlternativeCondition(ctx *parser.GradeCourseListAlternativeConditionContext) *conditions2.AlternativeCondition {
-	courseList := v.Visit(ctx.Course_list()).(conditions2.Condition)
-	return conditions2.NewAlternativeCondition(courseList)
+func (v *RequisiteVisitor) visitGradeCourseListAlternativeCondition(ctx *parser.GradeCourseListAlternativeConditionContext) *conditions.AlternativeCondition {
+	courseList := v.Visit(ctx.Course_list()).(conditions.Condition)
+	return conditions.NewAlternativeCondition(courseList)
 }
 
 // ======================= grade level standing condition =======================
@@ -160,13 +160,13 @@ func (v *RequisiteVisitor) VisitGradeLevelStandingCondition(ctx *parser.GradeLev
 	return v.visitGradeLevelStandingCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGradeLevelStandingCondition(ctx *parser.GradeLevelStandingConditionContext) conditions2.Condition {
-	conds := make([]conditions2.Condition, len(ctx.AllGRADE_LEVEL()))
+func (v *RequisiteVisitor) visitGradeLevelStandingCondition(ctx *parser.GradeLevelStandingConditionContext) conditions.Condition {
+	conds := make([]conditions.Condition, len(ctx.AllGRADE_LEVEL()))
 	for i, gradeLevel := range ctx.AllGRADE_LEVEL() {
-		conds[i] = conditions2.NewGradeLevelCondition(mapGradeLevel(gradeLevel.GetText()))
+		conds[i] = conditions.NewGradeLevelCondition(mapGradeLevel(gradeLevel.GetText()))
 	}
 
-	return conditions2.NewOrCondition(conds...)
+	return conditions.NewOrCondition(conds...)
 }
 
 // VisitGradeLevelMajorStandingCondition
@@ -176,8 +176,8 @@ func (v *RequisiteVisitor) VisitGradeLevelMajorStandingCondition(ctx *parser.Gra
 	return v.visitGradeLevelMajorStandingCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGradeLevelMajorStandingCondition(ctx *parser.GradeLevelMajorStandingConditionContext) *conditions2.GradeLevelCondition {
-	return conditions2.NewGradeLevelConditionWithDegree(mapGradeLevel(ctx.GRADE_LEVEL().GetText()), ctx.Degree().GetText())
+func (v *RequisiteVisitor) visitGradeLevelMajorStandingCondition(ctx *parser.GradeLevelMajorStandingConditionContext) *conditions.GradeLevelCondition {
+	return conditions.NewGradeLevelConditionWithDegree(mapGradeLevel(ctx.GRADE_LEVEL().GetText()), ctx.Degree().GetText())
 }
 
 // VisitMinimumGradeLevelStandingCondition
@@ -187,8 +187,8 @@ func (v *RequisiteVisitor) VisitMinimumGradeLevelStandingCondition(ctx *parser.M
 	return v.visitMinimumGradeLevelStandingCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitMinimumGradeLevelStandingCondition(ctx *parser.MinimumGradeLevelStandingConditionContext) *conditions2.GradeLevelCondition {
-	return conditions2.NewGradeLevelCondition(mapGradeLevel(ctx.GRADE_LEVEL().GetText()))
+func (v *RequisiteVisitor) visitMinimumGradeLevelStandingCondition(ctx *parser.MinimumGradeLevelStandingConditionContext) *conditions.GradeLevelCondition {
+	return conditions.NewGradeLevelCondition(mapGradeLevel(ctx.GRADE_LEVEL().GetText()))
 }
 
 // VisitAtLeastGradeLevelStandingCondition
@@ -198,8 +198,8 @@ func (v *RequisiteVisitor) VisitAtLeastGradeLevelStandingCondition(ctx *parser.A
 	return v.visitAtLeastGradeLevelStandingCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitAtLeastGradeLevelStandingCondition(ctx *parser.AtLeastGradeLevelStandingConditionContext) *conditions2.GradeLevelCondition {
-	return conditions2.NewGradeLevelCondition(mapGradeLevel(ctx.GRADE_LEVEL().GetText()))
+func (v *RequisiteVisitor) visitAtLeastGradeLevelStandingCondition(ctx *parser.AtLeastGradeLevelStandingConditionContext) *conditions.GradeLevelCondition {
+	return conditions.NewGradeLevelCondition(mapGradeLevel(ctx.GRADE_LEVEL().GetText()))
 }
 
 // VisitPrefixGradeLevelStandingCondition
@@ -209,16 +209,16 @@ func (v *RequisiteVisitor) VisitPrefixGradeLevelStandingCondition(ctx *parser.Pr
 	return v.visitPrefixGradeLevelStandingCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitPrefixGradeLevelStandingCondition(ctx *parser.PrefixGradeLevelStandingConditionContext) conditions2.Condition {
+func (v *RequisiteVisitor) visitPrefixGradeLevelStandingCondition(ctx *parser.PrefixGradeLevelStandingConditionContext) conditions.Condition {
 	//todo map/standardize major/degree/school etc
 	degree := ctx.PREFIX().GetText()
 
-	conds := make([]conditions2.Condition, len(ctx.AllGRADE_LEVEL()))
+	conds := make([]conditions.Condition, len(ctx.AllGRADE_LEVEL()))
 	for i, gradeLevel := range ctx.AllGRADE_LEVEL() {
-		conds[i] = conditions2.NewGradeLevelConditionWithDegree(mapGradeLevel(gradeLevel.GetText()), degree)
+		conds[i] = conditions.NewGradeLevelConditionWithDegree(mapGradeLevel(gradeLevel.GetText()), degree)
 	}
 
-	return conditions2.NewOrCondition(conds...)
+	return conditions.NewOrCondition(conds...)
 }
 
 // ======================= graduate standing condition =======================
@@ -230,8 +230,8 @@ func (v *RequisiteVisitor) VisitGraduateStandingInCondition(ctx *parser.Graduate
 	return v.visitGraduateStandingInCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGraduateStandingInCondition(ctx *parser.GraduateStandingInConditionContext) *conditions2.GraduateStandingInCondition {
-	return conditions2.NewGraduateStandingInConditionWithDegree(ctx.Degree().GetText())
+func (v *RequisiteVisitor) visitGraduateStandingInCondition(ctx *parser.GraduateStandingInConditionContext) *conditions.GraduateStandingInCondition {
+	return conditions.NewGraduateStandingInConditionWithDegree(ctx.Degree().GetText())
 }
 
 // VisitGraduateLevelStandingCondition
@@ -241,8 +241,8 @@ func (v *RequisiteVisitor) VisitGraduateLevelStandingCondition(ctx *parser.Gradu
 	return v.visitGraduateLevelStandingCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGraduateLevelStandingCondition(ctx *parser.GraduateLevelStandingConditionContext) *conditions2.GraduateStandingInCondition {
-	return conditions2.NewGraduateStandingInCondition()
+func (v *RequisiteVisitor) visitGraduateLevelStandingCondition(_ *parser.GraduateLevelStandingConditionContext) *conditions.GraduateStandingInCondition {
+	return conditions.NewGraduateStandingInCondition()
 }
 
 // ======================= GPA condition =======================
@@ -254,8 +254,8 @@ func (v *RequisiteVisitor) VisitUniversityGpaCondition(ctx *parser.UniversityGpa
 	return v.visitUniversityGpaCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitUniversityGpaCondition(ctx *parser.UniversityGpaConditionContext) *conditions2.GPACondition {
-	return conditions2.NewGpaCondition(mapGPA(ctx.GPA().GetText()))
+func (v *RequisiteVisitor) visitUniversityGpaCondition(ctx *parser.UniversityGpaConditionContext) *conditions.GPACondition {
+	return conditions.NewGpaCondition(mapGPA(ctx.GPA().GetText()))
 }
 
 // VisitMinimumGpaCondition
@@ -265,8 +265,8 @@ func (v *RequisiteVisitor) VisitMinimumGpaCondition(ctx *parser.MinimumGpaCondit
 	return v.visitMinimumGpaCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitMinimumGpaCondition(ctx *parser.MinimumGpaConditionContext) *conditions2.GPACondition {
-	return conditions2.NewGpaCondition(mapGPA(ctx.GPA().GetText()))
+func (v *RequisiteVisitor) visitMinimumGpaCondition(ctx *parser.MinimumGpaConditionContext) *conditions.GPACondition {
+	return conditions.NewGpaCondition(mapGPA(ctx.GPA().GetText()))
 }
 
 // VisitGpaInCourseCondition
@@ -276,9 +276,9 @@ func (v *RequisiteVisitor) VisitGpaInCourseCondition(ctx *parser.GpaInCourseCond
 	return v.visitGpaInCourseCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGpaInCourseCondition(ctx *parser.GpaInCourseConditionContext) *conditions2.GPACondition {
+func (v *RequisiteVisitor) visitGpaInCourseCondition(ctx *parser.GpaInCourseConditionContext) *conditions.GPACondition {
 	degree := v.Visit(ctx.Degree()).(string)
-	return conditions2.NewGpaConditionWithDegree(mapGPA(ctx.GPA().GetText()), degree)
+	return conditions.NewGpaConditionWithDegree(mapGPA(ctx.GPA().GetText()), degree)
 }
 
 // ======================= Major condition =======================
@@ -290,7 +290,7 @@ func (v *RequisiteVisitor) VisitPrefixMajorCondition(ctx *parser.PrefixMajorCond
 	return v.visitPrefixMajorCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitPrefixMajorCondition(ctx *parser.PrefixMajorConditionContext) conditions2.Condition {
+func (v *RequisiteVisitor) visitPrefixMajorCondition(ctx *parser.PrefixMajorConditionContext) conditions.Condition {
 
 	var degreeLevel constants.DegreeLevel
 	if ctx.DIVISION_TYPE() != nil {
@@ -306,21 +306,21 @@ func (v *RequisiteVisitor) visitPrefixMajorCondition(ctx *parser.PrefixMajorCond
 		gradeLevel = mapGradeLevel(ctx.GRADE_LEVEL().GetText())
 	}
 
-	conds := make([]conditions2.Condition, len(ctx.AllPREFIX()))
+	conds := make([]conditions.Condition, len(ctx.AllPREFIX()))
 	for i, prefix := range ctx.AllPREFIX() {
 		degree := prefix.GetText()
 
 		if degreeLevel != "" && gradeLevel != "" {
-			conds[i] = conditions2.NewMajorConditionWithDegreeAndGradeLevel(degree, degreeLevel, gradeLevel)
+			conds[i] = conditions.NewMajorConditionWithDegreeAndGradeLevel(degree, degreeLevel, gradeLevel)
 		} else if degreeLevel != "" {
-			conds[i] = conditions2.NewMajorConditionWithDegreeLevel(degree, degreeLevel)
+			conds[i] = conditions.NewMajorConditionWithDegreeLevel(degree, degreeLevel)
 		} else if gradeLevel != "" {
-			conds[i] = conditions2.NewMajorConditionWithGradeLevel(degree, gradeLevel)
+			conds[i] = conditions.NewMajorConditionWithGradeLevel(degree, gradeLevel)
 		} else {
-			conds[i] = conditions2.NewMajorCondition(degree)
+			conds[i] = conditions.NewMajorCondition(degree)
 		}
 	}
-	return conditions2.NewOrCondition(conds...)
+	return conditions.NewOrCondition(conds...)
 }
 
 // VisitGradeLevelPrefixMajorCondition
@@ -330,11 +330,11 @@ func (v *RequisiteVisitor) VisitGradeLevelPrefixMajorCondition(ctx *parser.Grade
 	return v.visitGradeLevelPrefixMajorCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGradeLevelPrefixMajorCondition(ctx *parser.GradeLevelPrefixMajorConditionContext) *conditions2.MajorCondition {
+func (v *RequisiteVisitor) visitGradeLevelPrefixMajorCondition(ctx *parser.GradeLevelPrefixMajorConditionContext) *conditions.MajorCondition {
 	//todo map prefix to degree
 	degree := ctx.PREFIX().GetText()
 	gradeLevel := mapGradeLevel(ctx.GRADE_LEVEL().GetText())
-	return conditions2.NewMajorConditionWithGradeLevel(degree, gradeLevel)
+	return conditions.NewMajorConditionWithGradeLevel(degree, gradeLevel)
 }
 
 // VisitDegreeTypePrefixMajorCondition
@@ -344,10 +344,10 @@ func (v *RequisiteVisitor) VisitDegreeTypePrefixMajorCondition(ctx *parser.Degre
 	return v.visitDegreeTypePrefixMajorCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitDegreeTypePrefixMajorCondition(ctx *parser.DegreeTypePrefixMajorConditionContext) *conditions2.MajorCondition {
+func (v *RequisiteVisitor) visitDegreeTypePrefixMajorCondition(ctx *parser.DegreeTypePrefixMajorConditionContext) *conditions.MajorCondition {
 	degree := ctx.PREFIX().GetText()
 	gradeLevel := mapDegreeLevel(ctx.DEGREE_LEVEL().GetText())
-	return conditions2.NewMajorConditionWithDegreeLevel(degree, gradeLevel)
+	return conditions.NewMajorConditionWithDegreeLevel(degree, gradeLevel)
 }
 
 // VisitNamedMajorCondition
@@ -357,9 +357,9 @@ func (v *RequisiteVisitor) VisitNamedMajorCondition(ctx *parser.NamedMajorCondit
 	return v.visitNamedMajorCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitNamedMajorCondition(ctx *parser.NamedMajorConditionContext) *conditions2.MajorCondition {
+func (v *RequisiteVisitor) visitNamedMajorCondition(ctx *parser.NamedMajorConditionContext) *conditions.MajorCondition {
 	degree := v.Visit(ctx.Degree()).(string)
-	return conditions2.NewMajorCondition(degree)
+	return conditions.NewMajorCondition(degree)
 }
 
 // VisitNamedDegreeTypeMajorCondition
@@ -369,10 +369,10 @@ func (v *RequisiteVisitor) VisitNamedDegreeTypeMajorCondition(ctx *parser.NamedD
 	return v.visitNamedDegreeTypeMajorCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitNamedDegreeTypeMajorCondition(ctx *parser.NamedDegreeTypeMajorConditionContext) *conditions2.MajorCondition {
+func (v *RequisiteVisitor) visitNamedDegreeTypeMajorCondition(ctx *parser.NamedDegreeTypeMajorConditionContext) *conditions.MajorCondition {
 	degree := v.Visit(ctx.Degree()).(string)
 	degreeLevel := mapDegreeLevel(ctx.DEGREE_LEVEL().GetText())
-	return conditions2.NewMajorConditionWithDegreeLevel(degree, degreeLevel)
+	return conditions.NewMajorConditionWithDegreeLevel(degree, degreeLevel)
 }
 
 // ======================= degree condition =======================
@@ -384,8 +384,8 @@ func (v *RequisiteVisitor) VisitUndergraduateDegreeCondition(ctx *parser.Undergr
 	return v.visitUndergraduateDegreeCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitUndergraduateDegreeCondition(ctx *parser.UndergraduateDegreeConditionContext) *conditions2.DegreeCondition {
-	return conditions2.NewDegreeCondition(v.Visit(ctx.Degree()).(string))
+func (v *RequisiteVisitor) visitUndergraduateDegreeCondition(ctx *parser.UndergraduateDegreeConditionContext) *conditions.DegreeCondition {
+	return conditions.NewDegreeCondition(v.Visit(ctx.Degree()).(string))
 }
 
 // VisitBachelorsOrMastersCondition
@@ -395,14 +395,14 @@ func (v *RequisiteVisitor) VisitBachelorsOrMastersCondition(ctx *parser.Bachelor
 	return v.visitBachelorsOrMastersCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitBachelorsOrMastersCondition(ctx *parser.BachelorsOrMastersConditionContext) conditions2.Condition {
+func (v *RequisiteVisitor) visitBachelorsOrMastersCondition(ctx *parser.BachelorsOrMastersConditionContext) conditions.Condition {
 	degreeList := v.Visit(ctx.Degree_list()).([]string)
-	conds := make([]conditions2.Condition, len(degreeList))
+	conds := make([]conditions.Condition, len(degreeList))
 	for i, degree := range degreeList {
-		conds[i] = conditions2.NewDegreeCondition(degree)
+		conds[i] = conditions.NewDegreeCondition(degree)
 	}
 
-	return conditions2.NewOrCondition(conds...)
+	return conditions.NewOrCondition(conds...)
 }
 
 // ======================= core condition =======================
@@ -414,14 +414,14 @@ func (v *RequisiteVisitor) VisitCoreCondition(ctx *parser.CoreConditionContext) 
 	return v.visitCoreCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitCoreCondition(ctx *parser.CoreConditionContext) *conditions2.CoreCondition {
+func (v *RequisiteVisitor) visitCoreCondition(ctx *parser.CoreConditionContext) *conditions.CoreCondition {
 	coreNumber := ctx.CORE_NUMBER().GetText()
 	coreTitle := stripChars(v.getTextOrDefault(ctx.CORE(), ""), "(", ")")
 	if strings.ToLower(coreTitle) == "core" {
 		coreTitle = ""
 	}
 
-	return conditions2.NewCoreCondition(coreNumber, coreTitle)
+	return conditions.NewCoreCondition(coreNumber, coreTitle)
 }
 
 // VisitAnyCoreSCHCondition
@@ -431,12 +431,12 @@ func (v *RequisiteVisitor) VisitAnyCoreSCHCondition(ctx *parser.AnyCoreSCHCondit
 	return v.visitAnyCoreSCHCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitAnyCoreSCHCondition(ctx *parser.AnyCoreSCHConditionContext) *conditions2.CoreCondition {
+func (v *RequisiteVisitor) visitAnyCoreSCHCondition(ctx *parser.AnyCoreSCHConditionContext) *conditions.CoreCondition {
 	hours := mapInt(ctx.SMALL_INT().GetText())
 	coreNumber := ctx.CORE_NUMBER().GetText()
 
 	//todo map core number to title / vice versa
-	return conditions2.NewCoreConditionWithSemesterHours(coreNumber, "", hours)
+	return conditions.NewCoreConditionWithSemesterHours(coreNumber, "", hours)
 }
 
 // ======================= SCH condition =======================
@@ -448,9 +448,9 @@ func (v *RequisiteVisitor) VisitSemesterCreditHoursCondition(ctx *parser.Semeste
 	return v.visitSemesterCreditHoursCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitSemesterCreditHoursCondition(ctx *parser.SemesterCreditHoursConditionContext) *conditions2.CreditHoursCondition {
+func (v *RequisiteVisitor) visitSemesterCreditHoursCondition(ctx *parser.SemesterCreditHoursConditionContext) *conditions.CreditHoursCondition {
 	hours := mapInt(ctx.INT().GetText())
-	return conditions2.NewCreditHoursCondition(hours)
+	return conditions.NewCreditHoursCondition(hours)
 }
 
 // ======================= SCH in Courses condition =======================
@@ -462,10 +462,10 @@ func (v *RequisiteVisitor) VisitMinimumHoursCondition(ctx *parser.MinimumHoursCo
 	return v.visitMinimumHoursCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitMinimumHoursCondition(ctx *parser.MinimumHoursConditionContext) *conditions2.CreditHoursFromCondition {
+func (v *RequisiteVisitor) visitMinimumHoursCondition(ctx *parser.MinimumHoursConditionContext) *conditions.CreditHoursFromCondition {
 	hours := mapInt(ctx.SMALL_INT().GetText())
-	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions2.Condition))
-	return conditions2.NewCreditHoursFromCondition(hours, courses)
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions.Condition))
+	return conditions.NewCreditHoursFromCondition(hours, courses)
 }
 
 // VisitMinimumHoursOfCondition
@@ -475,10 +475,10 @@ func (v *RequisiteVisitor) VisitMinimumHoursOfCondition(ctx *parser.MinimumHours
 	return v.visitMinimumHoursOfCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitMinimumHoursOfCondition(ctx *parser.MinimumHoursOfConditionContext) *conditions2.CreditHoursFromCondition {
+func (v *RequisiteVisitor) visitMinimumHoursOfCondition(ctx *parser.MinimumHoursOfConditionContext) *conditions.CreditHoursFromCondition {
 	hours := mapInt(ctx.SMALL_INT().GetText())
-	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions2.Condition))
-	return conditions2.NewCreditHoursFromCondition(hours, courses)
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions.Condition))
+	return conditions.NewCreditHoursFromCondition(hours, courses)
 }
 
 // VisitMinimumHoursFromCondition
@@ -488,10 +488,10 @@ func (v *RequisiteVisitor) VisitMinimumHoursFromCondition(ctx *parser.MinimumHou
 	return v.visitMinimumHoursFromCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitMinimumHoursFromCondition(ctx *parser.MinimumHoursFromConditionContext) *conditions2.CreditHoursFromCondition {
+func (v *RequisiteVisitor) visitMinimumHoursFromCondition(ctx *parser.MinimumHoursFromConditionContext) *conditions.CreditHoursFromCondition {
 	hours := mapInt(ctx.SMALL_INT().GetText())
-	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions2.Condition))
-	return conditions2.NewCreditHoursFromCondition(hours, courses)
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions.Condition))
+	return conditions.NewCreditHoursFromCondition(hours, courses)
 }
 
 // ======================= Upper Division condition =======================
@@ -503,11 +503,11 @@ func (v *RequisiteVisitor) VisitUpperDivisionSCHCondition(ctx *parser.UpperDivis
 	return v.visitUpperDivisionSCHCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitUpperDivisionSCHCondition(ctx *parser.UpperDivisionSCHConditionContext) *conditions2.UpperDivisionCoursesCondition {
+func (v *RequisiteVisitor) visitUpperDivisionSCHCondition(ctx *parser.UpperDivisionSCHConditionContext) *conditions.UpperDivisionCoursesCondition {
 	hours := mapInt(ctx.SMALL_INT().GetText())
 	prefix := ctx.PREFIX().GetText()
 
-	return conditions2.NewUpperDivisionCreditHoursCondition(hours, prefix)
+	return conditions.NewUpperDivisionCreditHoursCondition(hours, prefix)
 }
 
 // VisitUpperDivisionCountCondition
@@ -517,10 +517,10 @@ func (v *RequisiteVisitor) VisitUpperDivisionCountCondition(ctx *parser.UpperDiv
 	return v.visitUpperDivisionCountCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitUpperDivisionCountCondition(ctx *parser.UpperDivisionCountConditionContext) *conditions2.UpperDivisionCoursesCondition {
+func (v *RequisiteVisitor) visitUpperDivisionCountCondition(ctx *parser.UpperDivisionCountConditionContext) *conditions.UpperDivisionCoursesCondition {
 	count := mapNumberString(ctx.NUMBER_STRING().GetText())
 	prefix := ctx.PREFIX().GetText()
-	return conditions2.NewUpperDivisionCountCondition(count, prefix)
+	return conditions.NewUpperDivisionCountCondition(count, prefix)
 }
 
 // VisitUpperDivisionSingleCondition
@@ -530,9 +530,9 @@ func (v *RequisiteVisitor) VisitUpperDivisionSingleCondition(ctx *parser.UpperDi
 	return v.visitUpperDivisionSingleCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitUpperDivisionSingleCondition(ctx *parser.UpperDivisionSingleConditionContext) *conditions2.UpperDivisionCoursesCondition {
+func (v *RequisiteVisitor) visitUpperDivisionSingleCondition(ctx *parser.UpperDivisionSingleConditionContext) *conditions.UpperDivisionCoursesCondition {
 	prefix := ctx.PREFIX().GetText()
-	return conditions2.NewUpperDivisionCountCondition(1, prefix)
+	return conditions.NewUpperDivisionCountCondition(1, prefix)
 }
 
 // VisitResearchCondition
@@ -542,11 +542,11 @@ func (v *RequisiteVisitor) VisitResearchCondition(ctx *parser.ResearchConditionC
 	return v.visitResearchCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitResearchCondition(ctx *parser.ResearchConditionContext) *conditions2.ResearchCondition {
+func (v *RequisiteVisitor) visitResearchCondition(ctx *parser.ResearchConditionContext) *conditions.ResearchCondition {
 	count := mapInt(ctx.SMALL_INT().GetText())
 	degreeLevel := mapDivisionType(ctx.DIVISION_TYPE().GetText())
 
-	return conditions2.NewResearchCondition(count, degreeLevel)
+	return conditions.NewResearchCondition(count, degreeLevel)
 }
 
 // ======================= N courses condition =======================
@@ -558,10 +558,10 @@ func (v *RequisiteVisitor) VisitCompleteNOfFollowingCondition(ctx *parser.Comple
 	return v.visitCompleteNOfFollowingCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitCompleteNOfFollowingCondition(ctx *parser.CompleteNOfFollowingConditionContext) *conditions2.NCoursesCondition {
+func (v *RequisiteVisitor) visitCompleteNOfFollowingCondition(ctx *parser.CompleteNOfFollowingConditionContext) *conditions.NCoursesCondition {
 	count := mapNumberString(ctx.NUMBER_STRING().GetText())
-	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions2.Condition))
-	return conditions2.NewNCoursesCondition(count, courses)
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions.Condition))
+	return conditions.NewNCoursesCondition(count, courses)
 }
 
 // VisitCompleteNFromFollowingCondition
@@ -571,10 +571,10 @@ func (v *RequisiteVisitor) VisitCompleteNFromFollowingCondition(ctx *parser.Comp
 	return v.visitCompleteNFromFollowingCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitCompleteNFromFollowingCondition(ctx *parser.CompleteNFromFollowingConditionContext) *conditions2.NCoursesCondition {
+func (v *RequisiteVisitor) visitCompleteNFromFollowingCondition(ctx *parser.CompleteNFromFollowingConditionContext) *conditions.NCoursesCondition {
 	count := mapNumberString(ctx.NUMBER_STRING().GetText())
-	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions2.Condition))
-	return conditions2.NewNCoursesCondition(count, courses)
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course_list()).(conditions.Condition))
+	return conditions.NewNCoursesCondition(count, courses)
 }
 
 // ======================= Placement Test condition =======================
@@ -586,14 +586,14 @@ func (v *RequisiteVisitor) VisitPlacementScoreComparisonCondition(ctx *parser.Pl
 	return v.visitPlacementScoreComparisonCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitPlacementScoreComparisonCondition(ctx *parser.PlacementScoreComparisonConditionContext) *conditions2.PlacementTestScoreCondition {
+func (v *RequisiteVisitor) visitPlacementScoreComparisonCondition(ctx *parser.PlacementScoreComparisonConditionContext) *conditions.PlacementTestScoreCondition {
 	name := v.Visit(ctx.Placement_test_name()).(string)
 	score := mapInt(ctx.INT().GetText())
 
 	if ctx.LESS_THAN() != nil {
-		return conditions2.NewPlacementTestScoreCondition(name, 0, score)
+		return conditions.NewPlacementTestScoreCondition(name, 0, score)
 	}
-	return conditions2.NewPlacementTestScoreCondition(name, score, 100)
+	return conditions.NewPlacementTestScoreCondition(name, score, 100)
 }
 
 // VisitPlacementScoreRangeCondition
@@ -603,12 +603,12 @@ func (v *RequisiteVisitor) VisitPlacementScoreRangeCondition(ctx *parser.Placeme
 	return v.visitPlacementScoreRangeCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitPlacementScoreRangeCondition(ctx *parser.PlacementScoreRangeConditionContext) *conditions2.PlacementTestScoreCondition {
+func (v *RequisiteVisitor) visitPlacementScoreRangeCondition(ctx *parser.PlacementScoreRangeConditionContext) *conditions.PlacementTestScoreCondition {
 	name := v.Visit(ctx.Placement_test_name()).(string)
 	minScore := mapInt(ctx.INT(0).GetText())
 	maxScore := mapInt(ctx.INT(1).GetText())
 
-	return conditions2.NewPlacementTestScoreCondition(name, minScore, maxScore)
+	return conditions.NewPlacementTestScoreCondition(name, minScore, maxScore)
 }
 
 // VisitPlacementScoreMinimumCondition
@@ -618,11 +618,11 @@ func (v *RequisiteVisitor) VisitPlacementScoreMinimumCondition(ctx *parser.Place
 	return v.visitPlacementScoreMinimumCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitPlacementScoreMinimumCondition(ctx *parser.PlacementScoreMinimumConditionContext) *conditions2.PlacementTestScoreCondition {
+func (v *RequisiteVisitor) visitPlacementScoreMinimumCondition(ctx *parser.PlacementScoreMinimumConditionContext) *conditions.PlacementTestScoreCondition {
 	name := v.Visit(ctx.Placement_test_name()).(string)
 	score := mapInt(ctx.INT().GetText())
 
-	return conditions2.NewPlacementTestScoreCondition(name, score, 100)
+	return conditions.NewPlacementTestScoreCondition(name, score, 100)
 }
 
 // VisitApScoreCondition
@@ -632,9 +632,9 @@ func (v *RequisiteVisitor) VisitApScoreCondition(ctx *parser.ApScoreConditionCon
 	return v.visitApScoreCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitApScoreCondition(ctx *parser.ApScoreConditionContext) *conditions2.APScoreCondition {
+func (v *RequisiteVisitor) visitApScoreCondition(ctx *parser.ApScoreConditionContext) *conditions.APScoreCondition {
 	score := mapInt(ctx.SMALL_INT().GetText())
-	return conditions2.NewAPScoreCondition(score)
+	return conditions.NewAPScoreCondition(score)
 }
 
 // VisitAleksScoreCondition
@@ -644,9 +644,9 @@ func (v *RequisiteVisitor) VisitAleksScoreCondition(ctx *parser.AleksScoreCondit
 	return v.visitAleksScoreCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitAleksScoreCondition(ctx *parser.AleksScoreConditionContext) *conditions2.AleksScoreCondition {
+func (v *RequisiteVisitor) visitAleksScoreCondition(ctx *parser.AleksScoreConditionContext) *conditions.AleksScoreCondition {
 	score := mapInt(ctx.INT().GetText())
-	return conditions2.NewAleksScoreCondition(score)
+	return conditions.NewAleksScoreCondition(score)
 }
 
 // ======================= Group condition =======================
@@ -658,13 +658,13 @@ func (v *RequisiteVisitor) VisitBothGroupCondition(ctx *parser.BothGroupConditio
 	return v.visitBothGroupCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitBothGroupCondition(ctx *parser.BothGroupConditionContext) conditions2.Condition {
+func (v *RequisiteVisitor) visitBothGroupCondition(ctx *parser.BothGroupConditionContext) conditions.Condition {
 	group1 := v.Visit(ctx.Group(0)).(constants.StudentGroup)
 	group2 := v.Visit(ctx.Group(1)).(constants.StudentGroup)
 
-	return conditions2.NewAndCondition(
-		conditions2.NewStudentGroupCondition(group1),
-		conditions2.NewStudentGroupCondition(group2),
+	return conditions.NewAndCondition(
+		conditions.NewStudentGroupCondition(group1),
+		conditions.NewStudentGroupCondition(group2),
 	)
 }
 
@@ -675,13 +675,13 @@ func (v *RequisiteVisitor) VisitGroupListCondition(ctx *parser.GroupListConditio
 	return v.visitGroupListCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitGroupListCondition(ctx *parser.GroupListConditionContext) conditions2.Condition {
-	groupsConditions := make([]conditions2.Condition, len(ctx.AllGroup()))
+func (v *RequisiteVisitor) visitGroupListCondition(ctx *parser.GroupListConditionContext) conditions.Condition {
+	groupsConditions := make([]conditions.Condition, len(ctx.AllGroup()))
 	for i, group := range ctx.AllGroup() {
-		groupsConditions[i] = conditions2.NewStudentGroupCondition(v.Visit(group).(constants.StudentGroup))
+		groupsConditions[i] = conditions.NewStudentGroupCondition(v.Visit(group).(constants.StudentGroup))
 	}
 
-	return conditions2.NewOrCondition(groupsConditions...)
+	return conditions.NewOrCondition(groupsConditions...)
 }
 
 // VisitSingleGroupCondition
@@ -691,9 +691,9 @@ func (v *RequisiteVisitor) VisitSingleGroupCondition(ctx *parser.SingleGroupCond
 	return v.visitSingleGroupCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitSingleGroupCondition(ctx *parser.SingleGroupConditionContext) conditions2.Condition {
+func (v *RequisiteVisitor) visitSingleGroupCondition(ctx *parser.SingleGroupConditionContext) conditions.Condition {
 	group := v.Visit(ctx.Group()).(constants.StudentGroup)
-	return conditions2.NewStudentGroupCondition(group)
+	return conditions.NewStudentGroupCondition(group)
 }
 
 // ======================= Misc conditions =======================
@@ -705,13 +705,13 @@ func (v *RequisiteVisitor) VisitConcurrentEnrollmentCondition(ctx *parser.Concur
 	return v.visitConcurrentEnrollmentCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitConcurrentEnrollmentCondition(ctx *parser.ConcurrentEnrollmentConditionContext) conditions2.Condition {
-	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions2.Condition))
-	conds := make([]conditions2.Condition, len(courses))
+func (v *RequisiteVisitor) visitConcurrentEnrollmentCondition(ctx *parser.ConcurrentEnrollmentConditionContext) conditions.Condition {
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
+	conds := make([]conditions.Condition, len(courses))
 	for i, course := range courses {
-		conds[i] = conditions2.NewConcurrentEnrollmentCondition(course)
+		conds[i] = conditions.NewConcurrentEnrollmentCondition(course)
 	}
-	return conditions2.NewAndCondition(conds...)
+	return conditions.NewAndCondition(conds...)
 }
 
 // VisitExactSectionCondition
@@ -721,11 +721,11 @@ func (v *RequisiteVisitor) VisitExactSectionCondition(ctx *parser.ExactSectionCo
 	return v.visitExactSectionCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitExactSectionCondition(ctx *parser.ExactSectionConditionContext) conditions2.Condition {
-	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions2.Condition))
-	conds := make([]conditions2.Condition, len(courses))
+func (v *RequisiteVisitor) visitExactSectionCondition(ctx *parser.ExactSectionConditionContext) conditions.Condition {
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
+	conds := make([]conditions.Condition, len(courses))
 	for i, course := range courses {
-		conds[i] = conditions2.NewExactSectionCondition(
+		conds[i] = conditions.NewExactSectionCondition(
 			constants.Course{
 				Prefix:  course.Prefix,
 				Number:  course.Number,
@@ -733,7 +733,7 @@ func (v *RequisiteVisitor) visitExactSectionCondition(ctx *parser.ExactSectionCo
 			},
 		)
 	}
-	return conditions2.NewAndCondition(conds...)
+	return conditions.NewAndCondition(conds...)
 }
 
 // VisitWorkshopSectionCondition
@@ -743,11 +743,11 @@ func (v *RequisiteVisitor) VisitWorkshopSectionCondition(ctx *parser.WorkshopSec
 	return v.visitWorkshopSectionCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitWorkshopSectionCondition(ctx *parser.WorkshopSectionConditionContext) conditions2.Condition {
-	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions2.Condition))
-	conds := make([]conditions2.Condition, len(courses))
+func (v *RequisiteVisitor) visitWorkshopSectionCondition(ctx *parser.WorkshopSectionConditionContext) conditions.Condition {
+	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
+	conds := make([]conditions.Condition, len(courses))
 	for i, course := range courses {
-		conds[i] = conditions2.NewExactSectionCondition(
+		conds[i] = conditions.NewExactSectionCondition(
 			constants.Course{
 				Prefix:  course.Prefix,
 				Number:  course.Number,
@@ -755,7 +755,7 @@ func (v *RequisiteVisitor) visitWorkshopSectionCondition(ctx *parser.WorkshopSec
 			},
 		)
 	}
-	return conditions2.NewAndCondition(conds...)
+	return conditions.NewAndCondition(conds...)
 }
 
 // VisitAnyPreviousMajorCourseCondition
@@ -765,10 +765,10 @@ func (v *RequisiteVisitor) VisitAnyPreviousMajorCourseCondition(ctx *parser.AnyP
 	return v.visitAnyPreviousMajorCourseCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitAnyPreviousMajorCourseCondition(ctx *parser.AnyPreviousMajorCourseConditionContext) *conditions2.AnyPreviousMajorCourseCondition {
+func (v *RequisiteVisitor) visitAnyPreviousMajorCourseCondition(ctx *parser.AnyPreviousMajorCourseConditionContext) *conditions.AnyPreviousMajorCourseCondition {
 	prefix := ctx.PREFIX().GetText()
 
-	return conditions2.NewAnyPreviousMajorCourseCondition(prefix)
+	return conditions.NewAnyPreviousMajorCourseCondition(prefix)
 }
 
 // VisitAcademicPlanCondition
@@ -778,8 +778,8 @@ func (v *RequisiteVisitor) VisitAcademicPlanCondition(ctx *parser.AcademicPlanCo
 	return v.visitAcademicPlanCondition(ctx)
 }
 
-func (v *RequisiteVisitor) visitAcademicPlanCondition(ctx *parser.AcademicPlanConditionContext) *conditions2.AcademicYearCondition {
+func (v *RequisiteVisitor) visitAcademicPlanCondition(ctx *parser.AcademicPlanConditionContext) *conditions.AcademicYearCondition {
 	plan := ctx.ACADEMIC_PLAN().GetText()
 	equal := ctx.EQUAL() != nil
-	return conditions2.NewAcademicYearCondition(plan, equal)
+	return conditions.NewAcademicYearCondition(plan, equal)
 }

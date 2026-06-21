@@ -2,7 +2,7 @@ package visitors
 
 import (
 	"parser/objects"
-	conditions2 "parser/objects/conditions"
+	"parser/objects/conditions"
 	"parser/objects/constants"
 	"parser/objects/rules"
 	"parser/parser"
@@ -26,27 +26,27 @@ func NewRequisiteVisitor(tokens *antlr.CommonTokenStream) *RequisiteVisitor {
 	}
 }
 
-func (v *RequisiteVisitor) appendPreReq(condition conditions2.Condition) {
+func (v *RequisiteVisitor) appendPreReq(condition conditions.Condition) {
 	if v.Requirements.PreReqs == nil {
 		v.Requirements.PreReqs = condition
 	} else {
-		v.Requirements.PreReqs = conditions2.NewAndConditionFromExpr(v.Requirements.PreReqs, condition)
+		v.Requirements.PreReqs = conditions.NewAndConditionFromExpr(v.Requirements.PreReqs, condition)
 	}
 }
 
-func (v *RequisiteVisitor) appendCoReq(condition conditions2.Condition) {
+func (v *RequisiteVisitor) appendCoReq(condition conditions.Condition) {
 	if v.Requirements.CoReqs == nil {
 		v.Requirements.CoReqs = condition
 	} else {
-		v.Requirements.CoReqs = conditions2.NewAndConditionFromExpr(v.Requirements.CoReqs, condition)
+		v.Requirements.CoReqs = conditions.NewAndConditionFromExpr(v.Requirements.CoReqs, condition)
 	}
 }
 
-func (v *RequisiteVisitor) appendPreOrCoReq(condition conditions2.Condition) {
+func (v *RequisiteVisitor) appendPreOrCoReq(condition conditions.Condition) {
 	if v.Requirements.PreOrCoReqs == nil {
 		v.Requirements.PreOrCoReqs = condition
 	} else {
-		v.Requirements.PreOrCoReqs = conditions2.NewAndConditionFromExpr(v.Requirements.PreOrCoReqs, condition)
+		v.Requirements.PreOrCoReqs = conditions.NewAndConditionFromExpr(v.Requirements.PreOrCoReqs, condition)
 	}
 }
 

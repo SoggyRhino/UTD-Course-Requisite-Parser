@@ -1,8 +1,8 @@
 package visitors
 
 import (
-	conditions2 "parser/objects/conditions"
-	rules2 "parser/objects/rules"
+	conditions "parser/objects/conditions"
+	rules "parser/objects/rules"
 	"parser/parser"
 )
 
@@ -13,8 +13,8 @@ func (v *RequisiteVisitor) VisitParenExpr(ctx *parser.ParenExprContext) any {
 	return v.visitParenExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitParenExpr(ctx *parser.ParenExprContext) conditions2.Condition {
-	return v.Visit(ctx.Expr()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitParenExpr(ctx *parser.ParenExprContext) conditions.Condition {
+	return v.Visit(ctx.Expr()).(conditions.Condition)
 }
 
 // VisitOrExpr
@@ -24,12 +24,12 @@ func (v *RequisiteVisitor) VisitOrExpr(ctx *parser.OrExprContext) any {
 	return v.visitOrExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitOrExpr(ctx *parser.OrExprContext) conditions2.Condition {
-	cond1, ok1 := v.Visit(ctx.Expr(0)).(conditions2.Condition)
-	cond2, ok2 := v.Visit(ctx.Expr(1)).(conditions2.Condition)
+func (v *RequisiteVisitor) visitOrExpr(ctx *parser.OrExprContext) conditions.Condition {
+	cond1, ok1 := v.Visit(ctx.Expr(0)).(conditions.Condition)
+	cond2, ok2 := v.Visit(ctx.Expr(1)).(conditions.Condition)
 
 	if ok1 && ok2 {
-		return conditions2.NewOrConditionFromExpr(cond1, cond2)
+		return conditions.NewOrConditionFromExpr(cond1, cond2)
 	}
 	if ok1 {
 		return cond1
@@ -38,7 +38,7 @@ func (v *RequisiteVisitor) visitOrExpr(ctx *parser.OrExprContext) conditions2.Co
 		return cond2
 	}
 	//todo look into doing better job
-	return &conditions2.OrCondition{}
+	return &conditions.OrCondition{}
 }
 
 // VisitAndExpr
@@ -48,12 +48,12 @@ func (v *RequisiteVisitor) VisitAndExpr(ctx *parser.AndExprContext) any {
 	return v.visitAndExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitAndExpr(ctx *parser.AndExprContext) conditions2.Condition {
-	cond1, ok1 := v.Visit(ctx.Expr(0)).(conditions2.Condition)
-	cond2, ok2 := v.Visit(ctx.Expr(1)).(conditions2.Condition)
+func (v *RequisiteVisitor) visitAndExpr(ctx *parser.AndExprContext) conditions.Condition {
+	cond1, ok1 := v.Visit(ctx.Expr(0)).(conditions.Condition)
+	cond2, ok2 := v.Visit(ctx.Expr(1)).(conditions.Condition)
 
 	if ok1 && ok2 {
-		return conditions2.NewAndConditionFromExpr(cond1, cond2)
+		return conditions.NewAndConditionFromExpr(cond1, cond2)
 	}
 	if ok1 {
 		return cond1
@@ -62,7 +62,7 @@ func (v *RequisiteVisitor) visitAndExpr(ctx *parser.AndExprContext) conditions2.
 		return cond2
 	}
 	//todo look into doing better job
-	return &conditions2.AndCondition{}
+	return &conditions.AndCondition{}
 }
 
 // VisitAmpersandExpr
@@ -72,12 +72,12 @@ func (v *RequisiteVisitor) VisitAmpersandExpr(ctx *parser.AmpersandExprContext) 
 	return v.visitAmpersandExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitAmpersandExpr(ctx *parser.AmpersandExprContext) conditions2.Condition {
-	cond1, ok1 := v.Visit(ctx.Expr(0)).(conditions2.Condition)
-	cond2, ok2 := v.Visit(ctx.Expr(1)).(conditions2.Condition)
+func (v *RequisiteVisitor) visitAmpersandExpr(ctx *parser.AmpersandExprContext) conditions.Condition {
+	cond1, ok1 := v.Visit(ctx.Expr(0)).(conditions.Condition)
+	cond2, ok2 := v.Visit(ctx.Expr(1)).(conditions.Condition)
 
 	if ok1 && ok2 {
-		return conditions2.NewAndConditionFromExpr(cond1, cond2)
+		return conditions.NewAndConditionFromExpr(cond1, cond2)
 	}
 	if ok1 {
 		return cond1
@@ -86,7 +86,7 @@ func (v *RequisiteVisitor) visitAmpersandExpr(ctx *parser.AmpersandExprContext) 
 		return cond2
 	}
 	//todo look into doing better job
-	return &conditions2.AndCondition{}
+	return &conditions.AndCondition{}
 }
 
 // VisitEquivalentExpr
@@ -96,9 +96,9 @@ func (v *RequisiteVisitor) VisitEquivalentExpr(ctx *parser.EquivalentExprContext
 	return v.visitEquivalentExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitEquivalentExpr(ctx *parser.EquivalentExprContext) conditions2.Condition {
-	cond := v.Visit(ctx.Expr()).(conditions2.Condition)
-	return conditions2.NewAlternativeCondition(cond)
+func (v *RequisiteVisitor) visitEquivalentExpr(ctx *parser.EquivalentExprContext) conditions.Condition {
+	cond := v.Visit(ctx.Expr()).(conditions.Condition)
+	return conditions.NewAlternativeCondition(cond)
 }
 
 // VisitConsentExpr
@@ -108,8 +108,8 @@ func (v *RequisiteVisitor) VisitConsentExpr(ctx *parser.ConsentExprContext) any 
 	return v.visitConsentExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitConsentExpr(ctx *parser.ConsentExprContext) conditions2.Condition {
-	return v.Visit(ctx.Consent_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitConsentExpr(ctx *parser.ConsentExprContext) conditions.Condition {
+	return v.Visit(ctx.Consent_condition()).(conditions.Condition)
 }
 
 // VisitStandingExpr
@@ -119,8 +119,8 @@ func (v *RequisiteVisitor) VisitStandingExpr(ctx *parser.StandingExprContext) an
 	return v.visitStandingExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitStandingExpr(ctx *parser.StandingExprContext) conditions2.Condition {
-	return v.Visit(ctx.Standing_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitStandingExpr(ctx *parser.StandingExprContext) conditions.Condition {
+	return v.Visit(ctx.Standing_condition()).(conditions.Condition)
 }
 
 // VisitGpaExpr
@@ -130,8 +130,8 @@ func (v *RequisiteVisitor) VisitGpaExpr(ctx *parser.GpaExprContext) any {
 	return v.visitGpaExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitGpaExpr(ctx *parser.GpaExprContext) conditions2.Condition {
-	return v.Visit(ctx.Gpa_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitGpaExpr(ctx *parser.GpaExprContext) conditions.Condition {
+	return v.Visit(ctx.Gpa_condition()).(conditions.Condition)
 }
 
 // VisitGroupExpr
@@ -141,8 +141,8 @@ func (v *RequisiteVisitor) VisitGroupExpr(ctx *parser.GroupExprContext) any {
 	return v.visitGroupExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitGroupExpr(ctx *parser.GroupExprContext) conditions2.Condition {
-	return v.Visit(ctx.Group_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitGroupExpr(ctx *parser.GroupExprContext) conditions.Condition {
+	return v.Visit(ctx.Group_condition()).(conditions.Condition)
 }
 
 // VisitConcurrentEnrollmentExpr
@@ -152,8 +152,8 @@ func (v *RequisiteVisitor) VisitConcurrentEnrollmentExpr(ctx *parser.ConcurrentE
 	return v.visitConcurrentEnrollmentExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitConcurrentEnrollmentExpr(ctx *parser.ConcurrentEnrollmentExprContext) conditions2.Condition {
-	return v.Visit(ctx.Concurrent_enrollment_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitConcurrentEnrollmentExpr(ctx *parser.ConcurrentEnrollmentExprContext) conditions.Condition {
+	return v.Visit(ctx.Concurrent_enrollment_condition()).(conditions.Condition)
 }
 
 // VisitGradeExpr
@@ -163,8 +163,8 @@ func (v *RequisiteVisitor) VisitGradeExpr(ctx *parser.GradeExprContext) any {
 	return v.visitGradeExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitGradeExpr(ctx *parser.GradeExprContext) conditions2.Condition {
-	return v.Visit(ctx.Grade_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitGradeExpr(ctx *parser.GradeExprContext) conditions.Condition {
+	return v.Visit(ctx.Grade_condition()).(conditions.Condition)
 }
 
 // VisitAlternativeExpr
@@ -174,8 +174,8 @@ func (v *RequisiteVisitor) VisitAlternativeExpr(ctx *parser.AlternativeExprConte
 	return v.visitAlternativeExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitAlternativeExpr(ctx *parser.AlternativeExprContext) conditions2.Condition {
-	return v.Visit(ctx.Alternative_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitAlternativeExpr(ctx *parser.AlternativeExprContext) conditions.Condition {
+	return v.Visit(ctx.Alternative_condition()).(conditions.Condition)
 }
 
 // VisitGradeLevelStandingExpr
@@ -185,8 +185,8 @@ func (v *RequisiteVisitor) VisitGradeLevelStandingExpr(ctx *parser.GradeLevelSta
 	return v.visitGradeLevelStandingExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitGradeLevelStandingExpr(ctx *parser.GradeLevelStandingExprContext) conditions2.Condition {
-	return v.Visit(ctx.Grade_level_standing_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitGradeLevelStandingExpr(ctx *parser.GradeLevelStandingExprContext) conditions.Condition {
+	return v.Visit(ctx.Grade_level_standing_condition()).(conditions.Condition)
 }
 
 // VisitGraduateStandingExpr
@@ -196,8 +196,8 @@ func (v *RequisiteVisitor) VisitGraduateStandingExpr(ctx *parser.GraduateStandin
 	return v.visitGraduateStandingExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitGraduateStandingExpr(ctx *parser.GraduateStandingExprContext) conditions2.Condition {
-	return v.Visit(ctx.Graduate_standing_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitGraduateStandingExpr(ctx *parser.GraduateStandingExprContext) conditions.Condition {
+	return v.Visit(ctx.Graduate_standing_condition()).(conditions.Condition)
 }
 
 // VisitMajorExpr
@@ -207,8 +207,8 @@ func (v *RequisiteVisitor) VisitMajorExpr(ctx *parser.MajorExprContext) any {
 	return v.visitMajorExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitMajorExpr(ctx *parser.MajorExprContext) conditions2.Condition {
-	return v.Visit(ctx.Major_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitMajorExpr(ctx *parser.MajorExprContext) conditions.Condition {
+	return v.Visit(ctx.Major_condition()).(conditions.Condition)
 }
 
 // VisitDegreeExpr
@@ -218,8 +218,8 @@ func (v *RequisiteVisitor) VisitDegreeExpr(ctx *parser.DegreeExprContext) any {
 	return v.visitDegreeExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitDegreeExpr(ctx *parser.DegreeExprContext) conditions2.Condition {
-	return v.Visit(ctx.Degree_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitDegreeExpr(ctx *parser.DegreeExprContext) conditions.Condition {
+	return v.Visit(ctx.Degree_condition()).(conditions.Condition)
 }
 
 // VisitCoreExpr
@@ -229,8 +229,8 @@ func (v *RequisiteVisitor) VisitCoreExpr(ctx *parser.CoreExprContext) any {
 	return v.visitCoreExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitCoreExpr(ctx *parser.CoreExprContext) conditions2.Condition {
-	return v.Visit(ctx.Core_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitCoreExpr(ctx *parser.CoreExprContext) conditions.Condition {
+	return v.Visit(ctx.Core_condition()).(conditions.Condition)
 }
 
 // VisitAnyCoreExpr
@@ -240,8 +240,8 @@ func (v *RequisiteVisitor) VisitAnyCoreExpr(ctx *parser.AnyCoreExprContext) any 
 	return v.visitAnyCoreExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitAnyCoreExpr(ctx *parser.AnyCoreExprContext) conditions2.Condition {
-	return v.Visit(ctx.Any_core_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitAnyCoreExpr(ctx *parser.AnyCoreExprContext) conditions.Condition {
+	return v.Visit(ctx.Any_core_condition()).(conditions.Condition)
 }
 
 // VisitCompleteNExpr
@@ -251,8 +251,8 @@ func (v *RequisiteVisitor) VisitCompleteNExpr(ctx *parser.CompleteNExprContext) 
 	return v.visitCompleteNExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitCompleteNExpr(ctx *parser.CompleteNExprContext) conditions2.Condition {
-	return v.Visit(ctx.Complete_n_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitCompleteNExpr(ctx *parser.CompleteNExprContext) conditions.Condition {
+	return v.Visit(ctx.Complete_n_condition()).(conditions.Condition)
 }
 
 // VisitSemesterCreditHoursExpr
@@ -262,8 +262,8 @@ func (v *RequisiteVisitor) VisitSemesterCreditHoursExpr(ctx *parser.SemesterCred
 	return v.visitSemesterCreditHoursExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitSemesterCreditHoursExpr(ctx *parser.SemesterCreditHoursExprContext) conditions2.Condition {
-	return v.Visit(ctx.Semester_credit_hours_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitSemesterCreditHoursExpr(ctx *parser.SemesterCreditHoursExprContext) conditions.Condition {
+	return v.Visit(ctx.Semester_credit_hours_condition()).(conditions.Condition)
 }
 
 // VisitMinimumHoursExpr
@@ -273,8 +273,8 @@ func (v *RequisiteVisitor) VisitMinimumHoursExpr(ctx *parser.MinimumHoursExprCon
 	return v.visitMinimumHoursExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitMinimumHoursExpr(ctx *parser.MinimumHoursExprContext) conditions2.Condition {
-	return v.Visit(ctx.Minimum_hours_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitMinimumHoursExpr(ctx *parser.MinimumHoursExprContext) conditions.Condition {
+	return v.Visit(ctx.Minimum_hours_condition()).(conditions.Condition)
 }
 
 // VisitUpperDivisionHoursExpr
@@ -284,8 +284,8 @@ func (v *RequisiteVisitor) VisitUpperDivisionHoursExpr(ctx *parser.UpperDivision
 	return v.visitUpperDivisionHoursExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitUpperDivisionHoursExpr(ctx *parser.UpperDivisionHoursExprContext) conditions2.Condition {
-	return v.Visit(ctx.Upper_division_hours_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitUpperDivisionHoursExpr(ctx *parser.UpperDivisionHoursExprContext) conditions.Condition {
+	return v.Visit(ctx.Upper_division_hours_condition()).(conditions.Condition)
 }
 
 // VisitUpperDivisionClassesExpr
@@ -295,8 +295,8 @@ func (v *RequisiteVisitor) VisitUpperDivisionClassesExpr(ctx *parser.UpperDivisi
 	return v.visitUpperDivisionClassesExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitUpperDivisionClassesExpr(ctx *parser.UpperDivisionClassesExprContext) conditions2.Condition {
-	return v.Visit(ctx.Upper_division_classes_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitUpperDivisionClassesExpr(ctx *parser.UpperDivisionClassesExprContext) conditions.Condition {
+	return v.Visit(ctx.Upper_division_classes_condition()).(conditions.Condition)
 }
 
 // VisitResearchExpr
@@ -306,8 +306,8 @@ func (v *RequisiteVisitor) VisitResearchExpr(ctx *parser.ResearchExprContext) an
 	return v.visitResearchExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitResearchExpr(ctx *parser.ResearchExprContext) conditions2.Condition {
-	return v.Visit(ctx.Research_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitResearchExpr(ctx *parser.ResearchExprContext) conditions.Condition {
+	return v.Visit(ctx.Research_condition()).(conditions.Condition)
 }
 
 // VisitPlacementTestExpr
@@ -317,8 +317,8 @@ func (v *RequisiteVisitor) VisitPlacementTestExpr(ctx *parser.PlacementTestExprC
 	return v.visitPlacementTestExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitPlacementTestExpr(ctx *parser.PlacementTestExprContext) conditions2.Condition {
-	return v.Visit(ctx.Placement_test_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitPlacementTestExpr(ctx *parser.PlacementTestExprContext) conditions.Condition {
+	return v.Visit(ctx.Placement_test_condition()).(conditions.Condition)
 }
 
 // VisitApScoreExpr
@@ -328,8 +328,8 @@ func (v *RequisiteVisitor) VisitApScoreExpr(ctx *parser.ApScoreExprContext) any 
 	return v.visitApScoreExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitApScoreExpr(ctx *parser.ApScoreExprContext) conditions2.Condition {
-	return v.Visit(ctx.Ap_score_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitApScoreExpr(ctx *parser.ApScoreExprContext) conditions.Condition {
+	return v.Visit(ctx.Ap_score_condition()).(conditions.Condition)
 }
 
 // VisitAleksScoreExpr
@@ -339,8 +339,8 @@ func (v *RequisiteVisitor) VisitAleksScoreExpr(ctx *parser.AleksScoreExprContext
 	return v.visitAleksScoreExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitAleksScoreExpr(ctx *parser.AleksScoreExprContext) conditions2.Condition {
-	return v.Visit(ctx.Aleks_score_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitAleksScoreExpr(ctx *parser.AleksScoreExprContext) conditions.Condition {
+	return v.Visit(ctx.Aleks_score_condition()).(conditions.Condition)
 }
 
 // VisitExactSectionExpr
@@ -350,8 +350,8 @@ func (v *RequisiteVisitor) VisitExactSectionExpr(ctx *parser.ExactSectionExprCon
 	return v.visitExactSectionExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitExactSectionExpr(ctx *parser.ExactSectionExprContext) conditions2.Condition {
-	return v.Visit(ctx.Exact_section_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitExactSectionExpr(ctx *parser.ExactSectionExprContext) conditions.Condition {
+	return v.Visit(ctx.Exact_section_condition()).(conditions.Condition)
 }
 
 // VisitAnyMajorCourseExpr
@@ -361,8 +361,8 @@ func (v *RequisiteVisitor) VisitAnyMajorCourseExpr(ctx *parser.AnyMajorCourseExp
 	return v.visitAnyMajorCourseExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitAnyMajorCourseExpr(ctx *parser.AnyMajorCourseExprContext) conditions2.Condition {
-	return v.Visit(ctx.Any_major_course_condition()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitAnyMajorCourseExpr(ctx *parser.AnyMajorCourseExprContext) conditions.Condition {
+	return v.Visit(ctx.Any_major_course_condition()).(conditions.Condition)
 }
 
 // VisitLivingLearningExpr
@@ -372,8 +372,8 @@ func (v *RequisiteVisitor) VisitLivingLearningExpr(ctx *parser.LivingLearningExp
 	return v.visitLivingLearningExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitLivingLearningExpr(ctx *parser.LivingLearningExprContext) *rules2.LivingLearningRule {
-	rule := v.Visit(ctx.Living_learning_rule()).(*rules2.LivingLearningRule)
+func (v *RequisiteVisitor) visitLivingLearningExpr(ctx *parser.LivingLearningExprContext) *rules.LivingLearningRule {
+	rule := v.Visit(ctx.Living_learning_rule()).(*rules.LivingLearningRule)
 	v.appendRule(rule) //hoist rule out of condition
 	return nil
 }
@@ -385,8 +385,8 @@ func (v *RequisiteVisitor) VisitRepeatRuleExpr(ctx *parser.RepeatRuleExprContext
 	return v.visitRepeatRuleExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitRepeatRuleExpr(ctx *parser.RepeatRuleExprContext) *rules2.RepeatRule {
-	rule := v.Visit(ctx.Repeat_rule()).(*rules2.RepeatRule)
+func (v *RequisiteVisitor) visitRepeatRuleExpr(ctx *parser.RepeatRuleExprContext) *rules.RepeatRule {
+	rule := v.Visit(ctx.Repeat_rule()).(*rules.RepeatRule)
 	v.appendRule(rule) // hoist rule out of condition
 	return nil
 }
@@ -398,8 +398,8 @@ func (v *RequisiteVisitor) VisitRepeatLimitHoursExpr(ctx *parser.RepeatLimitHour
 	return v.visitRepeatLimitHoursExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitRepeatLimitHoursExpr(ctx *parser.RepeatLimitHoursExprContext) *rules2.RepeatRule {
-	rule := v.Visit(ctx.Repeat_limit_hours_rule()).(*rules2.RepeatRule)
+func (v *RequisiteVisitor) visitRepeatLimitHoursExpr(ctx *parser.RepeatLimitHoursExprContext) *rules.RepeatRule {
+	rule := v.Visit(ctx.Repeat_limit_hours_rule()).(*rules.RepeatRule)
 	v.appendRule(rule) // hoist rule out of condition
 	return nil
 }
@@ -411,6 +411,6 @@ func (v *RequisiteVisitor) VisitCourseExpr(ctx *parser.CourseExprContext) any {
 	return v.visitCourseExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitCourseExpr(ctx *parser.CourseExprContext) conditions2.Condition {
-	return v.Visit(ctx.Course()).(conditions2.Condition)
+func (v *RequisiteVisitor) visitCourseExpr(ctx *parser.CourseExprContext) conditions.Condition {
+	return v.Visit(ctx.Course()).(conditions.Condition)
 }

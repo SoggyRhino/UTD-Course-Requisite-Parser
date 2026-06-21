@@ -9,7 +9,7 @@ type SameAsRule struct {
 	Courses []constants.Course `json:"courses,omitempty"`
 }
 
-func (r *SameAsRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+func (r *SameAsRule) Fulfils(_ constants.UserInfo) *constants.Evaluation {
 	return nil
 }
 

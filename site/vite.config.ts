@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite"
 import { defineConfig } from "vite"
 
 export default defineConfig({
+  base: "./",
   plugins: [tailwindcss(), react()],
   resolve: {
     alias: {
@@ -15,5 +16,8 @@ export default defineConfig({
     fs: {
       allow: [".."],
     },
+  },
+  build: {
+    chunkSizeWarningLimit: 1000,
   },
 })

@@ -31,7 +31,7 @@ func NewPlacementTestScoreCondition(name string, scoreMin, scoreMax int) *Placem
 	}
 }
 
-func (c *PlacementTestScoreCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
+func (c *PlacementTestScoreCondition) Fulfils(_ constants.UserInfo, _ bool) *constants.Evaluation {
 	return &constants.Evaluation{
 		Name:    fmt.Sprintf("Placement Test Score %s", c.Name),
 		Status:  constants.StatusUnknown,
@@ -60,7 +60,7 @@ func NewAPScoreCondition(score int) *APScoreCondition {
 	}
 }
 
-func (c *APScoreCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
+func (c *APScoreCondition) Fulfils(_ constants.UserInfo, _ bool) *constants.Evaluation {
 	return &constants.Evaluation{
 		Name:    "AP Score",
 		Status:  constants.StatusUnknown,
@@ -89,7 +89,7 @@ func NewAleksScoreCondition(score int) *AleksScoreCondition {
 	}
 }
 
-func (c *AleksScoreCondition) Fulfils(userInfo constants.UserInfo, _ bool) *constants.Evaluation {
+func (c *AleksScoreCondition) Fulfils(_ constants.UserInfo, _ bool) *constants.Evaluation {
 	return &constants.Evaluation{
 		Name:    "Aleks Score",
 		Status:  constants.StatusUnknown,

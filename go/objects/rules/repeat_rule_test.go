@@ -144,3 +144,69 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 		})
 	}
 }
+
+func TestGpaRepeatRule_Fulfils(t *testing.T) {
+	testCases := map[string]struct {
+		rule     *GpaRepeatRule
+		userInfo constants.UserInfo
+		expected *constants.Evaluation
+	}{
+		"Matches plan and taken": {
+			rule: &GpaRepeatRule{
+				Course:       constants.Course{Prefix: "CS", Number: "1337"},
+				AcademicPlan: "CS",
+			},
+			userInfo: constants.UserInfo{
+				AcademicPlan: "CS",
+				Taken: map[constants.Course]constants.Grade{
+					{Prefix: "CS", Number: "1337"}: "B",
+				},
+			},
+			expected: &constants.Evaluation{
+				Name:    "GPA Repeat Rule",
+				Status:  constants.StatusDefiniteFail,
+				Summary: "Cannot repeat course CS 1337 to improve GPA",
+			},
+		},
+		"Different plan but taken": {
+			rule: &GpaRepeatRule{
+				Course:       constants.Course{Prefix: "CS", Number: "1337"},
+				AcademicPlan: "CS",
+			},
+			userInfo: constants.UserInfo{
+				AcademicPlan: "SE",
+				Taken: map[constants.Course]constants.Grade{
+					{Prefix: "CS", Number: "1337"}: "B",
+				},
+			},
+			expected: &constants.Evaluation{
+				Name:    "GPA Repeat Rule",
+				Status:  constants.StatusPass,
+				Summary: "GPA repeat rule satisfied",
+			},
+		},
+		"Matches plan but not taken": {
+			rule: &GpaRepeatRule{
+				Course:       constants.Course{Prefix: "CS", Number: "1337"},
+				AcademicPlan: "CS",
+			},
+			userInfo: constants.UserInfo{
+				AcademicPlan: "CS",
+			},
+			expected: &constants.Evaluation{
+				Name:    "GPA Repeat Rule",
+				Status:  constants.StatusPass,
+				Summary: "GPA repeat rule satisfied",
+			},
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			got := tc.rule.Fulfils(tc.userInfo)
+			if diff := cmp.Diff(tc.expected, got); diff != "" {
+				t.Errorf("Unexpected result (-want +got):\n%s", diff)
+			}
+		})
+	}
+}

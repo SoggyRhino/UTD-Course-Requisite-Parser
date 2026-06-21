@@ -3,7 +3,7 @@ package visitors
 import (
 	"parser/objects/conditions"
 	"parser/objects/constants"
-	rules2 "parser/objects/rules"
+	rules "parser/objects/rules"
 	"parser/parser"
 )
 
@@ -16,9 +16,9 @@ func (v *RequisiteVisitor) VisitCourseRepeatRule(ctx *parser.CourseRepeatRuleCon
 	return v.visitCourseRepeatRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitCourseRepeatRule(ctx *parser.CourseRepeatRuleContext) *rules2.RepeatRule {
+func (v *RequisiteVisitor) visitCourseRepeatRule(ctx *parser.CourseRepeatRuleContext) *rules.RepeatRule {
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
-	return rules2.NewCourseRepeatRule(courses)
+	return rules.NewCourseRepeatRule(courses)
 }
 
 // VisitInternshipRepeatRule
@@ -28,8 +28,8 @@ func (v *RequisiteVisitor) VisitInternshipRepeatRule(ctx *parser.InternshipRepea
 	return v.visitInternshipRepeatRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitInternshipRepeatRule(ctx *parser.InternshipRepeatRuleContext) *rules2.RepeatRule {
-	return rules2.NewInternshipRepeatRule(ctx.PREFIX().GetText())
+func (v *RequisiteVisitor) visitInternshipRepeatRule(ctx *parser.InternshipRepeatRuleContext) *rules.RepeatRule {
+	return rules.NewInternshipRepeatRule(ctx.PREFIX().GetText())
 }
 
 // VisitBareRepeatRule
@@ -39,9 +39,9 @@ func (v *RequisiteVisitor) VisitBareRepeatRule(ctx *parser.BareRepeatRuleContext
 	return v.visitBareRepeatRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitBareRepeatRule(ctx *parser.BareRepeatRuleContext) *rules2.RepeatRule {
+func (v *RequisiteVisitor) visitBareRepeatRule(_ *parser.BareRepeatRuleContext) *rules.RepeatRule {
 	//todo better blank value
-	return rules2.NewRepeatRule(1, 0, []constants.Course{}, "")
+	return rules.NewRepeatRule(1, 0, []constants.Course{}, "")
 }
 
 // VisitRepeatMaxHoursRule
@@ -51,10 +51,10 @@ func (v *RequisiteVisitor) VisitRepeatMaxHoursRule(ctx *parser.RepeatMaxHoursRul
 	return v.visitRepeatMaxHoursRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitRepeatMaxHoursRule(ctx *parser.RepeatMaxHoursRuleContext) *rules2.RepeatRule {
+func (v *RequisiteVisitor) visitRepeatMaxHoursRule(ctx *parser.RepeatMaxHoursRuleContext) *rules.RepeatRule {
 	hours := mapInt(ctx.SMALL_INT().GetText())
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
-	return rules2.NewRepeatRule(0, hours, courses, "")
+	return rules.NewRepeatRule(0, hours, courses, "")
 }
 
 // VisitRepeatHoursMaxSuffixRule
@@ -64,10 +64,10 @@ func (v *RequisiteVisitor) VisitRepeatHoursMaxSuffixRule(ctx *parser.RepeatHours
 	return v.visitRepeatHoursMaxSuffixRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitRepeatHoursMaxSuffixRule(ctx *parser.RepeatHoursMaxSuffixRuleContext) *rules2.RepeatRule {
+func (v *RequisiteVisitor) visitRepeatHoursMaxSuffixRule(ctx *parser.RepeatHoursMaxSuffixRuleContext) *rules.RepeatRule {
 	hours := mapInt(ctx.SMALL_INT().GetText())
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
-	return rules2.NewRepeatRule(0, hours, courses, "")
+	return rules.NewRepeatRule(0, hours, courses, "")
 }
 
 // VisitCourseRepeatMaxHoursRule
@@ -77,10 +77,10 @@ func (v *RequisiteVisitor) VisitCourseRepeatMaxHoursRule(ctx *parser.CourseRepea
 	return v.visitCourseRepeatMaxHoursRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitCourseRepeatMaxHoursRule(ctx *parser.CourseRepeatMaxHoursRuleContext) *rules2.RepeatRule {
+func (v *RequisiteVisitor) visitCourseRepeatMaxHoursRule(ctx *parser.CourseRepeatMaxHoursRuleContext) *rules.RepeatRule {
 	hours := mapInt(ctx.SMALL_INT().GetText())
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
-	return rules2.NewRepeatRule(0, hours, courses, "")
+	return rules.NewRepeatRule(0, hours, courses, "")
 }
 
 // VisitCombinedRepeatMaxHoursRule
@@ -90,14 +90,14 @@ func (v *RequisiteVisitor) VisitCombinedRepeatMaxHoursRule(ctx *parser.CombinedR
 	return v.visitCombinedRepeatMaxHoursRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitCombinedRepeatMaxHoursRule(ctx *parser.CombinedRepeatMaxHoursRuleContext) *rules2.RepeatRule {
+func (v *RequisiteVisitor) visitCombinedRepeatMaxHoursRule(ctx *parser.CombinedRepeatMaxHoursRuleContext) *rules.RepeatRule {
 	hours := mapInt(ctx.SMALL_INT().GetText())
 
 	var courses []constants.Course
 	courses = append(courses, extractCoursesFromCourseList(v.Visit(ctx.Course(0)).(conditions.Condition))...)
 	courses = append(courses, extractCoursesFromCourseList(v.Visit(ctx.Course(1)).(conditions.Condition))...)
 
-	return rules2.NewRepeatRule(0, hours, courses, "")
+	return rules.NewRepeatRule(0, hours, courses, "")
 }
 
 // VisitCourseRepeatLimitRule
@@ -107,9 +107,9 @@ func (v *RequisiteVisitor) VisitCourseRepeatLimitRule(ctx *parser.CourseRepeatLi
 	return v.visitCourseRepeatLimitRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitCourseRepeatLimitRule(ctx *parser.CourseRepeatLimitRuleContext) *rules2.RepeatRule {
+func (v *RequisiteVisitor) visitCourseRepeatLimitRule(ctx *parser.CourseRepeatLimitRuleContext) *rules.RepeatRule {
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
-	return rules2.NewCourseRepeatRule(courses)
+	return rules.NewCourseRepeatRule(courses)
 }
 
 // VisitRepeatUpToTimesRule
@@ -119,10 +119,10 @@ func (v *RequisiteVisitor) VisitRepeatUpToTimesRule(ctx *parser.RepeatUpToTimesR
 	return v.visitRepeatUpToTimesRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitRepeatUpToTimesRule(ctx *parser.RepeatUpToTimesRuleContext) *rules2.RepeatRule {
+func (v *RequisiteVisitor) visitRepeatUpToTimesRule(ctx *parser.RepeatUpToTimesRuleContext) *rules.RepeatRule {
 	count := mapInt(ctx.SMALL_INT().GetText())
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
-	return rules2.NewRepeatRule(count, 0, courses, "")
+	return rules.NewRepeatRule(count, 0, courses, "")
 }
 
 // VisitRepeatMaxTimesRule
@@ -132,10 +132,10 @@ func (v *RequisiteVisitor) VisitRepeatMaxTimesRule(ctx *parser.RepeatMaxTimesRul
 	return v.visitRepeatMaxTimesRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitRepeatMaxTimesRule(ctx *parser.RepeatMaxTimesRuleContext) *rules2.RepeatRule {
+func (v *RequisiteVisitor) visitRepeatMaxTimesRule(ctx *parser.RepeatMaxTimesRuleContext) *rules.RepeatRule {
 	count := mapInt(ctx.SMALL_INT().GetText())
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
-	return rules2.NewRepeatRule(count, 0, courses, "")
+	return rules.NewRepeatRule(count, 0, courses, "")
 }
 
 // VisitGpaRepeatRule
@@ -145,9 +145,9 @@ func (v *RequisiteVisitor) VisitGpaRepeatRule(ctx *parser.GpaRepeatRuleContext) 
 	return v.visitGpaRepeatRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitGpaRepeatRule(ctx *parser.GpaRepeatRuleContext) *rules2.GpaRepeatRule {
+func (v *RequisiteVisitor) visitGpaRepeatRule(ctx *parser.GpaRepeatRuleContext) *rules.GpaRepeatRule {
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
-	return rules2.NewGpaRepeatRule(courses[0])
+	return rules.NewGpaRepeatRule(courses[0])
 }
 
 // ======================= Degree Satisfaction Rule ======================
@@ -159,10 +159,10 @@ func (v *RequisiteVisitor) VisitPrefixDegreeSatisfactionRule(ctx *parser.PrefixD
 	return v.visitPrefixDegreeSatisfactionRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitPrefixDegreeSatisfactionRule(ctx *parser.PrefixDegreeSatisfactionRuleContext) *rules2.DegreeSatisfactionRule {
+func (v *RequisiteVisitor) visitPrefixDegreeSatisfactionRule(ctx *parser.PrefixDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
 	prefix := ctx.PREFIX().GetText()
 	degreeLevel := mapDegreeLevel(v.getTextOrDefault(ctx.DEGREE_LEVEL(), ""))
-	return rules2.NewDegreeSatisfactionRuleFromPrefix([]string{prefix}, degreeLevel)
+	return rules.NewDegreeSatisfactionRuleFromPrefix([]string{prefix}, degreeLevel)
 }
 
 // VisitNamedDegreeSatisfactionRule
@@ -172,10 +172,10 @@ func (v *RequisiteVisitor) VisitNamedDegreeSatisfactionRule(ctx *parser.NamedDeg
 	return v.visitNamedDegreeSatisfactionRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitNamedDegreeSatisfactionRule(ctx *parser.NamedDegreeSatisfactionRuleContext) *rules2.DegreeSatisfactionRule {
+func (v *RequisiteVisitor) visitNamedDegreeSatisfactionRule(ctx *parser.NamedDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
 	degree := v.Visit(ctx.Degree()).(string)
 	degreeLevel := mapDegreeLevel(v.getTextOrDefault(ctx.DEGREE_LEVEL(), ""))
-	return rules2.NewDegreeSatisfactionRuleFromDegree([]string{degree}, degreeLevel)
+	return rules.NewDegreeSatisfactionRuleFromDegree([]string{degree}, degreeLevel)
 }
 
 // VisitMultiPrefixForDegreeSatisfactionRule
@@ -185,14 +185,14 @@ func (v *RequisiteVisitor) VisitMultiPrefixForDegreeSatisfactionRule(ctx *parser
 	return v.visitMultiPrefixForDegreeSatisfactionRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitMultiPrefixForDegreeSatisfactionRule(ctx *parser.MultiPrefixForDegreeSatisfactionRuleContext) *rules2.DegreeSatisfactionRule {
+func (v *RequisiteVisitor) visitMultiPrefixForDegreeSatisfactionRule(ctx *parser.MultiPrefixForDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
 	prefixes := make([]string, 0, len(ctx.AllPREFIX()))
 	for _, p := range ctx.AllPREFIX() {
 		prefixes = append(prefixes, p.GetText())
 	}
 	degreeLevels := ctx.AllDEGREE_LEVEL()
 	degreeLevel := mapDegreeLevel(v.getTextOrDefault(v.firstOrNil(degreeLevels), ""))
-	return rules2.NewDegreeSatisfactionRuleFromPrefix(prefixes, degreeLevel)
+	return rules.NewDegreeSatisfactionRuleFromPrefix(prefixes, degreeLevel)
 
 }
 
@@ -203,14 +203,14 @@ func (v *RequisiteVisitor) VisitOfMultiPrefixDegreeSatisfactionRule(ctx *parser.
 	return v.visitOfMultiPrefixDegreeSatisfactionRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitOfMultiPrefixDegreeSatisfactionRule(ctx *parser.OfMultiPrefixDegreeSatisfactionRuleContext) *rules2.DegreeSatisfactionRule {
+func (v *RequisiteVisitor) visitOfMultiPrefixDegreeSatisfactionRule(ctx *parser.OfMultiPrefixDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
 	prefixes := make([]string, 0, len(ctx.AllPREFIX()))
 	for _, p := range ctx.AllPREFIX() {
 		prefixes = append(prefixes, p.GetText())
 	}
 	degreeLevels := ctx.AllDEGREE_LEVEL()
 	degreeLevel := mapDegreeLevel(v.getTextOrDefault(v.firstOrNil(degreeLevels), ""))
-	return rules2.NewDegreeSatisfactionRuleFromPrefix(prefixes, degreeLevel)
+	return rules.NewDegreeSatisfactionRuleFromPrefix(prefixes, degreeLevel)
 }
 
 // VisitSchoolDegreeSatisfactionRule
@@ -220,13 +220,13 @@ func (v *RequisiteVisitor) VisitSchoolDegreeSatisfactionRule(ctx *parser.SchoolD
 	return v.visitSchoolDegreeSatisfactionRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitSchoolDegreeSatisfactionRule(ctx *parser.SchoolDegreeSatisfactionRuleContext) *rules2.DegreeSatisfactionRule {
+func (v *RequisiteVisitor) visitSchoolDegreeSatisfactionRule(ctx *parser.SchoolDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
 	schools := make([]string, 0, len(ctx.AllDegree()))
 	for _, d := range ctx.AllDegree() {
 		schools = append(schools, v.Visit(d).(string))
 	}
 	degreeLevel := mapDegreeLevel(v.getTextOrDefault(ctx.DEGREE_LEVEL(), ""))
-	return rules2.NewDegreeSatisfactionRuleFromSchool(schools, degreeLevel)
+	return rules.NewDegreeSatisfactionRuleFromSchool(schools, degreeLevel)
 }
 
 // VisitSchoolsDegreeSatisfactionRule
@@ -236,14 +236,14 @@ func (v *RequisiteVisitor) VisitSchoolsDegreeSatisfactionRule(ctx *parser.School
 	return v.visitSchoolsDegreeSatisfactionRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitSchoolsDegreeSatisfactionRule(ctx *parser.SchoolsDegreeSatisfactionRuleContext) *rules2.DegreeSatisfactionRule {
+func (v *RequisiteVisitor) visitSchoolsDegreeSatisfactionRule(ctx *parser.SchoolsDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
 	schools := make([]string, 0)
 	for _, degrees := range ctx.AllDegree_list() {
 		courses := v.Visit(degrees).([]string)
 		schools = append(schools, courses...)
 	}
 	degreeLevel := mapDegreeLevel(v.getTextOrDefault(ctx.DEGREE_LEVEL(), ""))
-	return rules2.NewDegreeSatisfactionRuleFromSchool(schools, degreeLevel)
+	return rules.NewDegreeSatisfactionRuleFromSchool(schools, degreeLevel)
 }
 
 // VisitStudentDegreeSatisfactionRule
@@ -253,9 +253,9 @@ func (v *RequisiteVisitor) VisitStudentDegreeSatisfactionRule(ctx *parser.Studen
 	return v.visitStudentDegreeSatisfactionRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitStudentDegreeSatisfactionRule(ctx *parser.StudentDegreeSatisfactionRuleContext) *rules2.DegreeSatisfactionRule {
+func (v *RequisiteVisitor) visitStudentDegreeSatisfactionRule(ctx *parser.StudentDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
 	degree := v.Visit(ctx.Degree()).(string)
-	return rules2.NewDegreeSatisfactionRuleFromDegree([]string{degree}, constants.AnyDegree)
+	return rules.NewDegreeSatisfactionRuleFromDegree([]string{degree}, constants.AnyDegree)
 
 }
 
@@ -266,8 +266,8 @@ func (v *RequisiteVisitor) VisitMathDegreeSatisfactionRule(ctx *parser.MathDegre
 	return v.visitMathDegreeSatisfactionRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitMathDegreeSatisfactionRule(ctx *parser.MathDegreeSatisfactionRuleContext) *rules2.DegreeSatisfactionRule {
-	return rules2.NewMathDegreeSatisfactionRule()
+func (v *RequisiteVisitor) visitMathDegreeSatisfactionRule(_ *parser.MathDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
+	return rules.NewMathDegreeSatisfactionRule()
 }
 
 // VisitElectivesDegreeSatisfactionRule
@@ -277,9 +277,9 @@ func (v *RequisiteVisitor) VisitElectivesDegreeSatisfactionRule(ctx *parser.Elec
 	return v.visitElectivesDegreeSatisfactionRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitElectivesDegreeSatisfactionRule(ctx *parser.ElectivesDegreeSatisfactionRuleContext) *rules2.DegreeSatisfactionRule {
-	inner := v.Visit(ctx.Degree_satisfaction_rule()).(*rules2.DegreeSatisfactionRule)
-	return rules2.NewDegreeSatisfactionRuleFromElectives(inner)
+func (v *RequisiteVisitor) visitElectivesDegreeSatisfactionRule(ctx *parser.ElectivesDegreeSatisfactionRuleContext) *rules.DegreeSatisfactionRule {
+	inner := v.Visit(ctx.Degree_satisfaction_rule()).(*rules.DegreeSatisfactionRule)
+	return rules.NewDegreeSatisfactionRuleFromElectives(inner)
 }
 
 // ======================= Credit Rules ======================
@@ -291,9 +291,9 @@ func (v *RequisiteVisitor) VisitCreditForRule(ctx *parser.CreditForRuleContext) 
 	return v.visitCreditForRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitCreditForRule(ctx *parser.CreditForRuleContext) *rules2.CreditForRule {
-	courseCollection := v.Visit(ctx.Credit_expr()).(rules2.CourseCollection)
-	return rules2.NewCreditForRule(courseCollection)
+func (v *RequisiteVisitor) visitCreditForRule(ctx *parser.CreditForRuleContext) *rules.CreditForRule {
+	courseCollection := v.Visit(ctx.Credit_expr()).(rules.CourseCollection)
+	return rules.NewCreditForRule(courseCollection)
 }
 
 // VisitParenCreditExpr
@@ -303,8 +303,8 @@ func (v *RequisiteVisitor) VisitParenCreditExpr(ctx *parser.ParenCreditExprConte
 	return v.visitParenCreditExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitParenCreditExpr(ctx *parser.ParenCreditExprContext) rules2.CourseCollection {
-	return v.Visit(ctx.Credit_expr()).(rules2.CourseCollection)
+func (v *RequisiteVisitor) visitParenCreditExpr(ctx *parser.ParenCreditExprContext) rules.CourseCollection {
+	return v.Visit(ctx.Credit_expr()).(rules.CourseCollection)
 }
 
 // VisitOrCreditExpr
@@ -314,11 +314,11 @@ func (v *RequisiteVisitor) VisitOrCreditExpr(ctx *parser.OrCreditExprContext) an
 	return v.visitOrCreditExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitOrCreditExpr(ctx *parser.OrCreditExprContext) rules2.CourseCollection {
-	col1 := v.Visit(ctx.Credit_expr(0)).(rules2.CourseCollection)
-	col2 := v.Visit(ctx.Credit_expr(1)).(rules2.CourseCollection)
+func (v *RequisiteVisitor) visitOrCreditExpr(ctx *parser.OrCreditExprContext) rules.CourseCollection {
+	col1 := v.Visit(ctx.Credit_expr(0)).(rules.CourseCollection)
+	col2 := v.Visit(ctx.Credit_expr(1)).(rules.CourseCollection)
 
-	return rules2.NewOrCourseCollection(col1, col2)
+	return rules.NewOrCourseCollection(col1, col2)
 }
 
 // VisitAndCreditExpr
@@ -328,11 +328,11 @@ func (v *RequisiteVisitor) VisitAndCreditExpr(ctx *parser.AndCreditExprContext) 
 	return v.visitAndCreditExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitAndCreditExpr(ctx *parser.AndCreditExprContext) rules2.CourseCollection {
-	col1 := v.Visit(ctx.Credit_expr(0)).(rules2.CourseCollection)
-	col2 := v.Visit(ctx.Credit_expr(1)).(rules2.CourseCollection)
+func (v *RequisiteVisitor) visitAndCreditExpr(ctx *parser.AndCreditExprContext) rules.CourseCollection {
+	col1 := v.Visit(ctx.Credit_expr(0)).(rules.CourseCollection)
+	col2 := v.Visit(ctx.Credit_expr(1)).(rules.CourseCollection)
 
-	return rules2.NewAndCourseCollection(col1, col2)
+	return rules.NewAndCourseCollection(col1, col2)
 }
 
 // VisitAmpersandCreditExpr
@@ -342,11 +342,11 @@ func (v *RequisiteVisitor) VisitAmpersandCreditExpr(ctx *parser.AmpersandCreditE
 	return v.visitAmpersandCreditExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitAmpersandCreditExpr(ctx *parser.AmpersandCreditExprContext) rules2.CourseCollection {
-	col1 := v.Visit(ctx.Credit_expr(0)).(rules2.CourseCollection)
-	col2 := v.Visit(ctx.Credit_expr(1)).(rules2.CourseCollection)
+func (v *RequisiteVisitor) visitAmpersandCreditExpr(ctx *parser.AmpersandCreditExprContext) rules.CourseCollection {
+	col1 := v.Visit(ctx.Credit_expr(0)).(rules.CourseCollection)
+	col2 := v.Visit(ctx.Credit_expr(1)).(rules.CourseCollection)
 
-	return rules2.NewAndCourseCollection(col1, col2)
+	return rules.NewAndCourseCollection(col1, col2)
 }
 
 // VisitCourseCreditExpr
@@ -356,9 +356,9 @@ func (v *RequisiteVisitor) VisitCourseCreditExpr(ctx *parser.CourseCreditExprCon
 	return v.visitCourseCreditExpr(ctx)
 }
 
-func (v *RequisiteVisitor) visitCourseCreditExpr(ctx *parser.CourseCreditExprContext) rules2.CourseCollection {
+func (v *RequisiteVisitor) visitCourseCreditExpr(ctx *parser.CourseCreditExprContext) rules.CourseCollection {
 	courses := extractCoursesFromCourseList(v.Visit(ctx.Course()).(conditions.Condition))
-	return rules2.NewSimpleCourseCollection(courses)
+	return rules.NewSimpleCourseCollection(courses)
 }
 
 // ======================= Living Learning Rule ======================
@@ -370,12 +370,12 @@ func (v *RequisiteVisitor) VisitPrefixLivingLearningRule(ctx *parser.PrefixLivin
 	return v.visitPrefixLivingLearningRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitPrefixLivingLearningRule(ctx *parser.PrefixLivingLearningRuleContext) *rules2.LivingLearningRule {
+func (v *RequisiteVisitor) visitPrefixLivingLearningRule(ctx *parser.PrefixLivingLearningRuleContext) *rules.LivingLearningRule {
 	prefixes := make([]string, len(ctx.AllPREFIX()))
 	for i, p := range ctx.AllPREFIX() {
 		prefixes[i] = p.GetText()
 	}
-	return rules2.NewLivingLearningRuleFromPrefixes(prefixes)
+	return rules.NewLivingLearningRuleFromPrefixes(prefixes)
 }
 
 // VisitDegreeLivingLearningRule
@@ -385,8 +385,8 @@ func (v *RequisiteVisitor) VisitDegreeLivingLearningRule(ctx *parser.DegreeLivin
 	return v.visitDegreeLivingLearningRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitDegreeLivingLearningRule(ctx *parser.DegreeLivingLearningRuleContext) *rules2.LivingLearningRule {
-	return rules2.NewLivingLearningRuleFromDegrees(v.Visit(ctx.Degree_list()).([]string))
+func (v *RequisiteVisitor) visitDegreeLivingLearningRule(ctx *parser.DegreeLivingLearningRuleContext) *rules.LivingLearningRule {
+	return rules.NewLivingLearningRuleFromDegrees(v.Visit(ctx.Degree_list()).([]string))
 }
 
 // ======================= School Rule ======================
@@ -398,9 +398,9 @@ func (v *RequisiteVisitor) VisitSchoolRule(ctx *parser.SchoolRuleContext) any {
 	return v.visitSchoolRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitSchoolRule(ctx *parser.SchoolRuleContext) *rules2.SchoolRule {
+func (v *RequisiteVisitor) visitSchoolRule(ctx *parser.SchoolRuleContext) *rules.SchoolRule {
 	schools := v.Visit(ctx.Degree_list()).([]string)
-	return rules2.NewSchoolRule(schools)
+	return rules.NewSchoolRule(schools)
 }
 
 // ======================= Same As Rule ======================
@@ -412,11 +412,11 @@ func (v *RequisiteVisitor) VisitSameAsRule(ctx *parser.SameAsRuleContext) any {
 	return v.visitSameAsRule(ctx)
 }
 
-func (v *RequisiteVisitor) visitSameAsRule(ctx *parser.SameAsRuleContext) *rules2.SameAsRule {
+func (v *RequisiteVisitor) visitSameAsRule(ctx *parser.SameAsRuleContext) *rules.SameAsRule {
 	courses := make([]constants.Course, 0, len(ctx.AllCourse()))
 	for _, course := range ctx.AllCourse() {
 		courses = append(courses, extractCoursesFromCourseList(v.Visit(course).(conditions.Condition))...)
 	}
 
-	return rules2.NewSameAsRule(courses)
+	return rules.NewSameAsRule(courses)
 }
