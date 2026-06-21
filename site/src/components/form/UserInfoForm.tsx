@@ -14,7 +14,7 @@ import {
     Senior,
     Sophomore,
     Undergraduate,
-} from "@goscript/parser/objects/constants/objects.gs"
+} from "@goscript/parser/objects/constants"
 
 import type {UserInfo} from "@goscript/parser/objects/constants"
 

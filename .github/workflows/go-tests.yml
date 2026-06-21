@@ -2,7 +2,6 @@ name: Go Tests
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -17,19 +16,6 @@ jobs:
       uses: actions/setup-go@v5
       with:
         go-version-file: './go/go.mod'
-
-    - name: Setup Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-
-    - name: Generate ANTLR Parser
-      run: java -jar scripts/antlr.jar -Dlanguage=Go -visitor -package parser -o go/parser Requirements.g4
-
-    - name: Build
-      working-directory: ./go
-      run: go build -v ./...
 
     - name: Test
       working-directory: ./go

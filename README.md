@@ -1,5 +1,10 @@
 # UTD Course Requisite Parser 
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/SoggyRhino/UTD-Course-Requisite-Parser/go)](https://goreportcard.com/report/github.com/SoggyRhino/UTD-Course-Requisite-Parser/go)
+[![Build Status](https://github.com/SoggyRhino/UTD-Course-Requisite-Parser/actions/workflows/go-tests.yml/badge.svg)](https://github.com/SoggyRhino/UTD-Course-Requisite-Parser/actions)
+[![codecov](https://codecov.io/gh/SoggyRhino/UTD-Course-Requisite-Parser/branch/main/graph/badge.svg)](https://codecov.io/gh/SoggyRhino/UTD-Course-Requisite-Parser)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ANTLR4 based approach for parsing UTD course requirements. The parsing and generation of course requirement is intended to be 
 run once through the Go library (see main.go for sample usage); while the evaluation from student info supports client-side 
 evaluation through TypeScript generation (credit to [goscript](https://github.com/aperturerobotics/goscript)).
@@ -10,9 +15,7 @@ approach in this parser: course requirements are not a formal grammar, just pret
 mostly an excuse to build a project using ANTLR4, and of those that can't be parsed, most are random, tiny courses, so the 
 vast majority of students wouldn't even notice. 
 
-There is a live demo of this project hosted in GitHub pages [here](). The tech stack is: React + shadcn ui. 
-
-
+There is a live demo of this project hosted in GitHub pages [here](https://soggyrhino.github.io/UTD-Course-Requisite-Parser/). The tech stack is: React + shadcn ui. 
 
 
 

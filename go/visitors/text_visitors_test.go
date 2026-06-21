@@ -57,7 +57,7 @@ func TestVisitDegreeList(t *testing.T) {
 		Input  string
 		Result []string
 	}{
-		"Or seperated": {
+		"Or separated": {
 			Input:  "psychology or computer science or neuroscience",
 			Result: []string{"psychology", "computer science", "neuroscience"},
 		},

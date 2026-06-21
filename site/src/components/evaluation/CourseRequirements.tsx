@@ -1,3 +1,4 @@
+import {useState, useEffect} from "react"
 import {Requirements, RequirementsResult} from "@goscript/parser/objects"
 import {type Evaluation, UserInfo} from "@goscript/parser/objects/constants"
 import {EvaluationNode} from "./EvaluationNode.tsx"
@@ -48,7 +49,17 @@ function Section({title, evaluations}: SectionProps) {
 }
 
 function CourseRequirements({info, req}: CourseRequirementsProps) {
-    const result: RequirementsResult = req.Evaluate(info)
+    const [result, setResult] = useState<RequirementsResult | null>(null)
+
+    useEffect(() => {
+        let mounted = true
+        Promise.resolve((req.Evaluate as any)(info)).then((r: any) => {
+            if (mounted) setResult(r as RequirementsResult)
+        })
+        return () => { mounted = false }
+    }, [info, req])
+
+    if (!result) return null
 
     const preReqs = unwrapEvaluation(result.PreReqs)
     const coReqs = unwrapEvaluation(result.CoReqs)

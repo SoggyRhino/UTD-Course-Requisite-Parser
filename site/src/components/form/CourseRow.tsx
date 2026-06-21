@@ -14,7 +14,7 @@ import {
   TooltipContent, TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import type { Grade } from "@goscript/parser/objects/constants/objects.gs"
+import type { Grade } from "@goscript/parser/objects/constants"
 import requirements from "../../../../static/requirements.json"
 
 const GRADE_OPTIONS: Grade[] = [

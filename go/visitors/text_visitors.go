@@ -5,7 +5,7 @@ import (
 	"parser/parser"
 )
 
-// VisitTitle matches what is essentially a name / propper noun
+// VisitTitle matches what is essentially a name / proper noun
 //
 // Rule: (CAPITALIZED | CORE)+ ( 'and' (CAPITALIZED | CORE)+ )*
 func (v *RequisiteVisitor) VisitTitle(ctx *parser.TitleContext) any {
