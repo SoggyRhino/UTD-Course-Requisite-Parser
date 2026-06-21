@@ -99,7 +99,7 @@ export function CourseRow({
       <div className="w-[120px]">
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger render={<span onPointerDown={(e) => e.preventDefault()} />} closeOnClick={false}>
+            <TooltipTrigger render={<span className="block h-full w-full" />} closeOnClick={false}>
                 <Select
                   value={course.grade}
                   onValueChange={(v) => update({ grade: v as Grade })}
@@ -130,7 +130,7 @@ export function CourseRow({
         <Checkbox
           id={`${course.id}-enrolled`}
           checked={course.currentlyEnrolled}
-          onCheckedChange={(state) => handleEnrolledChange(state === true)}
+          onCheckedChange={(state) => handleEnrolledChange(state)}
         />
         <label
           htmlFor={`${course.id}-enrolled`}

@@ -1,69 +1,74 @@
-import { useState } from "react"
-import { Card, CardContent, CardTitle } from "@/components/ui/card"
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { ChevronDown } from "lucide-react"
-import { UserInfo } from "@goscript/parser/objects/constants/objects.gs"
+import {useMemo, useState} from "react"
+import {Card} from "@/components/ui/card"
 import UserInfoForm from "@/components/form/UserInfoForm"
-import { Input } from "@/components/ui/input"
+import {Input} from "@/components/ui/input"
 import requirements from "../../static/requirements.json"
 import {Requirements} from "@goscript/parser/objects";
-import CourseRequirements from "@/components/CourseRequirements.tsx";
+import CourseRequirements from "@/components/evaluation/CourseRequirements.tsx";
+import {UserInfo} from "@goscript/parser/objects/constants";
+import * as json from "@goscript/encoding/json/index.js";
+import * as $ from "@goscript/builtin/index.js";
+
 const coursesList = Object.keys(requirements)
 const reqData = requirements as Record<string, any>
 
 function App() {
     const [userInfo, updateUserInfo] = useState<UserInfo>(new UserInfo())
-    const [isOpen, setIsOpen] = useState(true)
     const [searchedCourse, setSearchedCourse] = useState("")
 
-    const foundData: Requirements | null  = searchedCourse && reqData[searchedCourse] ? reqData[searchedCourse] : null
+    const rawEntry = searchedCourse && reqData[searchedCourse] ? reqData[searchedCourse] : null
+    const foundData: Requirements | null = useMemo(() => {
+        if (!rawEntry) return null
+        const req = new Requirements()
+        const bytes = $.stringToBytes(JSON.stringify(rawEntry))
+        const err = json.Unmarshal(bytes, req)
+        if (err != null) {
+            console.error("Failed to parse requirements:", err)
+            return null
+        }
+        return req
+    }, [JSON.stringify(rawEntry)])
 
     return (
-        <div className="App min-h-screen bg-muted/30 p-4 sm:p-8 md:p-12 flex flex-col items-center gap-6">
-            <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full max-w-3xl">
-                <Card className="border-muted/50 shadow-sm">
-                    <CollapsibleTrigger className="flex w-full items-center justify-between border-b px-6 py-5 text-left">
-                        <CardTitle className="text-lg font-medium tracking-tight">
-                            Student information
-                        </CardTitle>
-                        <ChevronDown
-                            className={`size-4 shrink-0 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`}
-                        />
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                        <CardContent >
-                            <UserInfoForm setUserInfo={updateUserInfo} userInfo={userInfo} />
-                        </CardContent>
-                    </CollapsibleContent>
-                </Card>
-            </Collapsible>
+        <div className="App min-h-screen bg-linear-to-br from-background via-background to-muted/50 p-4 sm:p-8 md:p-12 flex flex-col items-center gap-8">
 
-            <Card className="w-full max-w-3xl border-muted/50 shadow-sm p-6 flex flex-col gap-4">
-                <h2 className="text-lg font-medium tracking-tight m-0">Course Search</h2>
-                <Input 
-                    placeholder="Search for a course (e.g. CS 1200)"
-                    list="app-course-list"
-                    value={searchedCourse}
-                    onChange={(e) => setSearchedCourse(e.target.value.toUpperCase())}
-                />
-                <datalist id="app-course-list">
-                    {coursesList.map((c) => (
-                        <option key={c} value={c} />
-                    ))}
-                </datalist>
+            <Card className="w-full max-w-3xl border-border/50 shadow-lg bg-card/60 backdrop-blur-xl p-6 sm:p-8 flex flex-col gap-6 rounded-xl transition-all">
+                <div className="space-y-1.5">
+                    <h2 className="text-xl font-semibold tracking-tight m-0 text-foreground">Course Search</h2>
+                    <p className="text-sm text-muted-foreground m-0">Search for a course to evaluate its prerequisites and rules.</p>
+                </div>
+                <div className="flex flex-col gap-4">
+                    <Input
+                        placeholder="Search for a course (e.g. CS 1200)"
+                        list="app-course-list"
+                        value={searchedCourse}
+                        onChange={(e) => setSearchedCourse(e.target.value.toUpperCase())}
+                        className="h-12 text-base px-4 bg-background/50 focus-visible:ring-primary/50"
+                    />
+                    <datalist id="app-course-list">
+                        {coursesList.map((c) => (
+                            <option key={c} value={c}/>
+                        ))}
+                    </datalist>
+                </div>
 
-                <div className="bg-muted/30 p-4 rounded-md border min-h-[100px] overflow-auto">
-                    {foundData ? (
-                        <CourseRequirements req={foundData}/>
-                    ) : (
-                        <p className="text-sm text-muted-foreground">
-                            {searchedCourse ? "Course not found in requirements." : "Enter a course to view its requirements JSON."}
-                        </p>
-                    )}
+                <div className="bg-background/40 p-5 rounded-lg border border-border/50 shadow-inner min-h-[120px] overflow-auto">
+                    {foundData
+                        ? <CourseRequirements info={userInfo} req={foundData}/>
+                        : <div className="h-full flex items-center justify-center min-h-[80px]">
+                            <p className="text-muted-foreground text-sm font-medium">No course selected</p>
+                          </div>
+                    }
+                </div>
+            </Card>
+
+            <Card className="w-full max-w-3xl border-border/50 shadow-lg bg-card/60 backdrop-blur-xl p-6 sm:p-8 flex flex-col gap-6 rounded-xl transition-all">
+                <div className="space-y-1.5">
+                    <h2 className="text-xl font-semibold tracking-tight m-0 text-foreground">Student Profile</h2>
+                    <p className="text-sm text-muted-foreground m-0">Configure your academic information to evaluate requirements.</p>
+                </div>
+                <div className="pt-2">
+                    <UserInfoForm setUserInfo={updateUserInfo} userInfo={userInfo}/>
                 </div>
             </Card>
         </div>

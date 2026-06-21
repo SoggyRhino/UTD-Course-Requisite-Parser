@@ -37,10 +37,12 @@ func (c *CreditForRule) MarshalJSON() ([]byte, error) {
 	})
 }
 
+type rawCreditForRule struct {
+	Courses json.RawMessage `json:"courses"`
+}
+
 func (c *CreditForRule) UnmarshalJSON(b []byte) error {
-	var raw struct {
-		Courses json.RawMessage `json:"courses"`
-	}
+	var raw rawCreditForRule
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return err
 	}
@@ -100,20 +102,23 @@ func (a *AndCourseCollection) MarshalJSON() ([]byte, error) {
 	})
 }
 
+type rawAndCourseCollection struct {
+	Courses []any `json:"courses"`
+}
+
 func (a *AndCourseCollection) UnmarshalJSON(b []byte) error {
-	var raw struct {
-		Courses []json.RawMessage `json:"courses"`
-	}
+	var raw rawAndCourseCollection
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return err
 	}
 	a.Courses = make([]CourseCollection, len(raw.Courses))
-	for i, rawCol := range raw.Courses {
-		col, err := UnmarshalCourseCollection(rawCol)
+	for i, rawCondAny := range raw.Courses {
+		rawCond, _ := json.Marshal(rawCondAny)
+		cond, err := UnmarshalCourseCollection(rawCond)
 		if err != nil {
 			return err
 		}
-		a.Courses[i] = col
+		a.Courses[i] = cond
 	}
 	return nil
 }
@@ -170,20 +175,23 @@ func (o *OrCourseCollection) MarshalJSON() ([]byte, error) {
 	})
 }
 
+type rawOrCourseCollection struct {
+	Courses []any `json:"courses"`
+}
+
 func (o *OrCourseCollection) UnmarshalJSON(b []byte) error {
-	var raw struct {
-		Courses []json.RawMessage `json:"courses"`
-	}
+	var raw rawOrCourseCollection
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return err
 	}
 	o.Courses = make([]CourseCollection, len(raw.Courses))
-	for i, rawCol := range raw.Courses {
-		col, err := UnmarshalCourseCollection(rawCol)
+	for i, rawCondAny := range raw.Courses {
+		rawCond, _ := json.Marshal(rawCondAny)
+		cond, err := UnmarshalCourseCollection(rawCond)
 		if err != nil {
 			return err
 		}
-		o.Courses[i] = col
+		o.Courses[i] = cond
 	}
 	return nil
 }

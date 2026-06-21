@@ -1,3 +1,10 @@
+import type {Dispatch, SetStateAction} from "react";
+import {Field, FieldGroup, FieldLabel} from "@/components/ui/field"
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select"
+import {GroupsField} from "./GroupsField"
+import {StringInput} from "./StringInput"
+import {CourseListField} from "./CourseListField.tsx"
+
 import {
     AnyGrade,
     Freshman,
@@ -7,31 +14,18 @@ import {
     Senior,
     Sophomore,
     Undergraduate,
-    type UserInfo,
 } from "@goscript/parser/objects/constants/objects.gs"
 
-import { Field, FieldLabel, FieldGroup } from "@/components/ui/field"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { GroupsField } from "./GroupsField"
-import { StringInput } from "./StringInput"
-import { CourseListField } from "@/components/form/CourseListField.tsx"
+import type {UserInfo} from "@goscript/parser/objects/constants"
+
 
 interface UserInfoFormProps {
-    setUserInfo: (value: ((prevState: UserInfo) => UserInfo) | UserInfo) => void
+    setUserInfo:  Dispatch<SetStateAction<UserInfo>>
     userInfo: UserInfo
 }
 
-// Shared label width so every row in the form lines up, regardless of
-// whether the control is a Select, Input, or something custom like GroupsField.
-const LABEL_CLASS = "w-full sm:w-[140px] shrink-0 text-sm text-muted-foreground font-normal"
 
-function UserInfoForm({ setUserInfo, userInfo }: UserInfoFormProps) {
+function UserInfoForm({setUserInfo, userInfo}: UserInfoFormProps) {
     const handleGroupsChange = (groups: string[]) => {
         setUserInfo((prev) => {
             const next = prev.clone()
@@ -60,10 +54,12 @@ function UserInfoForm({ setUserInfo, userInfo }: UserInfoFormProps) {
 
     return (
         <FieldGroup className="gap-5">
-            <CourseListField userInfo={userInfo} setUserInfo={setUserInfo} />
+            <CourseListField userInfo={userInfo} setUserInfo={setUserInfo}/>
 
             <Field orientation="horizontal">
-                <FieldLabel className={LABEL_CLASS}>Degree level</FieldLabel>
+
+                <FieldLabel className="w-1/3">Degree
+                    level</FieldLabel>
                 <Select
                     value={userInfo.DegreeLevel || Undergraduate}
                     onValueChange={(v) =>
@@ -75,7 +71,7 @@ function UserInfoForm({ setUserInfo, userInfo }: UserInfoFormProps) {
                     }
                 >
                     <SelectTrigger className="flex-1">
-                        <SelectValue placeholder="Select degree level" />
+                        <SelectValue placeholder="Select degree level"/>
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value={Undergraduate}>Undergraduate</SelectItem>
@@ -87,7 +83,8 @@ function UserInfoForm({ setUserInfo, userInfo }: UserInfoFormProps) {
 
             {isUndergrad && (
                 <Field orientation="horizontal">
-                    <FieldLabel className={LABEL_CLASS}>Grade level</FieldLabel>
+                    <FieldLabel className="w-1/3">Grade
+                        level</FieldLabel>
                     <Select
                         value={userInfo.GradeLevel || ""}
                         onValueChange={(v) =>
@@ -99,7 +96,7 @@ function UserInfoForm({ setUserInfo, userInfo }: UserInfoFormProps) {
                         }
                     >
                         <SelectTrigger className="flex-1">
-                            <SelectValue placeholder="Select grade level" />
+                            <SelectValue placeholder="Select grade level"/>
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value={Freshman}>Freshman</SelectItem>
@@ -124,9 +121,7 @@ function UserInfoForm({ setUserInfo, userInfo }: UserInfoFormProps) {
                 onChange={handleMajorChange}
             />
 
-            <Field orientation="horizontal">
-                <GroupsField value={userInfo.Groups ?? []} onChange={handleGroupsChange} />
-            </Field>
+            <GroupsField value={userInfo.Groups ?? []} onChange={handleGroupsChange}/>
         </FieldGroup>
     )
 }

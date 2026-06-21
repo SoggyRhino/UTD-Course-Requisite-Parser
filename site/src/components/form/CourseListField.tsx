@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { ChevronDown, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FieldGroup, FieldLegend, FieldSet } from "@/components/ui/field"
-import { Course, type Grade, type UserInfo } from "@goscript/parser/objects/constants/objects.gs"
+import { Course, type Grade, type UserInfo } from "@goscript/parser/objects/constants"
 import { CourseRow, type CourseRowState } from "./CourseRow"
 import {
   Collapsible,

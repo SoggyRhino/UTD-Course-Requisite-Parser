@@ -20,10 +20,12 @@ func (a *AlternativeCondition) MarshalJSON() ([]byte, error) {
 	})
 }
 
+type rawAlternativeCondition struct {
+	Condition json.RawMessage `json:"condition"`
+}
+
 func (a *AlternativeCondition) UnmarshalJSON(b []byte) error {
-	var raw struct {
-		Condition json.RawMessage `json:"condition"`
-	}
+	var raw rawAlternativeCondition
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return err
 	}

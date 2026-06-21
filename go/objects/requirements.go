@@ -25,17 +25,16 @@ type Requirements struct {
 	Notices     []constants.Notice   `json:"notices,omitempty"`
 }
 
+type rawRequirements struct {
+	PreReqs     json.RawMessage    `json:"pre_reqs,omitempty"`
+	CoReqs      json.RawMessage    `json:"co_reqs,omitempty"`
+	PreOrCoReqs json.RawMessage    `json:"pre_or_co_reqs,omitempty"`
+	Rules       []any              `json:"rules,omitempty"`
+	Notices     []constants.Notice `json:"notices,omitempty"`
+}
+
 func (r *Requirements) UnmarshalJSON(b []byte) error {
-	type Alias Requirements
-	raw := struct {
-		PreReqs     json.RawMessage   `json:"pre_reqs,omitempty"`
-		CoReqs      json.RawMessage   `json:"co_reqs,omitempty"`
-		PreOrCoReqs json.RawMessage   `json:"pre_or_co_reqs,omitempty"`
-		Rules       []json.RawMessage `json:"rules,omitempty"`
-		*Alias
-	}{
-		Alias: (*Alias)(r),
-	}
+	var raw rawRequirements
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return err
 	}
@@ -64,7 +63,8 @@ func (r *Requirements) UnmarshalJSON(b []byte) error {
 
 	if len(raw.Rules) > 0 {
 		r.Rules = make([]rules.Rule, len(raw.Rules))
-		for i, rawRule := range raw.Rules {
+		for i, rawRuleAny := range raw.Rules {
+			rawRule, _ := json.Marshal(rawRuleAny)
 			rule, err := rules.UnmarshalRule(rawRule)
 			if err != nil {
 				return err
@@ -72,6 +72,7 @@ func (r *Requirements) UnmarshalJSON(b []byte) error {
 			r.Rules[i] = rule
 		}
 	}
+	r.Notices = raw.Notices
 
 	return nil
 }
@@ -82,30 +83,26 @@ func (r *Requirements) Evaluate(info constants.UserInfo) RequirementsResult {
 	}
 
 	if r.PreReqs != nil {
-		eval := r.PreReqs.Fulfils(info, false)
-		result.PreReqs = eval
-		result.Overall = constants.WorstStatus(result.Overall, eval.Status)
+		result.PreReqs = r.PreReqs.Fulfils(info, false)
+		result.Overall = constants.WorstStatus(result.Overall, result.PreReqs.Status)
 	}
 
 	if r.CoReqs != nil {
-		eval := r.CoReqs.Fulfils(info, true)
-		result.CoReqs = eval
-		result.Overall = constants.WorstStatus(result.Overall, eval.Status)
+		result.CoReqs = r.CoReqs.Fulfils(info, true)
+		result.Overall = constants.WorstStatus(result.Overall, result.CoReqs.Status)
 	}
 
 	if r.PreOrCoReqs != nil {
-		eval := r.PreOrCoReqs.Fulfils(info, true)
-		result.PreOrCoReqs = eval
-		result.Overall = constants.WorstStatus(result.Overall, eval.Status)
+		result.PreOrCoReqs = r.PreOrCoReqs.Fulfils(info, true)
+		result.Overall = constants.WorstStatus(result.Overall, result.PreOrCoReqs.Status)
 	}
 
 	if len(r.Rules) > 0 {
 		var evaluatedRules []constants.Evaluation
 		for _, rule := range r.Rules {
-			eval := rule.Fulfils(info)
-			if eval != nil {
-				evaluatedRules = append(evaluatedRules, *eval)
-				result.Overall = constants.WorstStatus(result.Overall, eval.Status)
+			if res := rule.Fulfils(info); res != nil {
+				evaluatedRules = append(evaluatedRules, *res)
+				result.Overall = constants.WorstStatus(result.Overall, res.Status)
 			}
 		}
 		result.Rules = evaluatedRules

@@ -21,15 +21,18 @@ func (o *OrCondition) MarshalJSON() ([]byte, error) {
 	})
 }
 
+type rawOrCondition struct {
+	Conditions []any `json:"conditions"`
+}
+
 func (o *OrCondition) UnmarshalJSON(b []byte) error {
-	var raw struct {
-		Conditions []json.RawMessage `json:"conditions"`
-	}
+	var raw rawOrCondition
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return err
 	}
 	o.Conditions = make([]Condition, len(raw.Conditions))
-	for i, rawCond := range raw.Conditions {
+	for i, rawCondAny := range raw.Conditions {
+		rawCond, _ := json.Marshal(rawCondAny)
 		cond, err := UnmarshalCondition(rawCond)
 		if err != nil {
 			return err
@@ -120,15 +123,18 @@ func (a *AndCondition) MarshalJSON() ([]byte, error) {
 	})
 }
 
+type rawAndCondition struct {
+	Conditions []any `json:"conditions"`
+}
+
 func (a *AndCondition) UnmarshalJSON(b []byte) error {
-	var raw struct {
-		Conditions []json.RawMessage `json:"conditions"`
-	}
+	var raw rawAndCondition
 	if err := json.Unmarshal(b, &raw); err != nil {
 		return err
 	}
 	a.Conditions = make([]Condition, len(raw.Conditions))
-	for i, rawCond := range raw.Conditions {
+	for i, rawCondAny := range raw.Conditions {
+		rawCond, _ := json.Marshal(rawCondAny)
 		cond, err := UnmarshalCondition(rawCond)
 		if err != nil {
 			return err
