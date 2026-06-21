@@ -10,7 +10,7 @@ import * as json from "@goscript/encoding/json/index.js";
 import * as $ from "@goscript/builtin/index.js";
 
 const coursesList = Object.keys(requirements)
-const reqData = requirements as Record<string, any>
+const reqData = requirements as Record<string, unknown>
 
 function App() {
     const [userInfo, updateUserInfo] = useState<UserInfo>(new UserInfo())
@@ -27,7 +27,7 @@ function App() {
             return null
         }
         return req
-    }, [JSON.stringify(rawEntry)])
+    }, [rawEntry])
 
     return (
         <div className="App min-h-screen bg-linear-to-br from-background via-background to-muted/50 p-4 sm:p-8 md:p-12 flex flex-col items-center gap-8">

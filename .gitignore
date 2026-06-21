@@ -3,6 +3,4 @@
 /scripts/out/
 /scripts/err
 
-# do not included generated sources in repo
-/go/parser/*
 /out/

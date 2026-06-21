@@ -69,6 +69,7 @@ export function CourseListField({ userInfo, setUserInfo }: CourseListFieldProps)
 
   useEffect(() => {
     if (rows.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDraftRows([{ id: makeId(), rawInput: "", prefix: "", number: "", grade: "", currentlyEnrolled: false }])
       setIsOpen(true)
     }

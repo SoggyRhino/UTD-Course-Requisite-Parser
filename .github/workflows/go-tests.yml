@@ -9,10 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./go
-
+    
     steps:
     - uses: actions/checkout@v4
 
@@ -21,8 +18,19 @@ jobs:
       with:
         go-version-file: './go/go.mod'
 
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Generate ANTLR Parser
+      run: java -jar scripts/antlr.jar -Dlanguage=Go -visitor -package parser -o go/parser Requirements.g4
+
     - name: Build
+      working-directory: ./go
       run: go build -v ./...
 
     - name: Test
+      working-directory: ./go
       run: go test -v ./...
