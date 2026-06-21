@@ -2,6 +2,7 @@ package rules
 
 import (
 	"encoding/json"
+	"fmt"
 	"parser/objects/constants"
 )
 
@@ -50,9 +51,50 @@ func NewDegreeSatisfactionRuleFromElectives(rule *DegreeSatisfactionRule) *Degre
 }
 
 func (r *DegreeSatisfactionRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluation {
+	levelMatches := r.DegreeLevel == "" || r.DegreeLevel == userInfo.DegreeLevel
+
+	if levelMatches {
+		for _, prefix := range r.Prefixes {
+			if userInfo.Major == prefix {
+				return &constants.Evaluation{
+					Name:    "Degree Satisfaction Rule",
+					Status:  constants.StatusDefiniteFail,
+					Summary: fmt.Sprintf("Course cannot be used to satisfy degree requirements for %s majors", prefix),
+				}
+			}
+		}
+
+		for _, degree := range r.Degrees {
+			if userInfo.Major == degree {
+				return &constants.Evaluation{
+					Name:    "Degree Satisfaction Rule",
+					Status:  constants.StatusDefiniteFail,
+					Summary: fmt.Sprintf("Course cannot be used to satisfy degree requirements for %s degree", degree),
+				}
+			}
+		}
+
+		for _, school := range r.Schools {
+			if userInfo.School == school {
+				if r.Math {
+					return &constants.Evaluation{
+						Name:    "Degree Satisfaction Rule",
+						Status:  constants.StatusDefiniteFail,
+						Summary: "Course cannot be used to satisfy mathematics requirements by students in Mathematics",
+					}
+				}
+				return &constants.Evaluation{
+					Name:    "Degree Satisfaction Rule",
+					Status:  constants.StatusDefiniteFail,
+					Summary: fmt.Sprintf("Course cannot be used to satisfy degree requirements for the %s school", school),
+				}
+			}
+		}
+	}
+
 	return &constants.Evaluation{
 		Name:    "Degree Satisfaction Rule",
-		Status:  constants.StatusDefiniteFail,
-		Summary: "Not implemented",
+		Status:  constants.StatusPass,
+		Summary: "Student satisfies degree requirements rule",
 	}
 }
