@@ -37,7 +37,7 @@ jobs:
 
       - name: Compile Go to TypeScript
         run: |
-          go install github.com/aperturerobotics/goscript/cmd/goscript@latest
+          go install github.com/s4wave/goscript/cmd/goscript@latest
           mkdir -p out/ts
           goscript compile --dir go --package parser/objects/... --output out/ts --all-dependencies
           echo '{ "compilerOptions": { "target": "es2024", "lib": ["es2024", "dom"], "moduleResolution": "bundler", "allowImportingTsExtensions": true, "noEmit": true, "strict": true, "baseUrl": ".", "paths": { "@goscript/*": ["./@goscript/*"] } } }' > out/ts/tsconfig.json

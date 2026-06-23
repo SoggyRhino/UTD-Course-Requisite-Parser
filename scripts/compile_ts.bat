@@ -5,7 +5,7 @@ setlocal
 where goscript >nul 2>err
 if %errorlevel% neq 0 (
     echo [ERROR] goscript not found. Please install it using:
-    echo go install github.com/aperturerobotics/goscript/cmd/goscript@latest
+    echo go install github.com/s4wave/goscript/cmd/goscript@latest
     exit /b 1
 )
 

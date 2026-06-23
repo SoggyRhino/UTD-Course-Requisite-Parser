@@ -9,7 +9,7 @@
 ANTLR4 based approach for parsing UTD course requirements (the requirements needed for a student to be able to take a course, 
 essentially its prerequisites). The parsing and generation of course requirement is intended to be run once through the Go 
 library (see main.go for sample usage); while the evaluation from student info supports client-side evaluation through 
-TypeScript generation (credit to [goscript](https://github.com/aperturerobotics/goscript)).
+TypeScript generation (credit to [goscript](https://github.com/s4wave/goscript)).
 
 The project supports over 95% of unique course requirements (as of Spring Semester 2026). This highlights a small flaw in 
 this parser: course requirements are not a formal grammar, just pretty close, but at the end of the day, this was mostly an
@@ -160,8 +160,8 @@ The `scripts/` folder contains several utilities for development:
   - `--missing` flag prints a Markdown list of missing visitors.
 - **`extract_inputs.bat`**: Extracts captured inputs for specific rules, useful for unit testing.
 - **`test_grammar.bat`**: Validates changes against the grammar.
-- **`compile_ts.bat`**: Transpiles the Go `objects` package to TypeScript using [goscript](https://github.com/aperturerobotics/goscript).
-  - Requires `goscript` to be installed: `go install github.com/aperturerobotics/goscript/cmd/goscript@latest`
+- **`compile_ts.bat`**: Transpiles the Go `objects` package to TypeScript using [goscript](https://github.com/s4wave/goscript).
+  - Requires `goscript` to be installed: `go install github.com/s4wave/goscript/cmd/goscript@latest`
 
 ### Usage 
 
