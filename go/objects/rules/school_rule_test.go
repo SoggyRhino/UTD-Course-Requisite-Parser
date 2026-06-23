@@ -37,7 +37,7 @@ func TestSchoolRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "School Rule",
 				Status:  constants.StatusPass,
-				Summary: "Student is in required school: ECS",
+				Summary: "Student is enrolled in an eligible school: ECS",
 			},
 		},
 		"Does not match school": {
@@ -48,7 +48,7 @@ func TestSchoolRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "School Rule",
 				Status:  constants.StatusDefiniteFail,
-				Summary: "Student is not in any of the required schools: ECS, NSM",
+				Summary: "Course is restricted to students in the following schools: ECS, NSM",
 			},
 		},
 	}

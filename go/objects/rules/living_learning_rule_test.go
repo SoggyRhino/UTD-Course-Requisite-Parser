@@ -40,7 +40,7 @@ func TestLivingLearningRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Living Learning Rule",
 				Status:  constants.StatusPass,
-				Summary: "Student's major matches living learning degree: CS",
+				Summary: "Student is enrolled in a required living learning degree: CS",
 			},
 		},
 		"Does not match degree": {
@@ -51,7 +51,7 @@ func TestLivingLearningRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Living Learning Rule",
 				Status:  constants.StatusDefiniteFail,
-				Summary: "Student's major \"MATH\" is not in the required living learning degrees: CS, SE",
+				Summary: "Course is restricted to students in the following living learning degrees: CS, SE (student is in \"MATH\")",
 			},
 		},
 		"Prefixes not implemented": {

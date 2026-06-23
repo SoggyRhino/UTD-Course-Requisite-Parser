@@ -70,7 +70,7 @@ func TestCreditForRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Credit For Rule",
 				Status:  constants.StatusPass,
-				Summary: "Student satisfies credit for rule",
+				Summary: "Student does not have credit for any mutually exclusive courses",
 			},
 		},
 		"Fails when simple course taken": {
@@ -83,7 +83,7 @@ func TestCreditForRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Credit For Rule",
 				Status:  constants.StatusDefiniteFail,
-				Summary: "Student violates credit for rule: CS 1337",
+				Summary: "Student has already received credit for a mutually exclusive course: CS 1337",
 			},
 		},
 		"Fails when OR course taken": {
@@ -99,7 +99,7 @@ func TestCreditForRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Credit For Rule",
 				Status:  constants.StatusDefiniteFail,
-				Summary: "Student violates credit for rule: (CS 1337 OR SE 1337)",
+				Summary: "Student has already received credit for a mutually exclusive course: (CS 1337 OR SE 1337)",
 			},
 		},
 		"Passes when only one of AND taken": {
@@ -115,7 +115,7 @@ func TestCreditForRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Credit For Rule",
 				Status:  constants.StatusPass,
-				Summary: "Student satisfies credit for rule",
+				Summary: "Student does not have credit for any mutually exclusive courses",
 			},
 		},
 		"Fails when both of AND taken": {
@@ -132,7 +132,7 @@ func TestCreditForRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Credit For Rule",
 				Status:  constants.StatusDefiniteFail,
-				Summary: "Student violates credit for rule: (CS 1337 AND SE 1337)",
+				Summary: "Student has already received credit for a mutually exclusive course: (CS 1337 AND SE 1337)",
 			},
 		},
 	}

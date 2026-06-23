@@ -16,13 +16,13 @@ func (c *CreditForRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluati
 		return &constants.Evaluation{
 			Name:    "Credit For Rule",
 			Status:  constants.StatusDefiniteFail,
-			Summary: fmt.Sprintf("Student violates credit for rule: %s", c.Courses.String()),
+			Summary: fmt.Sprintf("Student has already received credit for a mutually exclusive course: %s", c.Courses.String()),
 		}
 	}
 	return &constants.Evaluation{
 		Name:    "Credit For Rule",
 		Status:  constants.StatusPass,
-		Summary: "Student satisfies credit for rule",
+		Summary: "Student does not have credit for any mutually exclusive courses",
 	}
 }
 

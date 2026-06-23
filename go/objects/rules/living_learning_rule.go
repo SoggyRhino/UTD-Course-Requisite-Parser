@@ -45,7 +45,7 @@ func (r *LivingLearningRule) Fulfils(userInfo constants.UserInfo) *constants.Eva
 			return &constants.Evaluation{
 				Name:    "Living Learning Rule",
 				Status:  constants.StatusPass,
-				Summary: fmt.Sprintf("Student's major matches living learning degree: %s", degree),
+				Summary: fmt.Sprintf("Student is enrolled in a required living learning degree: %s", degree),
 			}
 		}
 	}
@@ -53,6 +53,6 @@ func (r *LivingLearningRule) Fulfils(userInfo constants.UserInfo) *constants.Eva
 	return &constants.Evaluation{
 		Name:    "Living Learning Rule",
 		Status:  constants.StatusDefiniteFail,
-		Summary: fmt.Sprintf("Student's major %q is not in the required living learning degrees: %s", userInfo.Major, strings.Join(r.Degrees, ", ")),
+		Summary: fmt.Sprintf("Course is restricted to students in the following living learning degrees: %s (student is in %q)", strings.Join(r.Degrees, ", "), userInfo.Major),
 	}
 }

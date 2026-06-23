@@ -43,7 +43,7 @@ func (r *RepeatRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluation 
 		return &constants.Evaluation{
 			Name:    "Repeat Rule",
 			Status:  constants.StatusDefiniteFail,
-			Summary: fmt.Sprintf("Repeated courses %d times (limit %d)", takenCount, r.Count),
+			Summary: fmt.Sprintf("Course has been repeated %d times, which meets or exceeds the limit of %d", takenCount, r.Count),
 		}
 	}
 
@@ -51,14 +51,14 @@ func (r *RepeatRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluation 
 		return &constants.Evaluation{
 			Name:    "Repeat Rule",
 			Status:  constants.StatusDefiniteFail,
-			Summary: fmt.Sprintf("Repeated courses for %d hours (limit %d)", takenHours, r.Hours),
+			Summary: fmt.Sprintf("Course has been repeated for %d hours, which meets or exceeds the limit of %d hours", takenHours, r.Hours),
 		}
 	}
 
 	return &constants.Evaluation{
 		Name:    "Repeat Rule",
 		Status:  constants.StatusPass,
-		Summary: "Repeat limits not exceeded",
+		Summary: "Course repeat limits have not been exceeded",
 	}
 }
 
@@ -144,6 +144,6 @@ func (r *GpaRepeatRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluati
 	return &constants.Evaluation{
 		Name:    "GPA Repeat Rule",
 		Status:  constants.StatusPass,
-		Summary: "GPA repeat rule satisfied",
+		Summary: "Course can be repeated to improve GPA",
 	}
 }

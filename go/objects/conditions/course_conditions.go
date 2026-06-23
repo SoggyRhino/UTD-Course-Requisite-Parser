@@ -64,7 +64,11 @@ func (c *CourseCondition) Fulfils(info constants.UserInfo, allowCoReq bool) *con
 
 	for taken, grade := range info.Taken {
 		if taken.Prefix == c.Course.Prefix && taken.Number == c.Course.Number {
-			if c.MinGrade == "" || gradeAtLeast(grade, c.MinGrade) {
+			minGrade := c.MinGrade
+			if minGrade == "" {
+				minGrade = "C"
+			}
+			if gradeAtLeast(grade, minGrade) {
 				return &constants.Evaluation{
 					Name:    courseLabel,
 					Status:  constants.StatusPass,
@@ -74,7 +78,7 @@ func (c *CourseCondition) Fulfils(info constants.UserInfo, allowCoReq bool) *con
 			return &constants.Evaluation{
 				Name:    courseLabel,
 				Status:  constants.StatusDefiniteFail,
-				Summary: fmt.Sprintf("Completed %s but grade %s does not meet minimum %s", courseLabel, grade, c.MinGrade),
+				Summary: fmt.Sprintf("Completed %s but grade %s does not meet minimum %s", courseLabel, grade, minGrade),
 			}
 		}
 	}

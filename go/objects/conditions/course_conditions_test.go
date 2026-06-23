@@ -86,6 +86,19 @@ func TestCourseConditionFulfils(t *testing.T) {
 				Summary: "Completed BIOL 2311 with grade B",
 			},
 		},
+		"Completed without minimum grade, below C": {
+			condition: *NewCourseCondition("BIOL", "2311", ""),
+			userInfo: constants.UserInfo{
+				Taken: map[constants.Course]constants.Grade{
+					{Prefix: "BIOL", Number: "2311"}: "D",
+				},
+			},
+			expected: constants.Evaluation{
+				Name:    "BIOL 2311",
+				Status:  constants.StatusDefiniteFail,
+				Summary: "Completed BIOL 2311 but grade D does not meet minimum C",
+			},
+		},
 		"Completed with sufficient grade": {
 			condition: *NewCourseCondition("BIOL", "2311", "C"),
 			userInfo: constants.UserInfo{

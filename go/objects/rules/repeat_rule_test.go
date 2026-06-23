@@ -68,7 +68,7 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Repeat Rule",
 				Status:  constants.StatusPass,
-				Summary: "Repeat limits not exceeded",
+				Summary: "Course repeat limits have not been exceeded",
 			},
 		},
 		"Taken exactly count limit": {
@@ -81,7 +81,7 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Repeat Rule",
 				Status:  constants.StatusDefiniteFail,
-				Summary: "Repeated courses 1 times (limit 1)",
+				Summary: "Course has been repeated 1 times, which meets or exceeds the limit of 1",
 			},
 		},
 		"Taken hours under limit": {
@@ -94,7 +94,7 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Repeat Rule",
 				Status:  constants.StatusPass,
-				Summary: "Repeat limits not exceeded",
+				Summary: "Course repeat limits have not been exceeded",
 			},
 		},
 		"Taken hours over limit": {
@@ -107,7 +107,7 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Repeat Rule",
 				Status:  constants.StatusDefiniteFail,
-				Summary: "Repeated courses for 3 hours (limit 3)",
+				Summary: "Course has been repeated for 3 hours, which meets or exceeds the limit of 3 hours",
 			},
 		},
 		"Enrolled in course exceeding limit": {
@@ -121,7 +121,7 @@ func TestRepeatRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Repeat Rule",
 				Status:  constants.StatusDefiniteFail,
-				Summary: "Repeated courses 2 times (limit 1)",
+				Summary: "Course has been repeated 2 times, which meets or exceeds the limit of 1",
 			},
 		},
 		"Internship case": {
@@ -182,7 +182,7 @@ func TestGpaRepeatRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "GPA Repeat Rule",
 				Status:  constants.StatusPass,
-				Summary: "GPA repeat rule satisfied",
+				Summary: "Course can be repeated to improve GPA",
 			},
 		},
 		"Matches plan but not taken": {
@@ -196,7 +196,7 @@ func TestGpaRepeatRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "GPA Repeat Rule",
 				Status:  constants.StatusPass,
-				Summary: "GPA repeat rule satisfied",
+				Summary: "Course can be repeated to improve GPA",
 			},
 		},
 	}

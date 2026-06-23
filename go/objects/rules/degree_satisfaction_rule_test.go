@@ -62,7 +62,7 @@ func TestDegreeSatisfactionRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Degree Satisfaction Rule",
 				Status:  constants.StatusPass,
-				Summary: "Student satisfies degree requirements rule",
+				Summary: "Course is eligible for the student's degree requirements",
 			},
 		},
 		"Matches school with Math true": {
@@ -73,7 +73,7 @@ func TestDegreeSatisfactionRule_Fulfils(t *testing.T) {
 			expected: &constants.Evaluation{
 				Name:    "Degree Satisfaction Rule",
 				Status:  constants.StatusDefiniteFail,
-				Summary: "Course cannot be used to satisfy mathematics requirements by students in Mathematics",
+				Summary: "Course cannot be used to satisfy mathematics requirements by students in the Mathematics school",
 			},
 		},
 		"Matches school with Math false": {

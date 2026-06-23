@@ -28,7 +28,7 @@ func (r *SchoolRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluation 
 			return &constants.Evaluation{
 				Name:    "School Rule",
 				Status:  constants.StatusPass,
-				Summary: fmt.Sprintf("Student is in required school: %s", school),
+				Summary: fmt.Sprintf("Student is enrolled in an eligible school: %s", school),
 			}
 		}
 	}
@@ -36,7 +36,7 @@ func (r *SchoolRule) Fulfils(userInfo constants.UserInfo) *constants.Evaluation 
 	return &constants.Evaluation{
 		Name:    "School Rule",
 		Status:  constants.StatusDefiniteFail,
-		Summary: fmt.Sprintf("Student is not in any of the required schools: %s", strings.Join(r.Schools, ", ")),
+		Summary: fmt.Sprintf("Course is restricted to students in the following schools: %s", strings.Join(r.Schools, ", ")),
 	}
 }
 

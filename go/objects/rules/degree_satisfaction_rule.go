@@ -69,7 +69,7 @@ func (r *DegreeSatisfactionRule) Fulfils(userInfo constants.UserInfo) *constants
 				return &constants.Evaluation{
 					Name:    "Degree Satisfaction Rule",
 					Status:  constants.StatusDefiniteFail,
-					Summary: fmt.Sprintf("Course cannot be used to satisfy degree requirements for %s degree", degree),
+					Summary: fmt.Sprintf("Course cannot be used to satisfy degree requirements for the %s degree", degree),
 				}
 			}
 		}
@@ -80,7 +80,7 @@ func (r *DegreeSatisfactionRule) Fulfils(userInfo constants.UserInfo) *constants
 					return &constants.Evaluation{
 						Name:    "Degree Satisfaction Rule",
 						Status:  constants.StatusDefiniteFail,
-						Summary: "Course cannot be used to satisfy mathematics requirements by students in Mathematics",
+						Summary: "Course cannot be used to satisfy mathematics requirements by students in the Mathematics school",
 					}
 				}
 				return &constants.Evaluation{
@@ -95,6 +95,6 @@ func (r *DegreeSatisfactionRule) Fulfils(userInfo constants.UserInfo) *constants
 	return &constants.Evaluation{
 		Name:    "Degree Satisfaction Rule",
 		Status:  constants.StatusPass,
-		Summary: "Student satisfies degree requirements rule",
+		Summary: "Course is eligible for the student's degree requirements",
 	}
 }
